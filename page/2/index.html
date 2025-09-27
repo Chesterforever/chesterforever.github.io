@@ -238,128 +238,24 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/09/27/Kalman%20%E6%BB%A4%E6%B3%A2/" target="_blank">
-          
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/09/27/Kalman%20%E6%BB%A4%E6%B3%A2/" target="_blank">
-        <div>
-          Kalman 滤波 怎么选择状态量和观测量 怎么建立状态方程和观测方程
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/09/27/HAL%E5%BA%93%E5%92%8CLL%E5%BA%93%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/" target="_blank">
-          
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/09/27/HAL%E5%BA%93%E5%92%8CLL%E5%BA%93%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/" target="_blank">
-        <div>
-          HAL库和LL库（可以混合使用） hal库：函数复杂，但是直接对寄存器调用，移植方便 LL库：使用很多内联函数（省去进入和退出函数的时间）高效速度快 hal库： 以_IT为后缀结尾表示中断方式 用cubemx配高速时钟注意检查晶振大小要相同  HAL_Init:配置NVIC 更新全局变量SystemCoreClock（此时用的还是内部HSI48M时钟） SystemClock_Config:配置时
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/09/27/GPIO%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0%20%20%20%20%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%BC%8F%E7%BC%96%E7%A8%8B/" target="_blank">
-          
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/09/27/GPIO%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0%20%20%20%20%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%BC%8F%E7%BC%96%E7%A8%8B/" target="_blank">
-        <div>
-          GPIO进阶学习 输出状态：推挽PV 开漏OD 支持复用  可以支持速度选择（干扰较多就把速度调低） 输入状态：上拉 下拉 模拟（主要用于ADC） 浮空    支持复用  可以从手册中看上拉下拉电阻的阻值 当配置为复用模式时，输入寄存器IDR可以正常读取，输出寄存器无法正常读取（由手册读出） 模拟输入寄存器可以直接读ADC（注意寄存器是否受基准电压影响） 备份域（RTC）  拉电流 灌电流 注入电
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/09/27/FOC/" target="_blank">
-          
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/09/27/FOC/" target="_blank">
-        <div>
-          FOC1.配置定时器输出三路PWM（这个方案基于驱动IC，驱动IC接收MCU3路PWM输入，转换成3对互补PWM输出，用于驱动三相桥的6个mosfet，并且驱动IC可以自动插入死区时间，如果选择不用驱动IC的方案则需手动配置6路互补PWM并且要考虑死区插入等一系列问题） 注意pwm的三个参数：频率，分辨率，占空比 2.使电机转到固定电角度通过park反变换和clark反变换最终实现输入电角度和电压
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
       <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" target="_blank">
-          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="FreeRTOS内核任务链表与状态切换">
+        <a href="/2025/03/05/bootloader/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="bootloader">
         </a>
       </div>
     
     <article class="col-12 col-md-8 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" target="_blank">
-          FreeRTOS内核任务链表与状态切换
+        <a href="/2025/03/05/bootloader/" target="_blank">
+          bootloader
         </a>
       </h2>
 
       
-      <a class="index-excerpt " href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" target="_blank">
+      <a class="index-excerpt " href="/2025/03/05/bootloader/" target="_blank">
         <div>
-          FreeRTOS内核任务链表与状态切换首先创建(静态)任务会在SRAM里的.bss段的FreeRTOS_HEAP_SIZE里生成一个TCB块   TCB块里会有一个结构体，这个结构体存储了以下数据   pxTopOfStack指向该任务的栈顶（通过PSP指针初始化栈寄存器） *pxStack指向该任务的栈底 比较关键的是xStateListitem和xEventListitem这两个成员 xSta
+          bootloader 单片机启动流程  首地址是MSP 中断向量表  跳转配置   将APP程序加载到支持运行程序的Flash或者RAM中  复位RCC时钟  复位所有开启的外设  关闭滴答  关闭所有中断  设置跳转PC，SP和Control寄存器  如果用了RTOS，则要设置为特权级模式，使用MSP指针    APP程序问题   APP程序入口依然是复位中断服务程序 注意设置APP的中断向量表
         </div>
       </a>
 
@@ -370,7 +266,126 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="/tags/RTOS/">#RTOS</a>
+              <a href="/tags/MCU/">#MCU</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2025/02/05/FOC/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="FOC">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/02/05/FOC/" target="_blank">
+          FOC
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2025/02/05/FOC/" target="_blank">
+        <div>
+          FOC1.配置定时器输出三路PWM（这个方案基于驱动IC，驱动IC接收MCU3路PWM输入，转换成3对互补PWM输出，用于驱动三相桥的6个mosfet，并且驱动IC可以自动插入死区时间，如果选择不用驱动IC的方案则需手动配置6路互补PWM并且要考虑死区插入等一系列问题） 注意pwm的三个参数：频率，分辨率，占空比 2.使电机转到固定电角度通过park反变换和clark反变换最终实现输入电角度和电压
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MCU/">#MCU</a>
+            
+              <a href="/tags/FOC/">#FOC</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2025/01/20/%E5%88%86%E6%95%A3%E5%8A%A0%E8%BD%BD/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="分散加载">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/01/20/%E5%88%86%E6%95%A3%E5%8A%A0%E8%BD%BD/" target="_blank">
+          分散加载
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2025/01/20/%E5%88%86%E6%95%A3%E5%8A%A0%E8%BD%BD/" target="_blank">
+        <div>
+          分散加载  这块碰到再详细学一下，感觉实战应用场景应该是特别大的项目 https://www.bilibili.com/video/BV1MR4y157XS?t=2457.3
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MCU/">#MCU</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="MCU启动流程">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_blank">
+          MCU启动流程
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" target="_blank">
+        <div>
+          MCU启动流程CPU从0x00000000地址取值             取到的第一个四字节是栈底位置（不是MSP，只是此时MSP主栈指针指向栈底） PSP（从栈指针）主要负责处理os的栈 任务切换触发PendSV中断
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MCU/">#MCU</a>
             
           </div>
         
@@ -419,11 +434,208 @@
     </article>
   </div>
 
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="代码优化策略">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/" target="_blank">
+          代码优化策略
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/" target="_blank">
+        <div>
+          代码优化策略 哪有什么代码优化，不过是空间和时间转化的策略罢了，实战当中要平衡好RAM空间与运行时间的关系  首先得了解不同编译器的优化模式，以keil为例，优化等级分为-o0，-o1，-o2，-o3，额外独立配置：-Ospace，-Otime；  -o0：不优化，优点是方便调试时变量查看，缺点是代码运行速度慢，占用内存大；（开发调试阶段） -o1：受限优化，平衡优化，优化不涉及“空间-时间”权衡
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MCU/">#MCU</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/08/20/STM32H750VBT6%E5%AD%A6%E4%B9%A0/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="STM32H750VBT6学习">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/08/20/STM32H750VBT6%E5%AD%A6%E4%B9%A0/" target="_blank">
+          STM32H750VBT6学习
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/08/20/STM32H750VBT6%E5%AD%A6%E4%B9%A0/" target="_blank">
+        <div>
+          STM32H750VBT6学习1.Cache（缓存）Cache是跟Flash和SRAM同一级别的存在，是一种高速小容量存储器，主要作为高速缓冲区 CPU &lt;-&gt; Cache &lt;-&gt; 主存（DRAM） &lt;-&gt; 外部存储（Flash&#x2F;HDD） Cache带来了性能提升，但也引入了数据一致性问题：  DMA操作： 当DMA控制器（如MDMA, BDMA）直接
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MCU%EF%BC%8CSTM32H7/">#MCU，STM32H7</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/07/25/GPIO%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0%20%20%20%20%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%BC%8F%E7%BC%96%E7%A8%8B/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="GPIO进阶学习 非阻塞式编程思想">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/07/25/GPIO%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0%20%20%20%20%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%BC%8F%E7%BC%96%E7%A8%8B/" target="_blank">
+          GPIO进阶学习 非阻塞式编程思想
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/07/25/GPIO%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0%20%20%20%20%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%BC%8F%E7%BC%96%E7%A8%8B/" target="_blank">
+        <div>
+          GPIO进阶学习输出状态：推挽PV 开漏OD 支持复用  可以支持速度选择（干扰较多就把速度调低） 输入状态：上拉 下拉 模拟（主要用于ADC） 浮空    支持复用  可以从手册中看上拉下拉电阻的阻值 当配置为复用模式时，输入寄存器IDR可以正常读取，输出寄存器无法正常读取（由手册读出） 模拟输入寄存器可以直接读ADC（注意寄存器是否受基准电压影响） 备份域（RTC） 拉电流 灌电流 注入电流
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MCU/">#MCU</a>
+            
+              <a href="/tags/STM32H7/">#STM32H7</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/04/25/%E8%8A%AF%E7%89%87%E5%90%AF%E5%8A%A8%E5%88%B0%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BB%A5stm32H7%E7%B3%BB%E5%88%97%E4%B8%BA%E4%BE%8B%EF%BC%89/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="芯片启动到运行流程（以stm32H7为例）">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/04/25/%E8%8A%AF%E7%89%87%E5%90%AF%E5%8A%A8%E5%88%B0%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BB%A5stm32H7%E7%B3%BB%E5%88%97%E4%B8%BA%E4%BE%8B%EF%BC%89/" target="_blank">
+          芯片启动到运行流程（以stm32H7为例）
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/04/25/%E8%8A%AF%E7%89%87%E5%90%AF%E5%8A%A8%E5%88%B0%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BB%A5stm32H7%E7%B3%BB%E5%88%97%E4%B8%BA%E4%BE%8B%EF%BC%89/" target="_blank">
+        <div>
+          芯片启动到运行流程（以stm32H7系列为例）1.芯片供电域（看芯片手册） 2.上电启动流程（从硬件上看） 上电复位和手动复位都是操作电容         从图上看感觉就是各种时钟的初始化 3.软件启动流程 启动文件路径（Drivers-&gt;CMSIS-&gt;Device-&gt;ST-&gt;STM32H7xx-&gt;Source-&gt;Templates-&gt;各种种类启动文件如i
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MCU/">#MCU</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2024/04/20/NVIC%E4%B8%AD%E6%96%AD%E7%AE%A1%E7%90%86%E5%92%8C%E4%BC%98%E5%85%88%E7%BA%A7%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="NVIC中断管理和优先级动态分配">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2024/04/20/NVIC%E4%B8%AD%E6%96%AD%E7%AE%A1%E7%90%86%E5%92%8C%E4%BC%98%E5%85%88%E7%BA%A7%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D/" target="_blank">
+          NVIC中断管理和优先级动态分配
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2024/04/20/NVIC%E4%B8%AD%E6%96%AD%E7%AE%A1%E7%90%86%E5%92%8C%E4%BC%98%E5%85%88%E7%BA%A7%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D/" target="_blank">
+        <div>
+          NVIC中断管理和优先级动态分配 抢占优先级（可以抢占） 子优先级（不能抢占，只能优先） 数值越小越优先； 在debug中可以看NVIC(路径是debug中全速运行，然后打开外设栏，内核外设栏，NVIC) （此处缺少一张截图） E指enable，P指挂起，A指active； 尽量多用局部中断少用全局中断（以串口FIFO为例，用到哪个外设就调用那个外设的中断而非全局中断）； 中断中不要做64倍除法，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MCU/">#MCU</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/#board">3</a><a class="extend next" rel="next" href="/page/3/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
