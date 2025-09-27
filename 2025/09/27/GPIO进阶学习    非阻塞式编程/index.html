@@ -19,21 +19,25 @@
   <meta name="author" content="jiawei xu">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="article">
-<meta property="og:title" content="3">
-<meta property="og:url" content="https://chesterforever.github.io/2025/09/27/3/index.html">
+    <meta name="description" content="GPIO进阶学习 输出状态：推挽PV 开漏OD 支持复用  可以支持速度选择（干扰较多就把速度调低） 输入状态：上拉 下拉 模拟（主要用于ADC） 浮空    支持复用  可以从手册中看上拉下拉电阻的阻值 当配置为复用模式时，输入寄存器IDR可以正常读取，输出寄存器无法正常读取（由手册读出） 模拟输入寄存器可以直接读ADC（注意寄存器是否受基准电压影响） 备份域（RTC）  拉电流 灌电流 注入电">
+<meta property="og:type" content="article">
+<meta property="og:title" content="技术挖掘师">
+<meta property="og:url" content="https://chesterforever.github.io/2025/09/27/GPIO%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0%20%20%20%20%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%BC%8F%E7%BC%96%E7%A8%8B/index.html">
 <meta property="og:site_name" content="技术挖掘师">
+<meta property="og:description" content="GPIO进阶学习 输出状态：推挽PV 开漏OD 支持复用  可以支持速度选择（干扰较多就把速度调低） 输入状态：上拉 下拉 模拟（主要用于ADC） 浮空    支持复用  可以从手册中看上拉下拉电阻的阻值 当配置为复用模式时，输入寄存器IDR可以正常读取，输出寄存器无法正常读取（由手册读出） 模拟输入寄存器可以直接读ADC（注意寄存器是否受基准电压影响） 备份域（RTC）  拉电流 灌电流 注入电">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-09-27T11:03:38.000Z">
-<meta property="article:modified_time" content="2025-09-27T11:03:38.063Z">
+<meta property="og:image" content="d:\xwechat_files\wxid_6nvrkw1t28522_8bad\temp\InputTemp\aec07773-8925-4222-97e1-5d372ea992f4.png">
+<meta property="article:published_time" content="2025-09-27T14:07:00.894Z">
+<meta property="article:modified_time" content="2025-08-12T08:12:59.877Z">
 <meta property="article:author" content="jiawei xu">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="d:\xwechat_files\wxid_6nvrkw1t28522_8bad\temp\InputTemp\aec07773-8925-4222-97e1-5d372ea992f4.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>3 - 技术挖掘师</title>
+  <title>技术挖掘师</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -210,7 +214,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="3"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -231,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          278 字
         
       </span>
     
@@ -242,7 +246,7 @@
         
         
         
-          1 分钟
+          3 分钟
         
       </span>
     
@@ -279,12 +283,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">3</h1>
+            <h1 id="seo-header"></h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年9月27日 晚上
+                    本文最后更新于 2025年8月12日 下午
                   
                 
               </p>
@@ -292,7 +296,22 @@
             
               <div class="markdown-body">
                 
-                
+                <p><strong>GPIO进阶学习</strong></p>
+<p>输出状态：推挽PV 开漏OD 支持复用 </p>
+<p>可以支持速度选择（干扰较多就把速度调低）</p>
+<p>输入状态：上拉 下拉 模拟（主要用于ADC） 浮空    支持复用</p>
+<p> 可以从手册中看上拉下拉电阻的阻值</p>
+<p>当配置为复用模式时，输入寄存器IDR可以正常读取，输出寄存器无法正常读取（由手册读出）</p>
+<p>模拟输入寄存器可以直接读ADC（注意寄存器是否受基准电压影响）</p>
+<p>备份域（RTC）</p>
+<p><img src="D:\xwechat_files\wxid_6nvrkw1t28522_8bad\temp\InputTemp\aec07773-8925-4222-97e1-5d372ea992f4.png" srcset="/img/loading.gif" lazyload alt="aec07773-8925-4222-97e1-5d372ea992f4"></p>
+<p>拉电流 灌电流 注入电流</p>
+<p><strong>非阻塞式编程</strong></p>
+<p>按键：  用循环队列fifo存储按键状态（按下 松开 长按），然后定时器每过固定时间检测fifo值，可以避免delay  </p>
+<p>蜂鸣器：</p>
+<p><strong>Event Recorder狂暴模式</strong></p>
+<p>需要单独设置ram，然后用分散加载</p>
+
                 
               </div>
             
@@ -309,8 +328,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>3</div>
-      <div>https://chesterforever.github.io/2025/09/27/3/</div>
+      <div></div>
+      <div>https://chesterforever.github.io/2025/09/27/GPIO进阶学习    非阻塞式编程/</div>
     </div>
     <div class="license-meta">
       
@@ -328,7 +347,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年9月27日</div>
+          <div>2025年8月12日</div>
         </div>
       
       
@@ -359,12 +378,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2025/09/27/HAL%E5%BA%93%E5%92%8CLL%E5%BA%93%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/09/27/2/" title="2">
-                        <span class="hidden-mobile">2</span>
+                      <a href="/2025/09/27/FOC/" title="">
+                        <span class="hidden-mobile"></span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

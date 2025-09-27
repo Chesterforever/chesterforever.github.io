@@ -19,27 +19,23 @@
   <meta name="author" content="jiawei xu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="MPU和cache为什么要有MPU：阻止用户应用破坏关键任务；阻止代码注入攻击；改变内存访问属性； cache的作用：以H7为例，内核480M，RAM只有240M，通过cache就能实现类似倍频的效果； MPU一般有16个域，每个域配置8个等大小的子域（子域最小大小受cache line影响，禁止子域就是禁止该子域的MPU配置）优先级值越大，优先级越高，当域存在重叠时，以优先级高的域的配置为主；">
+    <meta name="description" content="FOC1.配置定时器输出三路PWM（这个方案基于驱动IC，驱动IC接收MCU3路PWM输入，转换成3对互补PWM输出，用于驱动三相桥的6个mosfet，并且驱动IC可以自动插入死区时间，如果选择不用驱动IC的方案则需手动配置6路互补PWM并且要考虑死区插入等一系列问题） 注意pwm的三个参数：频率，分辨率，占空比 2.使电机转到固定电角度通过park反变换和clark反变换最终实现输入电角度和电压">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MPU和cache">
-<meta property="og:url" content="https://chesterforever.github.io/2024/09/20/MPU%E5%92%8Ccache/index.html">
+<meta property="og:title" content="技术挖掘师">
+<meta property="og:url" content="https://chesterforever.github.io/2025/09/27/FOC/index.html">
 <meta property="og:site_name" content="技术挖掘师">
-<meta property="og:description" content="MPU和cache为什么要有MPU：阻止用户应用破坏关键任务；阻止代码注入攻击；改变内存访问属性； cache的作用：以H7为例，内核480M，RAM只有240M，通过cache就能实现类似倍频的效果； MPU一般有16个域，每个域配置8个等大小的子域（子域最小大小受cache line影响，禁止子域就是禁止该子域的MPU配置）优先级值越大，优先级越高，当域存在重叠时，以优先级高的域的配置为主；">
+<meta property="og:description" content="FOC1.配置定时器输出三路PWM（这个方案基于驱动IC，驱动IC接收MCU3路PWM输入，转换成3对互补PWM输出，用于驱动三相桥的6个mosfet，并且驱动IC可以自动插入死区时间，如果选择不用驱动IC的方案则需手动配置6路互补PWM并且要考虑死区插入等一系列问题） 注意pwm的三个参数：频率，分辨率，占空比 2.使电机转到固定电角度通过park反变换和clark反变换最终实现输入电角度和电压">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
-<meta property="article:published_time" content="2024-09-20T11:03:24.000Z">
-<meta property="article:modified_time" content="2025-09-27T13:59:04.105Z">
+<meta property="article:published_time" content="2025-09-27T14:07:00.888Z">
+<meta property="article:modified_time" content="2025-09-27T14:12:11.374Z">
 <meta property="article:author" content="jiawei xu">
-<meta property="article:tag" content="MCU">
-<meta property="article:tag" content="STM32H7">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>MPU和cache - 技术挖掘师</title>
+  <title>技术挖掘师</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +212,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="MPU和cache"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -237,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          664 字
         
       </span>
     
@@ -248,7 +244,7 @@
         
         
         
-          12 分钟
+          6 分钟
         
       </span>
     
@@ -285,7 +281,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">MPU和cache</h1>
+            <h1 id="seo-header"></h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
@@ -298,43 +294,20 @@
             
               <div class="markdown-body">
                 
-                <h1 id="MPU和cache"><a href="#MPU和cache" class="headerlink" title="MPU和cache"></a><strong>MPU和cache</strong></h1><p>为什么要有MPU：阻止用户应用破坏关键任务；阻止代码注入攻击；改变内存访问属性；</p>
-<p>cache的作用：以H7为例，内核480M，RAM只有240M，通过cache就能实现类似倍频的效果；</p>
-<p>MPU一般有16个域，每个域配置8个等大小的子域（子域最小大小受cache line影响，禁止子域就是禁止该子域的MPU配置）优先级值越大，优先级越高，当域存在重叠时，以优先级高的域的配置为主；</p>
-<p>内存类型分为下面三种类型</p>
-<p>Normal memory：由DRAM，SRAM，FLASH等通用存储介质组成，支持cache缓存，预取，允许乱序访问，缓冲合并，充分发挥了各种机制，所以性能最强；</p>
-<p>Device memory：内存映射外部寄存器，不可缓存，不可预取，严格顺序访问，禁止写合并，性能稍差；</p>
-<p>Strongly-ordered Memory：系统关键组件，不可缓存，不可预取，绝对顺序执行(严格按照指令顺序执行)，禁止任何缓冲，所有访问全局可观察，性能最差，访问延迟最长；</p>
-<p><strong>MPU配置：</strong>  </p>
-<p>内存属性</p>
-<p>XN：执行禁止，标记内存区域是否允许执行指令，默认使能即可；</p>
-<p>AP：访问权限，决定CPU特权级和用户级的读写权限；</p>
-<p>TEX:拓展内存类型；</p>
-<p>S：是否支持多核&#x2F;总线主设备共享；</p>
-<p>C：数据是否可缓存；</p>
-<p>B：写操作是否允许缓冲；</p>
-<img src="/2024/09/20/MPU%E5%92%8Ccache/0592f54a-de70-4e12-95e2-cc8cfc6e6b74.png" srcset="/img/loading.gif" lazyload class="">
-
-<p><img src="/2024/09/20/MPU%E5%92%8Ccache/0592f54a-de70-4e12-95e2-cc8cfc6e6b74.png" srcset="/img/loading.gif" lazyload></p>
-<p>配置为1011（normal   not shareable）时性能最强</p>
-<h5 id="Cache"><a href="#Cache" class="headerlink" title="Cache"></a>Cache</h5><ul>
-<li><p>为什么要有cache？</p>
-<p>根据局部性原理，如果某个数据被访问了，那个它自身以及临近的数据都很有可能在不久的将来被访问，所以计算机决定把这些数据从慢速的主存放到快速且小的存储单元中，这个单元就是cache</p>
-</li>
-<li><p>cache是如何工作的</p>
-<p>当CPU需要读取数据时，先会查询要访问的内存地址，cache控制器检查这个地址的数据是否已经在cache中，如果检查到存在则直接从cache中将数据返回给CPU，如果检查到不存在触发cache miss，具体步骤为CPU先从主内存DRAM读取包含目标地址的整个数据块（为什么这样读取涉及映射策略），将数据块载入cache，并且用替换算法淘汰cache的旧块，淘汰旧块时检测旧块是否被CPU修改过（dirty bit&#x3D;1），若被修改过则需执行write back操作</p>
-<p>通过这一系列的操作将数据从cache返回至CPU中</p>
-</li>
-</ul>
-<p>内部FLASH仅需开启指令cache即可达到最高性能；</p>
-<p>外部QSPI FLASH开启读cache和写cache即可达到最高性能；</p>
-<p>DTCM和ITCM主频和CPU一样，无需配置MPU和cache；</p>
-<p>涉及到ADC+DMA读取或串口+DMA收发，在开启DMA前先clean，在读取DMA后invalidate；</p>
-<p>涉及到DMA的数据一致性问题解决思路：在输出层调用SCB_CleanInvalidateDCache（）；(一般不建议用这个函数，因为会带来性能损失的问题)</p>
-<p>SCB_InvalidateDCache_by_Addr：将指定地址与指定大小的Ram的内容同步到Cache中，典型使用场景为DMA接收。<br>SCB_CleanDCache_by_Addr：将指定地址与指定大小的Cache的内容同步到Ram中，典型使用场景为DMA发送。</p>
-<p><strong>使用函数SCB_InvalidateDCache_by_Addr，SCB_CleanDCache_by_Addr等函数注意事项</strong></p>
-<p><strong>addr ： 操作的地址一定要是32字节对齐的。</strong></p>
-<p><strong>dsize ：一定要是32字节的整数倍</strong></p>
+                <h1 id="FOC"><a href="#FOC" class="headerlink" title="FOC"></a>FOC</h1><h4 id="1-配置定时器输出三路PWM"><a href="#1-配置定时器输出三路PWM" class="headerlink" title="1.配置定时器输出三路PWM"></a>1.配置定时器输出三路PWM</h4><p>（这个方案基于驱动IC，驱动IC接收MCU3路PWM输入，转换成3对互补PWM输出，用于驱动三相桥的6个mosfet，并且驱动IC可以自动插入死区时间，如果选择不用驱动IC的方案则需手动配置6路互补PWM并且要考虑死区插入等一系列问题）</p>
+<p>注意pwm的三个参数：频率，分辨率，占空比</p>
+<h4 id="2-使电机转到固定电角度"><a href="#2-使电机转到固定电角度" class="headerlink" title="2.使电机转到固定电角度"></a>2.使电机转到固定电角度</h4><p>通过park反变换和clark反变换最终实现输入电角度和电压，输出合适的三相pwm</p>
+<h4 id="3-开环速度"><a href="#3-开环速度" class="headerlink" title="3.开环速度"></a>3.开环速度</h4><p>根据时间生成一个逐渐增大的电角度并调用相关函数即可让电机持续转动  </p>
+<p>这里要配置定时器并开启定时器中断</p>
+<p>最终实现输入速度，只要让电角度按固定步长增长，就能实现电机开环控制，固定步长的计算为循环运行时间间隔*目标速度（需要注意单位一致）</p>
+<h4 id="4-AS5600获取角度"><a href="#4-AS5600获取角度" class="headerlink" title="4.AS5600获取角度"></a>4.AS5600获取角度</h4><p>通过软件I2C与传感器通信</p>
+<h4 id="5-电角度对齐"><a href="#5-电角度对齐" class="headerlink" title="5.电角度对齐"></a>5.电角度对齐</h4><p>将AS5600和电角度的量程尺度化为一致</p>
+<h4 id="6-闭环位置"><a href="#6-闭环位置" class="headerlink" title="6.闭环位置"></a>6.闭环位置</h4><h4 id="7-AS5600获取速度（注意方向问题）"><a href="#7-AS5600获取速度（注意方向问题）" class="headerlink" title="7.AS5600获取速度（注意方向问题）"></a>7.AS5600获取速度（注意方向问题）</h4><p>传感器接收两次角度的差&#x2F;间隔时间&#x3D;角速度</p>
+<h4 id="8-闭环速度"><a href="#8-闭环速度" class="headerlink" title="8.闭环速度"></a>8.闭环速度</h4><p>引入pid算法，输入期望速度，计算需要的合适的q轴电压值，然后调用函数生成pwm波控制</p>
+<h4 id="9-闭环位置"><a href="#9-闭环位置" class="headerlink" title="9.闭环位置"></a>9.闭环位置</h4><h4 id="10-获取Iq电流"><a href="#10-获取Iq电流" class="headerlink" title="10.获取Iq电流"></a>10.获取Iq电流</h4><p>配置ADC+DMA用于读取采样电阻阻值（滤波），根据阻值算出电流</p>
+<h4 id="11-Iq电流闭环"><a href="#11-Iq电流闭环" class="headerlink" title="11.Iq电流闭环"></a>11.Iq电流闭环</h4><p>输入期望速度，计算需要的合适的q轴电流值</p>
+<h4 id="12-双闭环或者三闭环"><a href="#12-双闭环或者三闭环" class="headerlink" title="12.双闭环或者三闭环"></a>12.双闭环或者三闭环</h4><p>核心思想就是位置PID输出给速度环PID,速度环输出给电流环PID，在这个过程中可以限定输出范<br>围，如0.1A、速度。即限定力矩。  </p>
+<h4 id="13-CAN通信"><a href="#13-CAN通信" class="headerlink" title="13.CAN通信"></a>13.CAN通信</h4><p>硬件加入can收发器，软件加入can通信</p>
 
                 
               </div>
@@ -344,15 +317,6 @@
               <div class="post-metas my-3">
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/MCU/" class="print-no-link">#MCU</a>
-      
-        <a href="/tags/STM32H7/" class="print-no-link">#STM32H7</a>
-      
-    </div>
-  
 </div>
 
 
@@ -361,8 +325,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>MPU和cache</div>
-      <div>https://chesterforever.github.io/2024/09/20/MPU和cache/</div>
+      <div></div>
+      <div>https://chesterforever.github.io/2025/09/27/FOC/</div>
     </div>
     <div class="license-meta">
       
@@ -374,7 +338,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年9月20日</div>
+          <div>2025年9月27日</div>
         </div>
       
       
@@ -411,15 +375,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" title="FreeRTOS内核任务链表与状态切换">
+                      <a href="/2025/09/27/GPIO%E8%BF%9B%E9%98%B6%E5%AD%A6%E4%B9%A0%20%20%20%20%E9%9D%9E%E9%98%BB%E5%A1%9E%E5%BC%8F%E7%BC%96%E7%A8%8B/" title="">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">FreeRTOS内核任务链表与状态切换</span>
+                        <span class="hidden-mobile"></span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" title="FreeRTOS内核任务链表与状态切换">
+                        <span class="hidden-mobile">FreeRTOS内核任务链表与状态切换</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>

@@ -19,27 +19,23 @@
   <meta name="author" content="jiawei xu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="MPU和cache为什么要有MPU：阻止用户应用破坏关键任务；阻止代码注入攻击；改变内存访问属性； cache的作用：以H7为例，内核480M，RAM只有240M，通过cache就能实现类似倍频的效果； MPU一般有16个域，每个域配置8个等大小的子域（子域最小大小受cache line影响，禁止子域就是禁止该子域的MPU配置）优先级值越大，优先级越高，当域存在重叠时，以优先级高的域的配置为主；">
+    <meta name="description" content="代码优化策略 哪有什么代码优化，不过是空间和时间转化的策略罢了，实战当中要平衡好RAM空间与运行时间的关系  首先得了解不同编译器的优化模式，以keil为例，优化等级分为-o0，-o1，-o2，-o3，额外独立配置：-Ospace，-Otime；  -o0：不优化，优点是方便调试时变量查看，缺点是代码运行速度慢，占用内存大；（开发调试阶段） -o1：受限优化，平衡优化，优化不涉及“空间-时间”权衡">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MPU和cache">
-<meta property="og:url" content="https://chesterforever.github.io/2024/09/20/MPU%E5%92%8Ccache/index.html">
+<meta property="og:title" content="技术挖掘师">
+<meta property="og:url" content="https://chesterforever.github.io/2025/09/27/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/index.html">
 <meta property="og:site_name" content="技术挖掘师">
-<meta property="og:description" content="MPU和cache为什么要有MPU：阻止用户应用破坏关键任务；阻止代码注入攻击；改变内存访问属性； cache的作用：以H7为例，内核480M，RAM只有240M，通过cache就能实现类似倍频的效果； MPU一般有16个域，每个域配置8个等大小的子域（子域最小大小受cache line影响，禁止子域就是禁止该子域的MPU配置）优先级值越大，优先级越高，当域存在重叠时，以优先级高的域的配置为主；">
+<meta property="og:description" content="代码优化策略 哪有什么代码优化，不过是空间和时间转化的策略罢了，实战当中要平衡好RAM空间与运行时间的关系  首先得了解不同编译器的优化模式，以keil为例，优化等级分为-o0，-o1，-o2，-o3，额外独立配置：-Ospace，-Otime；  -o0：不优化，优点是方便调试时变量查看，缺点是代码运行速度慢，占用内存大；（开发调试阶段） -o1：受限优化，平衡优化，优化不涉及“空间-时间”权衡">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
-<meta property="article:published_time" content="2024-09-20T11:03:24.000Z">
-<meta property="article:modified_time" content="2025-09-27T13:59:04.105Z">
+<meta property="article:published_time" content="2025-09-27T14:07:00.924Z">
+<meta property="article:modified_time" content="2025-09-03T13:21:49.498Z">
 <meta property="article:author" content="jiawei xu">
-<meta property="article:tag" content="MCU">
-<meta property="article:tag" content="STM32H7">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>MPU和cache - 技术挖掘师</title>
+  <title>技术挖掘师</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +212,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="MPU和cache"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -237,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          1.8k 字
         
       </span>
     
@@ -248,7 +244,7 @@
         
         
         
-          12 分钟
+          16 分钟
         
       </span>
     
@@ -285,12 +281,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">MPU和cache</h1>
+            <h1 id="seo-header"></h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于 2025年9月27日 晚上
+                    本文最后更新于 2025年9月3日 晚上
                   
                 
               </p>
@@ -298,43 +294,52 @@
             
               <div class="markdown-body">
                 
-                <h1 id="MPU和cache"><a href="#MPU和cache" class="headerlink" title="MPU和cache"></a><strong>MPU和cache</strong></h1><p>为什么要有MPU：阻止用户应用破坏关键任务；阻止代码注入攻击；改变内存访问属性；</p>
-<p>cache的作用：以H7为例，内核480M，RAM只有240M，通过cache就能实现类似倍频的效果；</p>
-<p>MPU一般有16个域，每个域配置8个等大小的子域（子域最小大小受cache line影响，禁止子域就是禁止该子域的MPU配置）优先级值越大，优先级越高，当域存在重叠时，以优先级高的域的配置为主；</p>
-<p>内存类型分为下面三种类型</p>
-<p>Normal memory：由DRAM，SRAM，FLASH等通用存储介质组成，支持cache缓存，预取，允许乱序访问，缓冲合并，充分发挥了各种机制，所以性能最强；</p>
-<p>Device memory：内存映射外部寄存器，不可缓存，不可预取，严格顺序访问，禁止写合并，性能稍差；</p>
-<p>Strongly-ordered Memory：系统关键组件，不可缓存，不可预取，绝对顺序执行(严格按照指令顺序执行)，禁止任何缓冲，所有访问全局可观察，性能最差，访问延迟最长；</p>
-<p><strong>MPU配置：</strong>  </p>
-<p>内存属性</p>
-<p>XN：执行禁止，标记内存区域是否允许执行指令，默认使能即可；</p>
-<p>AP：访问权限，决定CPU特权级和用户级的读写权限；</p>
-<p>TEX:拓展内存类型；</p>
-<p>S：是否支持多核&#x2F;总线主设备共享；</p>
-<p>C：数据是否可缓存；</p>
-<p>B：写操作是否允许缓冲；</p>
-<img src="/2024/09/20/MPU%E5%92%8Ccache/0592f54a-de70-4e12-95e2-cc8cfc6e6b74.png" srcset="/img/loading.gif" lazyload class="">
-
-<p><img src="/2024/09/20/MPU%E5%92%8Ccache/0592f54a-de70-4e12-95e2-cc8cfc6e6b74.png" srcset="/img/loading.gif" lazyload></p>
-<p>配置为1011（normal   not shareable）时性能最强</p>
-<h5 id="Cache"><a href="#Cache" class="headerlink" title="Cache"></a>Cache</h5><ul>
-<li><p>为什么要有cache？</p>
-<p>根据局部性原理，如果某个数据被访问了，那个它自身以及临近的数据都很有可能在不久的将来被访问，所以计算机决定把这些数据从慢速的主存放到快速且小的存储单元中，这个单元就是cache</p>
-</li>
-<li><p>cache是如何工作的</p>
-<p>当CPU需要读取数据时，先会查询要访问的内存地址，cache控制器检查这个地址的数据是否已经在cache中，如果检查到存在则直接从cache中将数据返回给CPU，如果检查到不存在触发cache miss，具体步骤为CPU先从主内存DRAM读取包含目标地址的整个数据块（为什么这样读取涉及映射策略），将数据块载入cache，并且用替换算法淘汰cache的旧块，淘汰旧块时检测旧块是否被CPU修改过（dirty bit&#x3D;1），若被修改过则需执行write back操作</p>
-<p>通过这一系列的操作将数据从cache返回至CPU中</p>
-</li>
+                <h1 id="代码优化策略"><a href="#代码优化策略" class="headerlink" title="代码优化策略"></a>代码优化策略</h1><blockquote>
+<p>哪有什么代码优化，不过是空间和时间转化的策略罢了，实战当中要平衡好RAM空间与运行时间的关系</p>
+</blockquote>
+<p>首先得了解不同编译器的优化模式，以keil为例，优化等级分为-o0，-o1，-o2，-o3，额外独立配置：-Ospace，-Otime；</p>
+<ul>
+<li>-o0：不优化，优点是方便调试时变量查看，缺点是代码运行速度慢，占用内存大；（开发调试阶段）</li>
+<li>-o1：受限优化，平衡优化，优化不涉及“空间-时间”权衡，只进行优化如删除未使用的函数，变量；（测试优化阶段）</li>
+<li>-o2：高性能优化，执行包括指令调度在内的大量优化，包括展开小的循环，缺点是代码尺寸增加，变量可能被优化；（电机控制，数字信号处理，低端MCU）</li>
+<li>-o3：极致性能优化，在-o2基础上采取更激进策略（大量循环展开，更激进的函数内联），代码体积急速膨胀；（核心算法循环）</li>
+<li>-Ospace：偏向减小代码尺寸，比如-o2下选择不展开循环；（默认选项）</li>
+<li>-Otime：偏向提高运行速度，比如-o1下尝试内联小函数；</li>
 </ul>
-<p>内部FLASH仅需开启指令cache即可达到最高性能；</p>
-<p>外部QSPI FLASH开启读cache和写cache即可达到最高性能；</p>
-<p>DTCM和ITCM主频和CPU一样，无需配置MPU和cache；</p>
-<p>涉及到ADC+DMA读取或串口+DMA收发，在开启DMA前先clean，在读取DMA后invalidate；</p>
-<p>涉及到DMA的数据一致性问题解决思路：在输出层调用SCB_CleanInvalidateDCache（）；(一般不建议用这个函数，因为会带来性能损失的问题)</p>
-<p>SCB_InvalidateDCache_by_Addr：将指定地址与指定大小的Ram的内容同步到Cache中，典型使用场景为DMA接收。<br>SCB_CleanDCache_by_Addr：将指定地址与指定大小的Cache的内容同步到Ram中，典型使用场景为DMA发送。</p>
-<p><strong>使用函数SCB_InvalidateDCache_by_Addr，SCB_CleanDCache_by_Addr等函数注意事项</strong></p>
-<p><strong>addr ： 操作的地址一定要是32字节对齐的。</strong></p>
-<p><strong>dsize ：一定要是32字节的整数倍</strong></p>
+<p>不同优化最容易出问题的地方：延迟类函数，for循环</p>
+<p>keil中可以对不同文件夹设置不同优先级，这也是为什么要对架构进行设计，实战中可以试着逐步提高优化优先级，但有时候0级优化反而会出现问题</p>
+<p>![0d7110db-b55b-4d7b-b978-51d18a3e3591](C:\Users\41658\Desktop\系统性再学习\代码优化策略  picture\0d7110db-b55b-4d7b-b978-51d18a3e3591.png)</p>
+<ul>
+<li>总结：当使用for多重嵌套且最内层for只进行少量操作时，for本体就会占用大部分MCU周期频率，与内核指令流水线操作有关；（tip：需强化相关汇编知识）</li>
+</ul>
+<p>![9ca4347e-2caa-42bf-83d1-5c88dabaf46f](C:\Users\41658\Desktop\系统性再学习\代码优化策略  picture\9ca4347e-2caa-42bf-83d1-5c88dabaf46f.png)</p>
+<ul>
+<li>总结：缓存区域越大命中率越高（tip：有空做个实验）</li>
+</ul>
+<p>![6a76902b-5689-4c96-8ba0-4cf1587d809d](C:\Users\41658\Desktop\系统性再学习\代码优化策略  picture\6a76902b-5689-4c96-8ba0-4cf1587d809d.png)</p>
+<ul>
+<li>总结：对于需要频繁调用且函数内部操作少的情况，可以考虑内联</li>
+</ul>
+<p>![99677660-3675-40bb-a099-d37b594d94f0](C:\Users\41658\Desktop\系统性再学习\代码优化策略  picture\99677660-3675-40bb-a099-d37b594d94f0.png)</p>
+<ul>
+<li>总结：单独对函数设置优化等级操作</li>
+</ul>
+<p>![a7d4d9a5-3e54-4a56-a4a7-978dc52697f5](C:\Users\41658\Desktop\系统性再学习\代码优化策略  picture\a7d4d9a5-3e54-4a56-a4a7-978dc52697f5.png)</p>
+<ul>
+<li>总结：无法go to define的原因（如果是局部变量go to不到很正常）</li>
+</ul>
+<p>![e708b2c5-462b-4605-ad0f-6d783fd4492b](C:\Users\41658\Desktop\系统性再学习\代码优化策略  picture\e708b2c5-462b-4605-ad0f-6d783fd4492b.png)</p>
+<ul>
+<li>总结：结构体成员对齐要看定义顺序，按成员大小降序排列可最小化填充！</li>
+</ul>
+<p><strong>简化数据结构</strong>：使用位域（bit-field）存储标志位，使用联合体（union）节省空间</p>
+<p><strong>合理使用ITCM和DTCM也可以优化代码</strong></p>
+<p>第一种方法：通过修改链接脚本的分配地址将中间件代码（RTOS调度算法，其他算法）分配到TCM上</p>
+<p>第二种方法:</p>
+<p><em>&#x2F;&#x2F; 在代码中</em> </p>
+<p><code>__attribute__((section(&quot;.itcm_text&quot;))) void critical_motor_control_loop(void) {    *// 这个函数会被编译到.itcm_text段*    *// ... 极其时间敏感的代码* }</code></p>
+<p><strong>NEON是ARM的SIMD技术，通过128位寄存器实现数据并行处理，显著提升多媒体、信号处理等场景的性能。</strong></p>
+<p><strong>学习抢占优先级和响应优先级的设计架构</strong>（有效地拓展了优先级个数却不占用代码运行时间）</p>
 
                 
               </div>
@@ -344,15 +349,6 @@
               <div class="post-metas my-3">
   
   
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/MCU/" class="print-no-link">#MCU</a>
-      
-        <a href="/tags/STM32H7/" class="print-no-link">#STM32H7</a>
-      
-    </div>
-  
 </div>
 
 
@@ -361,8 +357,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>MPU和cache</div>
-      <div>https://chesterforever.github.io/2024/09/20/MPU和cache/</div>
+      <div></div>
+      <div>https://chesterforever.github.io/2025/09/27/代码优化策略/</div>
     </div>
     <div class="license-meta">
       
@@ -374,13 +370,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年9月20日</div>
+          <div>2025年9月27日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年9月27日</div>
+          <div>2025年9月3日</div>
         </div>
       
       
@@ -411,15 +407,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" title="FreeRTOS内核任务链表与状态切换">
+                      <a href="/2025/09/27/%E5%88%86%E6%95%A3%E5%8A%A0%E8%BD%BD/" title="">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">FreeRTOS内核任务链表与状态切换</span>
+                        <span class="hidden-mobile"></span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2025/09/27/%E5%B8%B8%E7%94%A8%E4%BD%86%E4%B8%8D%E7%86%9F%E6%82%89%E7%9A%84%E7%BC%96%E8%AF%91%E5%99%A8%E6%8B%93%E5%B1%95%E5%AD%A6%E4%B9%A0/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
