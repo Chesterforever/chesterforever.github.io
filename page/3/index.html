@@ -28,6 +28,8 @@
 <meta name="twitter:card" content="summary_large_image">
   
   
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
   
   <title>技术挖掘师</title>
 
@@ -253,7 +255,7 @@
       
       <a class="index-excerpt " href="/2024/04/20/NVIC%E4%B8%AD%E6%96%AD%E7%AE%A1%E7%90%86%E5%92%8C%E4%BC%98%E5%85%88%E7%BA%A7%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D/" target="_blank">
         <div>
-          NVIC中断管理和优先级动态分配 抢占优先级（可以抢占） 子优先级（不能抢占，只能优先） 数值越小越优先； 在debug中可以看NVIC(路径是debug中全速运行，然后打开外设栏，内核外设栏，NVIC) （此处缺少一张截图） E指enable，P指挂起，A指active； 尽量多用局部中断少用全局中断（以串口FIFO为例，用到哪个外设就调用那个外设的中断而非全局中断）； 中断中不要做64倍除法，
+          
         </div>
       </a>
 
@@ -292,7 +294,7 @@
       
       <a class="index-excerpt " href="/2023/11/05/HAL%E5%BA%93%E5%92%8CLL%E5%BA%93%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/" target="_blank">
         <div>
-          HAL库和LL库（可以混合使用） hal库：函数复杂，但是直接对寄存器调用，移植方便 LL库：使用很多内联函数（省去进入和退出函数的时间）高效速度快 hal库： 以_IT为后缀结尾表示中断方式 用cubemx配高速时钟注意检查晶振大小要相同  HAL_Init:配置NVIC 更新全局变量SystemCoreClock（此时用的还是内部HSI48M时钟） SystemClock_Config:配置时
+          
         </div>
       </a>
 
@@ -369,6 +371,32 @@
     </div>
   
   
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
   
 </div>
 
@@ -420,6 +448,8 @@
 
 
   <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 

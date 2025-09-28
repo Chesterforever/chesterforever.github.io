@@ -28,6 +28,8 @@
 <meta name="twitter:card" content="summary_large_image">
   
   
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
   
   <title>技术挖掘师</title>
 
@@ -253,7 +255,7 @@
       
       <a class="index-excerpt " href="/2025/09/29/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E4%B8%AD%E6%96%AD%E7%9A%84%E6%80%9D%E8%80%83/" target="_blank">
         <div>
-          关于一些特殊中断的思考引言​    最近有一起实习的同学问我PendSV中断在FreeRTOS运行过程中是否会“堆积”导致任务调度失败，答案当然是不会。   ​    这是因为当有任务需要调度时，PendSV中断并不会直接抢占，而是先被systick挂起，由于PendSV中断通常设置为最低优先级，所以在systick中断结束后还需要看是否有其他高优先级的中断需要执行，然后最后才会在空闲时轮到Pen
+          
         </div>
       </a>
 
@@ -294,7 +296,7 @@
       
       <a class="index-excerpt " href="/2025/09/05/%E5%85%AB%E8%82%A1%E5%A4%A7%E6%9D%82%E7%83%A9/" target="_blank">
         <div>
-          八股大杂烩目录1.裸机和RTOS如何选择2.RTOS如何保证实时性 3.FreeRTOS源码如何实现任务调度 4.FreeRTOS如何实现任务切换 5.怎么判断能驱动几路电机 6.如何判断主频能带动多少电机 7.摄像头驱动底层，如何检测驱动错误 8.如果打印日志，如何根据日志排查12C驱动 9.12C驱动的时序 10.为什么需要头文件 11.头文件分尖括号和双引号，应该如何写引入的顺序 12.就是
+          
         </div>
       </a>
 
@@ -333,7 +335,7 @@
       
       <a class="index-excerpt " href="/2025/08/31/%E6%9C%89%E6%95%88%E5%87%8F%E5%B0%91%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84bug%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95/" target="_blank">
         <div>
-          有效减少莫名奇妙的bug的一些方法1234567// 禁用DMA__HAL_DMA_DISABLE(&amp;hdma_spi1_rx);// 等待DMA被禁用（确保DMA已停止）while(hdma_spi1_rx.Instance-&gt;CR &amp; DMA_SxCR_EN)&#123;    __HAL_DMA_DISABLE(&amp;hdma_spi1_rx);&#125;   禁
+          
         </div>
       </a>
 
@@ -374,7 +376,7 @@
       
       <a class="index-excerpt " href="/2025/07/25/CAN%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%86%8D%E5%AD%A6%E4%B9%A0/" target="_blank">
         <div>
-          CAN学习 错误帧 过载帧 帧间隔：主动 ​                被动 位填充（连续5个电平后自动发个一个相反电平）：防止波形长时间无变化 ​               将正常数据流与错误帧和过载帧区分开 ​               防止被误认为总线空闲
+          
         </div>
       </a>
 
@@ -415,7 +417,7 @@
       
       <a class="index-excerpt " href="/2025/07/05/%E5%B8%B8%E7%94%A8%E4%BD%86%E4%B8%8D%E7%86%9F%E6%82%89%E7%9A%84%E7%BC%96%E8%AF%91%E5%99%A8%E6%8B%93%E5%B1%95%E5%AD%A6%E4%B9%A0/" target="_blank">
         <div>
-          常用却不熟悉的编译器拓展学习 需要注意的是有些代码架构其实是ARM编译器或GCC&#x2F;CLANG特有的变量属性，如果高频使用的话可能会导致系统可移植性和鲁棒性变差，可读性也会变差，“在必要处使用，避免炫技”  __attribute____attribute__ ：它是 GNU C 编译器（GCC）提供的一种编译器指令（Compiler Directive） 或扩展语法。它允许开发者向编译器
+          
         </div>
       </a>
 
@@ -456,7 +458,7 @@
       
       <a class="index-excerpt " href="/2025/07/02/C++%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%AD%A6%E4%B9%A0/" target="_blank">
         <div>
-          C++系统性学习
+          
         </div>
       </a>
 
@@ -495,7 +497,7 @@
       
       <a class="index-excerpt " href="/2025/06/20/MDK%E5%BA%94%E7%94%A8/" target="_blank">
         <div>
-          MDK应用 JTAG(20PIN) SWD(5PIN) 可以在debug时看全局变量 局部变量 在memory里看数据  Hardfault  硬件异常 内存异常 总线异常 处理异常 触发不同异常进入的各种中断可以配置优先级（实战好像没什么用） 本质就是通过硬件寄存器检测数据对不对，不对就触发中断.   进入异常后，判断LR寄存器bit2，如果等于0就把MSP给R0，如果等于1就把PSP给R0，最
+          
         </div>
       </a>
 
@@ -536,7 +538,7 @@
       
       <a class="index-excerpt " href="/2025/05/12/C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E7%BB%A7%E6%89%BF%EF%BC%8C%E5%B0%81%E8%A3%85%EF%BC%8C%E5%A4%9A%E6%80%81/" target="_blank">
         <div>
-          C语言实现继承，封装，多态不透明指针实现封装 123456789101112131415161718192021222324252627// person.h （头文件）typedef struct Person Person; // 前向声明Person* person_create(const char* name, int age);void person_destroy(Person* p
+          
         </div>
       </a>
 
@@ -575,7 +577,7 @@
       
       <a class="index-excerpt " href="/2025/04/01/Kalman%20%E6%BB%A4%E6%B3%A2/" target="_blank">
         <div>
-          Kalman 滤波 怎么选择状态量和观测量 怎么建立状态方程和观测方程
+          
         </div>
       </a>
 
@@ -614,7 +616,7 @@
       
       <a class="index-excerpt " href="/2025/03/22/MIPI%E5%8D%8F%E8%AE%AE/" target="_blank">
         <div>
-          MIPI协议 两种工作模式： HS：主要用于高速的数据传输，功耗较大 LP：主要用于低速的一些控制信号，功耗较小  数据处理  字节对齐 lane对齐 数据解包 像素解包
+          
         </div>
       </a>
 
@@ -693,6 +695,32 @@
     </div>
   
   
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
   
 </div>
 
@@ -744,6 +772,8 @@
 
 
   <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
 
 
 
