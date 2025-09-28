@@ -237,6 +237,45 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="FreeRTOS内核任务链表与状态切换">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" target="_blank">
+          FreeRTOS内核任务链表与状态切换
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" target="_blank">
+        <div>
+          FreeRTOS内核任务链表与状态切换首先创建(静态)任务会在SRAM里的.bss段的FreeRTOS_HEAP_SIZE里生成一个TCB块   TCB块里会有一个结构体，这个结构体存储了以下数据   pxTopOfStack指向该任务的栈顶（通过PSP指针初始化栈寄存器） *pxStack指向该任务的栈底 比较关键的是xStateListitem和xEventListitem这两个成员 xSta
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/RTOS/">#RTOS</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2025/03/05/bootloader/" target="_blank">
           <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="bootloader">
         </a>
@@ -574,45 +613,6 @@
       <a class="index-excerpt " href="/2024/04/25/%E8%8A%AF%E7%89%87%E5%90%AF%E5%8A%A8%E5%88%B0%E8%BF%90%E8%A1%8C%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BB%A5stm32H7%E7%B3%BB%E5%88%97%E4%B8%BA%E4%BE%8B%EF%BC%89/" target="_blank">
         <div>
           芯片启动到运行流程（以stm32H7系列为例）1.芯片供电域（看芯片手册） 2.上电启动流程（从硬件上看） 上电复位和手动复位都是操作电容         从图上看感觉就是各种时钟的初始化 3.软件启动流程 启动文件路径（Drivers-&gt;CMSIS-&gt;Device-&gt;ST-&gt;STM32H7xx-&gt;Source-&gt;Templates-&gt;各种种类启动文件如i
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/MCU/">#MCU</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2024/04/20/NVIC%E4%B8%AD%E6%96%AD%E7%AE%A1%E7%90%86%E5%92%8C%E4%BC%98%E5%85%88%E7%BA%A7%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D/" target="_blank">
-          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="NVIC中断管理和优先级动态分配">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2024/04/20/NVIC%E4%B8%AD%E6%96%AD%E7%AE%A1%E7%90%86%E5%92%8C%E4%BC%98%E5%85%88%E7%BA%A7%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D/" target="_blank">
-          NVIC中断管理和优先级动态分配
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2024/04/20/NVIC%E4%B8%AD%E6%96%AD%E7%AE%A1%E7%90%86%E5%92%8C%E4%BC%98%E5%85%88%E7%BA%A7%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D/" target="_blank">
-        <div>
-          NVIC中断管理和优先级动态分配 抢占优先级（可以抢占） 子优先级（不能抢占，只能优先） 数值越小越优先； 在debug中可以看NVIC(路径是debug中全速运行，然后打开外设栏，内核外设栏，NVIC) （此处缺少一张截图） E指enable，P指挂起，A指active； 尽量多用局部中断少用全局中断（以串口FIFO为例，用到哪个外设就调用那个外设的中断而非全局中断）； 中断中不要做64倍除法，
         </div>
       </a>
 

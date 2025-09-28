@@ -237,6 +237,47 @@
     
     
       <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2025/09/29/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E4%B8%AD%E6%96%AD%E7%9A%84%E6%80%9D%E8%80%83/" target="_blank">
+          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="关于一些特殊中断的思考">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2025/09/29/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E4%B8%AD%E6%96%AD%E7%9A%84%E6%80%9D%E8%80%83/" target="_blank">
+          关于一些特殊中断的思考
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2025/09/29/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E4%B8%AD%E6%96%AD%E7%9A%84%E6%80%9D%E8%80%83/" target="_blank">
+        <div>
+          关于一些特殊中断的思考引言​    最近有一起实习的同学问我PendSV中断在FreeRTOS运行过程中是否会“堆积”导致任务调度失败，答案当然是不会。   ​    这是因为当有任务需要调度时，PendSV中断并不会直接抢占，而是先被systick挂起，由于PendSV中断通常设置为最低优先级，所以在systick中断结束后还需要看是否有其他高优先级的中断需要执行，然后最后才会在空闲时轮到Pen
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/MCU/">#MCU</a>
+            
+              <a href="/tags/RTOS/">#RTOS</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
         <a href="/2025/09/05/%E5%85%AB%E8%82%A1%E5%A4%A7%E6%9D%82%E7%83%A9/" target="_blank">
           <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="八股大杂烩">
         </a>
@@ -587,45 +628,6 @@
               <a href="/tags/FPGA/">#FPGA</a>
             
               <a href="/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/">#音视频</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" target="_blank">
-          <img src="/img/avatar.png" srcset="/img/loading.gif" lazyload alt="FreeRTOS内核任务链表与状态切换">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" target="_blank">
-          FreeRTOS内核任务链表与状态切换
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt " href="/2025/03/05/FreeRTOS%E5%86%85%E6%A0%B8%E4%BB%BB%E5%8A%A1%E9%93%BE%E8%A1%A8%E4%B8%8E%E7%8A%B6%E6%80%81%E5%88%87%E6%8D%A2/" target="_blank">
-        <div>
-          FreeRTOS内核任务链表与状态切换首先创建(静态)任务会在SRAM里的.bss段的FreeRTOS_HEAP_SIZE里生成一个TCB块   TCB块里会有一个结构体，这个结构体存储了以下数据   pxTopOfStack指向该任务的栈顶（通过PSP指针初始化栈寄存器） *pxStack指向该任务的栈底 比较关键的是xStateListitem和xEventListitem这两个成员 xSta
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/RTOS/">#RTOS</a>
             
           </div>
         
