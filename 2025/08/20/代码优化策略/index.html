@@ -22,13 +22,13 @@
     <meta name="description" content="代码优化策略 哪有什么代码优化，不过是空间和时间转化的策略罢了，实战当中要平衡好RAM空间与运行时间的关系  首先得了解不同编译器的优化模式，以keil为例，优化等级分为-o0，-o1，-o2，-o3，额外独立配置：-Ospace，-Otime；  -o0：不优化，优点是方便调试时变量查看，缺点是代码运行速度慢，占用内存大；（开发调试阶段） -o1：受限优化，平衡优化，优化不涉及“空间-时间”权衡">
 <meta property="og:type" content="article">
 <meta property="og:title" content="代码优化策略">
-<meta property="og:url" content="https://chesterforever.github.io/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/index.html">
+<meta property="og:url" content="https://chesterforever.github.io/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/index.html">
 <meta property="og:site_name" content="技术挖掘师">
 <meta property="og:description" content="代码优化策略 哪有什么代码优化，不过是空间和时间转化的策略罢了，实战当中要平衡好RAM空间与运行时间的关系  首先得了解不同编译器的优化模式，以keil为例，优化等级分为-o0，-o1，-o2，-o3，额外独立配置：-Ospace，-Otime；  -o0：不优化，优点是方便调试时变量查看，缺点是代码运行速度慢，占用内存大；（开发调试阶段） -o1：受限优化，平衡优化，优化不涉及“空间-时间”权衡">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
-<meta property="article:published_time" content="2024-09-01T19:45:04.000Z">
-<meta property="article:modified_time" content="2025-09-27T15:08:14.692Z">
+<meta property="article:published_time" content="2025-08-19T19:45:04.000Z">
+<meta property="article:modified_time" content="2025-10-03T16:08:38.307Z">
 <meta property="article:author" content="jiawei xu">
 <meta property="article:tag" content="MCU">
 <meta name="twitter:card" content="summary_large_image">
@@ -312,32 +312,32 @@
 </ul>
 <p>不同优化最容易出问题的地方：延迟类函数，for循环</p>
 <p>keil中可以对不同文件夹设置不同优先级，这也是为什么要对架构进行设计，实战中可以试着逐步提高优化优先级，但有时候0级优化反而会出现问题</p>
-<img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/0d7110db-b55b-4d7b-b978-51d18a3e3591.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/0d7110db-b55b-4d7b-b978-51d18a3e3591.png" srcset="/img/loading.gif" lazyload class="">
 
 <ul>
 <li>总结：当使用for多重嵌套且最内层for只进行少量操作时，for本体就会占用大部分MCU周期频率，与内核指令流水线操作有关；（tip：需强化相关汇编知识）</li>
 </ul>
-<img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/9ca4347e-2caa-42bf-83d1-5c88dabaf46f.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/9ca4347e-2caa-42bf-83d1-5c88dabaf46f.png" srcset="/img/loading.gif" lazyload class="">
 
 <ul>
 <li>总结：缓存区域越大命中率越高（tip：有空做个实验）</li>
 </ul>
-<img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/6a76902b-5689-4c96-8ba0-4cf1587d809d.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/6a76902b-5689-4c96-8ba0-4cf1587d809d.png" srcset="/img/loading.gif" lazyload class="">
 
 <ul>
 <li>总结：对于需要频繁调用且函数内部操作少的情况，可以考虑内联</li>
 </ul>
-<img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/99677660-3675-40bb-a099-d37b594d94f0.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/99677660-3675-40bb-a099-d37b594d94f0.png" srcset="/img/loading.gif" lazyload class="">
 
 <ul>
 <li>总结：单独对函数设置优化等级操作</li>
 </ul>
-<img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/a7d4d9a5-3e54-4a56-a4a7-978dc52697f5.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/a7d4d9a5-3e54-4a56-a4a7-978dc52697f5.png" srcset="/img/loading.gif" lazyload class="">
 
 <ul>
 <li>总结：无法go to define的原因（如果是局部变量go to不到很正常）</li>
 </ul>
-<img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/e708b2c5-462b-4605-ad0f-6d783fd4492b.png" srcset="/img/loading.gif" lazyload class="">
+<img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/e708b2c5-462b-4605-ad0f-6d783fd4492b.png" srcset="/img/loading.gif" lazyload class="">
 
 <ul>
 <li>总结：结构体成员对齐要看定义顺序，按成员大小降序排列可最小化填充！</li>
@@ -375,7 +375,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>代码优化策略</div>
-      <div>https://chesterforever.github.io/2024/09/02/代码优化策略/</div>
+      <div>https://chesterforever.github.io/2025/08/20/代码优化策略/</div>
     </div>
     <div class="license-meta">
       
@@ -387,7 +387,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年9月2日</div>
+          <div>2025年8月20日</div>
         </div>
       
       
@@ -419,9 +419,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/09/20/MPU%E5%92%8Ccache/" title="MPU和cache">
+                      <a href="/2025/08/31/%E6%9C%89%E6%95%88%E5%87%8F%E5%B0%91%E8%8E%AB%E5%90%8D%E5%A5%87%E5%A6%99%E7%9A%84bug%E7%9A%84%E4%B8%80%E4%BA%9B%E6%96%B9%E6%B3%95/" title="有效减少莫名奇妙的bug的一些方法">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">MPU和cache</span>
+                        <span class="hidden-mobile">有效减少莫名奇妙的bug的一些方法</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -429,8 +429,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/08/20/STM32H750VBT6%E5%AD%A6%E4%B9%A0/" title="STM32H750VBT6学习">
-                        <span class="hidden-mobile">STM32H750VBT6学习</span>
+                      <a href="/2025/08/03/%E4%BB%A3%E7%A0%81%E7%BC%96%E8%AF%91%EF%BC%8C%E9%93%BE%E6%8E%A5%EF%BC%8C%E7%83%A7%E5%BD%95%E5%85%A8%E8%BF%87%E7%A8%8B/" title="一篇文章讲明白代码编译，链接，烧录全过程（尽可能涵盖不同芯片和不同编译器）">
+                        <span class="hidden-mobile">一篇文章讲明白代码编译，链接，烧录全过程（尽可能涵盖不同芯片和不同编译器）</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

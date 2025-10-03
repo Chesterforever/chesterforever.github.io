@@ -103,6 +103,25 @@
   
   
   <entry>
+    <title>代码优化策略</title>
+    <link href="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/"/>
+    <url>/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/</url>
+    
+    <content type="html"><![CDATA[<h1 id="代码优化策略"><a href="#代码优化策略" class="headerlink" title="代码优化策略"></a>代码优化策略</h1><blockquote><p>哪有什么代码优化，不过是空间和时间转化的策略罢了，实战当中要平衡好RAM空间与运行时间的关系</p></blockquote><p>首先得了解不同编译器的优化模式，以keil为例，优化等级分为-o0，-o1，-o2，-o3，额外独立配置：-Ospace，-Otime；</p><ul><li>-o0：不优化，优点是方便调试时变量查看，缺点是代码运行速度慢，占用内存大；（开发调试阶段）</li><li>-o1：受限优化，平衡优化，优化不涉及“空间-时间”权衡，只进行优化如删除未使用的函数，变量；（测试优化阶段）</li><li>-o2：高性能优化，执行包括指令调度在内的大量优化，包括展开小的循环，缺点是代码尺寸增加，变量可能被优化；（电机控制，数字信号处理，低端MCU）</li><li>-o3：极致性能优化，在-o2基础上采取更激进策略（大量循环展开，更激进的函数内联），代码体积急速膨胀；（核心算法循环）</li><li>-Ospace：偏向减小代码尺寸，比如-o2下选择不展开循环；（默认选项）</li><li>-Otime：偏向提高运行速度，比如-o1下尝试内联小函数；</li></ul><p>不同优化最容易出问题的地方：延迟类函数，for循环</p><p>keil中可以对不同文件夹设置不同优先级，这也是为什么要对架构进行设计，实战中可以试着逐步提高优化优先级，但有时候0级优化反而会出现问题</p><img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/0d7110db-b55b-4d7b-b978-51d18a3e3591.png" class=""><ul><li>总结：当使用for多重嵌套且最内层for只进行少量操作时，for本体就会占用大部分MCU周期频率，与内核指令流水线操作有关；（tip：需强化相关汇编知识）</li></ul><img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/9ca4347e-2caa-42bf-83d1-5c88dabaf46f.png" class=""><ul><li>总结：缓存区域越大命中率越高（tip：有空做个实验）</li></ul><img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/6a76902b-5689-4c96-8ba0-4cf1587d809d.png" class=""><ul><li>总结：对于需要频繁调用且函数内部操作少的情况，可以考虑内联</li></ul><img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/99677660-3675-40bb-a099-d37b594d94f0.png" class=""><ul><li>总结：单独对函数设置优化等级操作</li></ul><img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/a7d4d9a5-3e54-4a56-a4a7-978dc52697f5.png" class=""><ul><li>总结：无法go to define的原因（如果是局部变量go to不到很正常）</li></ul><img src="/2025/08/20/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/e708b2c5-462b-4605-ad0f-6d783fd4492b.png" class=""><ul><li>总结：结构体成员对齐要看定义顺序，按成员大小降序排列可最小化填充！</li></ul><p><strong>简化数据结构</strong>：使用位域（bit-field）存储标志位，使用联合体（union）节省空间</p><p><strong>合理使用ITCM和DTCM也可以优化代码</strong></p><p>第一种方法：通过修改链接脚本的分配地址将中间件代码（RTOS调度算法，其他算法）分配到TCM上</p><p>第二种方法:</p><p><em>&#x2F;&#x2F; 在代码中</em> </p><p><code>__attribute__((section(&quot;.itcm_text&quot;))) void critical_motor_control_loop(void) &#123;    *// 这个函数会被编译到.itcm_text段*    *// ... 极其时间敏感的代码* &#125;</code></p><p><strong>NEON是ARM的SIMD技术，通过128位寄存器实现数据并行处理，显著提升多媒体、信号处理等场景的性能。</strong></p><p><strong>学习抢占优先级和响应优先级的设计架构</strong>（有效地拓展了优先级个数却不占用代码运行时间）</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>MCU</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>一篇文章讲明白代码编译，链接，烧录全过程（尽可能涵盖不同芯片和不同编译器）</title>
     <link href="/2025/08/03/%E4%BB%A3%E7%A0%81%E7%BC%96%E8%AF%91%EF%BC%8C%E9%93%BE%E6%8E%A5%EF%BC%8C%E7%83%A7%E5%BD%95%E5%85%A8%E8%BF%87%E7%A8%8B/"/>
     <url>/2025/08/03/%E4%BB%A3%E7%A0%81%E7%BC%96%E8%AF%91%EF%BC%8C%E9%93%BE%E6%8E%A5%EF%BC%8C%E7%83%A7%E5%BD%95%E5%85%A8%E8%BF%87%E7%A8%8B/</url>
@@ -326,7 +345,7 @@
     <link href="/2025/01/20/%E5%88%86%E6%95%A3%E5%8A%A0%E8%BD%BD/"/>
     <url>/2025/01/20/%E5%88%86%E6%95%A3%E5%8A%A0%E8%BD%BD/</url>
     
-    <content type="html"><![CDATA[<h1 id="分散加载"><a href="#分散加载" class="headerlink" title="分散加载"></a><strong>分散加载</strong></h1><img src="/2025/01/20/%E5%88%86%E6%95%A3%E5%8A%A0%E8%BD%BD/image-20250811162225845.png" class=""><p>这块碰到再详细学一下，感觉实战应用场景应该是特别大的项目</p><p><a href="https://www.bilibili.com/video/BV1MR4y157XS?t=2457.3">https://www.bilibili.com/video/BV1MR4y157XS?t=2457.3</a></p>]]></content>
+    <content type="html"><![CDATA[<h1 id="分散加载"><a href="#分散加载" class="headerlink" title="分散加载"></a><strong>分散加载</strong></h1><img src="/2025/01/20/%E5%88%86%E6%95%A3%E5%8A%A0%E8%BD%BD/image-20250811162225845.png" class=""><p>这块碰到再详细学一下</p><p><a href="https://www.bilibili.com/video/BV1MR4y157XS?t=2457.3">https://www.bilibili.com/video/BV1MR4y157XS?t=2457.3</a></p>]]></content>
     
     
     
@@ -345,7 +364,7 @@
     <link href="/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/"/>
     <url>/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</url>
     
-    <content type="html"><![CDATA[<h4 id="MCU启动流程"><a href="#MCU启动流程" class="headerlink" title="MCU启动流程"></a><strong>MCU启动流程</strong></h4><p>CPU从0x00000000地址取值</p><img src="/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/e2939426-7334-437f-be36-495cb5ce0872.png" class=""><img src="/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/f74c7b9f-0983-4b8b-8e20-6b6cb6c51d88.png" class=""><img src="/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/a7146b0a-71c9-43e8-bb9c-c741b93c7b74.png" class=""><p>取到的第一个四字节是栈底位置（不是MSP，只是此时MSP主栈指针指向栈底）</p><p>PSP（从栈指针）主要负责处理os的栈</p><p>任务切换触发PendSV中断</p>]]></content>
+    <content type="html"><![CDATA[<h4 id="MCU启动流程"><a href="#MCU启动流程" class="headerlink" title="MCU启动流程"></a><strong>MCU启动流程</strong></h4><img src="/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/e2939426-7334-437f-be36-495cb5ce0872.png" class=""><img src="/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/f74c7b9f-0983-4b8b-8e20-6b6cb6c51d88.png" class=""><img src="/2024/09/22/MCU%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/a7146b0a-71c9-43e8-bb9c-c741b93c7b74.png" class=""><p>以cm3和cm4为例（cm7会有不同）</p><p>上电复位后硬件强制PC指向自举区的入口地址，先执行自举区代码（初始化基础时钟-&gt;通过boot引脚检测启动模式），如果（boot0&#x3D;0，boot1&#x3D;0）从主flash启动，那么就会将用户flash（0x08000000）重映射到0x00000000中，如果（boot0&#x3D;1，boot1&#x3D;0）从系统存储器启动，那么就会跳转到系统bootloader，如果（boot0&#x3D;1，boot1&#x3D;1）从SRAM启动           还有一种特殊情况就是使用了选项字节，这个时候就不看boot引脚状态</p><p>如果从主flash启动，就从0x00000000读MSP，0x00000000读PC（PC此时指向reset_handler地址，由于重映射关系，该地址一般是0x08000004之后的某一地址），读完地址就会跳转到该地址执行reset_handler（初始化.data,.bss,系统时钟……）最后执行main（）</p><p>如果从系统存储区启动，就会将系统存储器物理地址重映射到0x00000000上，然后跳转到系统bootloader（根据自举区固化好的代码，这个代码存储了系统bootloader的入口地址），bootloader会先初始化（初始化外设通信，配置外设时钟，初始化GPIO，初始化flash编程接口），然后bootloader会进入一个主循环（在这个循环中发送或等待特定协议用于监听主机发送命令），接收到主机各种命令后会进行处理（如擦除flash，接收bin&#x2F;hex文件数据写入用户flash地址里，读flash，……），最后会执行用户程序reset_handler（初始化.data,.bss,系统时钟……）最后执行main（）</p><p>如果从SRAM启动，其实就是debug过程会执行（）</p><p>在复位处理函数中，先初始化堆栈指针（将从向量表加载的初始SP值设置到硬件堆栈指针寄存器中），然后初始化.data段（存放已初始化的全局变量和静态变量）清零.bss段，再初始化系统时钟（调用systeminit函数）初始化浮点运算单元和MPU，最后跳转到main（）函数</p>]]></content>
     
     
     
@@ -373,25 +392,6 @@
       <tag>MCU</tag>
       
       <tag>STM32H7</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>代码优化策略</title>
-    <link href="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/"/>
-    <url>/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/</url>
-    
-    <content type="html"><![CDATA[<h1 id="代码优化策略"><a href="#代码优化策略" class="headerlink" title="代码优化策略"></a>代码优化策略</h1><blockquote><p>哪有什么代码优化，不过是空间和时间转化的策略罢了，实战当中要平衡好RAM空间与运行时间的关系</p></blockquote><p>首先得了解不同编译器的优化模式，以keil为例，优化等级分为-o0，-o1，-o2，-o3，额外独立配置：-Ospace，-Otime；</p><ul><li>-o0：不优化，优点是方便调试时变量查看，缺点是代码运行速度慢，占用内存大；（开发调试阶段）</li><li>-o1：受限优化，平衡优化，优化不涉及“空间-时间”权衡，只进行优化如删除未使用的函数，变量；（测试优化阶段）</li><li>-o2：高性能优化，执行包括指令调度在内的大量优化，包括展开小的循环，缺点是代码尺寸增加，变量可能被优化；（电机控制，数字信号处理，低端MCU）</li><li>-o3：极致性能优化，在-o2基础上采取更激进策略（大量循环展开，更激进的函数内联），代码体积急速膨胀；（核心算法循环）</li><li>-Ospace：偏向减小代码尺寸，比如-o2下选择不展开循环；（默认选项）</li><li>-Otime：偏向提高运行速度，比如-o1下尝试内联小函数；</li></ul><p>不同优化最容易出问题的地方：延迟类函数，for循环</p><p>keil中可以对不同文件夹设置不同优先级，这也是为什么要对架构进行设计，实战中可以试着逐步提高优化优先级，但有时候0级优化反而会出现问题</p><img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/0d7110db-b55b-4d7b-b978-51d18a3e3591.png" class=""><ul><li>总结：当使用for多重嵌套且最内层for只进行少量操作时，for本体就会占用大部分MCU周期频率，与内核指令流水线操作有关；（tip：需强化相关汇编知识）</li></ul><img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/9ca4347e-2caa-42bf-83d1-5c88dabaf46f.png" class=""><ul><li>总结：缓存区域越大命中率越高（tip：有空做个实验）</li></ul><img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/6a76902b-5689-4c96-8ba0-4cf1587d809d.png" class=""><ul><li>总结：对于需要频繁调用且函数内部操作少的情况，可以考虑内联</li></ul><img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/99677660-3675-40bb-a099-d37b594d94f0.png" class=""><ul><li>总结：单独对函数设置优化等级操作</li></ul><img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/a7d4d9a5-3e54-4a56-a4a7-978dc52697f5.png" class=""><ul><li>总结：无法go to define的原因（如果是局部变量go to不到很正常）</li></ul><img src="/2024/09/02/%E4%BB%A3%E7%A0%81%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/e708b2c5-462b-4605-ad0f-6d783fd4492b.png" class=""><ul><li>总结：结构体成员对齐要看定义顺序，按成员大小降序排列可最小化填充！</li></ul><p><strong>简化数据结构</strong>：使用位域（bit-field）存储标志位，使用联合体（union）节省空间</p><p><strong>合理使用ITCM和DTCM也可以优化代码</strong></p><p>第一种方法：通过修改链接脚本的分配地址将中间件代码（RTOS调度算法，其他算法）分配到TCM上</p><p>第二种方法:</p><p><em>&#x2F;&#x2F; 在代码中</em> </p><p><code>__attribute__((section(&quot;.itcm_text&quot;))) void critical_motor_control_loop(void) &#123;    *// 这个函数会被编译到.itcm_text段*    *// ... 极其时间敏感的代码* &#125;</code></p><p><strong>NEON是ARM的SIMD技术，通过128位寄存器实现数据并行处理，显著提升多媒体、信号处理等场景的性能。</strong></p><p><strong>学习抢占优先级和响应优先级的设计架构</strong>（有效地拓展了优先级个数却不占用代码运行时间）</p>]]></content>
-    
-    
-    
-    <tags>
-      
-      <tag>MCU</tag>
       
     </tags>
     
