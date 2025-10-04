@@ -22,13 +22,13 @@
     <meta name="description" content="对于嵌入式代码架构和分层的一些思考引言在我刚接触嵌入式软件的时候，其实就对这个问题非常感兴趣，所以在之后的学习中，比如在打rm的时候有时候看到别的战队的源码或者实习时拿到一份新的需要交接的源码，我都会先分析整个代码文件的架构并画图记录，这也极大地帮助我快速上手理解代码。所以这篇文章，我会从个人开发和企业开发两个角度，去讨论嵌入式代码架构和分层，以及介绍一些我目前接触学习到的架构，最后介绍一下如何用">
 <meta property="og:type" content="article">
 <meta property="og:title" content="对于代码架构和分层的一些思考">
-<meta property="og:url" content="https://chesterforever.github.io/2025/09/30/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/index.html">
+<meta property="og:url" content="https://chesterforever.github.io/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/index.html">
 <meta property="og:site_name" content="技术挖掘师">
 <meta property="og:description" content="对于嵌入式代码架构和分层的一些思考引言在我刚接触嵌入式软件的时候，其实就对这个问题非常感兴趣，所以在之后的学习中，比如在打rm的时候有时候看到别的战队的源码或者实习时拿到一份新的需要交接的源码，我都会先分析整个代码文件的架构并画图记录，这也极大地帮助我快速上手理解代码。所以这篇文章，我会从个人开发和企业开发两个角度，去讨论嵌入式代码架构和分层，以及介绍一些我目前接触学习到的架构，最后介绍一下如何用">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
-<meta property="article:published_time" content="2025-09-29T16:33:14.000Z">
-<meta property="article:modified_time" content="2025-10-03T15:38:29.436Z">
+<meta property="article:published_time" content="2025-09-18T16:33:14.000Z">
+<meta property="article:modified_time" content="2025-10-04T06:07:38.051Z">
 <meta property="article:author" content="jiawei xu">
 <meta property="article:tag" content="MCU">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.4k 字
+          5.8k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          45 分钟
+          49 分钟
         
       </span>
     
@@ -420,8 +420,22 @@
 <li><strong>遗留代码复用</strong>：适配旧硬件驱动</li>
 <li><strong>多平台支持</strong>：同一接口适配不同实现</li>
 </ul>
-<h3 id="四、使用draw-io或配合cursor-ai画架构图或UML图"><a href="#四、使用draw-io或配合cursor-ai画架构图或UML图" class="headerlink" title="四、使用draw.io或配合cursor ai画架构图或UML图"></a>四、使用draw.io或配合cursor ai画架构图或UML图</h3><p>待更新</p>
+<h3 id="四、使用draw-io或配合cursor-ai画架构图或UML图"><a href="#四、使用draw-io或配合cursor-ai画架构图或UML图" class="headerlink" title="四、使用draw.io或配合cursor ai画架构图或UML图"></a>四、使用draw.io或配合cursor ai画架构图或UML图</h3><h4 id="draw-io的下载"><a href="#draw-io的下载" class="headerlink" title="draw.io的下载"></a>draw.io的下载</h4><p>draw.io有网页端，桌面端，也可以在vscode这样的开发工具中通过插件方式使用</p>
+<p>draw.io桌面端是开源免费的，这里给出下载网址<a target="_blank" rel="noopener" href="https://github.com/jgraph/drawio-desktop/releases">Releases · jgraph&#x2F;drawio-desktop</a></p>
+<p>根据电脑自身系统下载对应的最新版本，我是windows系统，直接点击windows installer下载或下载如下图所示的文件</p>
+<img src="/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/2ff7c3c44b16d3895549a51466c6f193.png" srcset="/img/loading.gif" lazyload class="">
 
+<p>下载过程没什么坑，改下安装路径即可，如果需要桌面上的快捷方式需要手动创建</p>
+<h4 id="在vscode中通过插件方式配合cursor使用（无需下载draw-io本体）"><a href="#在vscode中通过插件方式配合cursor使用（无需下载draw-io本体）" class="headerlink" title="在vscode中通过插件方式配合cursor使用（无需下载draw.io本体）"></a>在vscode中通过插件方式配合cursor使用（无需下载draw.io本体）</h4><p>在vscode中的拓展安装Draw.io Integration插件</p>
+<p>在vscode中新建.drawio文件，然后最好改一下颜色主题，深色完全看不清</p>
+<p>向Cursor描述你的需求：</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">请帮我生成一个微服务架构图，包含：<br><span class="hljs-bullet">- </span>API网关<br><span class="hljs-bullet">- </span>用户服务<br><span class="hljs-bullet">- </span>订单服务<br><span class="hljs-bullet">- </span>支付服务<br><span class="hljs-bullet">- </span>数据库集群<br>使用Mermaid语法<br></code></pre></td></tr></table></figure>
+
+<p>然后将得到的代码按如下图方式插入到draw.io中</p>
+<img src="/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/64c62b5b-66ce-433a-a970-ef3fc867a339.png" srcset="/img/loading.gif" lazyload class="">
+
+<p>最终结果</p>
+<img src="/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/e82700be-d5ed-49e4-a5d3-92a74bbb795e.png" srcset="/img/loading.gif" lazyload class="">
                 
               </div>
             
@@ -446,7 +460,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>对于代码架构和分层的一些思考</div>
-      <div>https://chesterforever.github.io/2025/09/30/对于代码架构和分层的一些思考/</div>
+      <div>https://chesterforever.github.io/2025/09/19/对于代码架构和分层的一些思考/</div>
     </div>
     <div class="license-meta">
       
@@ -458,7 +472,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年9月30日</div>
+          <div>2025年9月19日</div>
         </div>
       
       
@@ -500,7 +514,7 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/09/29/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E4%B8%AD%E6%96%AD%E7%9A%84%E6%80%9D%E8%80%83/" title="关于一些特殊中断的思考">
+                      <a href="/2025/09/12/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E4%B8%AD%E6%96%AD%E7%9A%84%E6%80%9D%E8%80%83/" title="关于一些特殊中断的思考">
                         <span class="hidden-mobile">关于一些特殊中断的思考</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
