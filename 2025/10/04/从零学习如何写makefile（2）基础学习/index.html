@@ -19,16 +19,16 @@
   <meta name="author" content="jiawei xu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="从零学习写makefile（2）基础学习一.Makefile基础学习基本语法：12目标：依赖[TAB]命令  目标：一般是指要编译的目标，也可以是一个动作 依赖：指执行当前目标所要依赖的先项，包括其它目标，某个具体文件或库，一个目标可以有多个依赖 命令：该目标下要执行的具体命令，可以没有，也可以有多条（多条时每个命令一行）">
+    <meta name="description" content="从零学习写makefile（2）improve一.Makefile基础学习基本语法：12目标：依赖[TAB]命令  目标：一般是指要编译的目标，也可以是一个动作 依赖：指执行当前目标所要依赖的先项，包括其它目标，某个具体文件或库，一个目标可以有多个依赖 命令：该目标下要执行的具体命令，可以没有，也可以有多条（多条时每个命令一行） 二.MAKE环境搭建linux系统下装make环境很简单，这里主要介">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从零学习写makefile（2）基础学习">
 <meta property="og:url" content="https://chesterforever.github.io/2025/10/04/%E4%BB%8E%E9%9B%B6%E5%AD%A6%E4%B9%A0%E5%A6%82%E4%BD%95%E5%86%99makefile%EF%BC%882%EF%BC%89%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="技术挖掘师">
-<meta property="og:description" content="从零学习写makefile（2）基础学习一.Makefile基础学习基本语法：12目标：依赖[TAB]命令  目标：一般是指要编译的目标，也可以是一个动作 依赖：指执行当前目标所要依赖的先项，包括其它目标，某个具体文件或库，一个目标可以有多个依赖 命令：该目标下要执行的具体命令，可以没有，也可以有多条（多条时每个命令一行）">
+<meta property="og:description" content="从零学习写makefile（2）improve一.Makefile基础学习基本语法：12目标：依赖[TAB]命令  目标：一般是指要编译的目标，也可以是一个动作 依赖：指执行当前目标所要依赖的先项，包括其它目标，某个具体文件或库，一个目标可以有多个依赖 命令：该目标下要执行的具体命令，可以没有，也可以有多条（多条时每个命令一行） 二.MAKE环境搭建linux系统下装make环境很简单，这里主要介">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
 <meta property="article:published_time" content="2025-10-04T13:38:07.000Z">
-<meta property="article:modified_time" content="2025-10-04T16:16:27.345Z">
+<meta property="article:modified_time" content="2025-10-08T17:32:17.115Z">
 <meta property="article:author" content="jiawei xu">
 <meta property="article:tag" content="学习记录">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          158 字
+          4.9k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          2 分钟
+          41 分钟
         
       </span>
     
@@ -298,11 +298,118 @@
             
               <div class="markdown-body">
                 
-                <h1 id="从零学习写makefile（2）基础学习"><a href="#从零学习写makefile（2）基础学习" class="headerlink" title="从零学习写makefile（2）基础学习"></a>从零学习写makefile（2）基础学习</h1><h2 id="一-Makefile基础学习"><a href="#一-Makefile基础学习" class="headerlink" title="一.Makefile基础学习"></a>一.Makefile基础学习</h2><h4 id="基本语法："><a href="#基本语法：" class="headerlink" title="基本语法："></a>基本语法：</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">目标：依赖<br>[TAB]命令<br></code></pre></td></tr></table></figure>
+                <h1 id="从零学习写makefile（2）improve"><a href="#从零学习写makefile（2）improve" class="headerlink" title="从零学习写makefile（2）improve"></a>从零学习写makefile（2）improve</h1><h2 id="一-Makefile基础学习"><a href="#一-Makefile基础学习" class="headerlink" title="一.Makefile基础学习"></a>一.Makefile基础学习</h2><h4 id="基本语法："><a href="#基本语法：" class="headerlink" title="基本语法："></a>基本语法：</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">目标：依赖<br>[TAB]命令<br></code></pre></td></tr></table></figure>
 
 <p>目标：一般是指要编译的目标，也可以是一个动作</p>
 <p>依赖：指执行当前目标所要依赖的先项，包括其它目标，某个具体文件或库，一个目标可以有多个依赖</p>
 <p>命令：该目标下要执行的具体命令，可以没有，也可以有多条（多条时每个命令一行）</p>
+<h2 id="二-MAKE环境搭建"><a href="#二-MAKE环境搭建" class="headerlink" title="二.MAKE环境搭建"></a>二.MAKE环境搭建</h2><p>linux系统下装make环境很简单，这里主要介绍一下windows系统下的make环境搭建。</p>
+<p>如果没有mingw installation manager的话先装，然后打开mingw installation manager，在Basic Setup下找到mingw32-base，mingw32-gcc-g++，msys-base并右键mark for install，然后apply changes即可。（这里我踩了一个坑，就是先装了msys下的make然后发现版本太低了很多不兼容）</p>
+<p>安装完后需要将路径加到系统环境变量中，先找到新装的make放置的路径并复制（这是我的路径C:\MinGW\bin），然后复制mingw32-make.exe并在这个路径粘贴，将新的粘贴文件重命名为make.exe（这样命令行中就能直接输入make而不是mingw32-make）</p>
+<p>打开环境变量窗口，在用户变量中找到Path并双击，然后新建并把刚刚复制的路径粘贴，然后所有的窗口都要点击确认，此时make环境就搭建好了。</p>
+<p>如果要在vscode中写makefile，需要装makefile tool拓展</p>
+<h2 id="三-Makefile进阶学习"><a href="#三-Makefile进阶学习" class="headerlink" title="三.Makefile进阶学习"></a>三.Makefile进阶学习</h2><h3 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h3><p>首先介绍一下最重要的，命令行输入make -h可以打印帮助列表</p>
+<p>然后介绍一下常用的几个命令</p>
+<p>-f 指定除上述文件名之外的文件作为输入文件</p>
+<p>-n 输出命令，但不执行</p>
+<p>-s 执行命令，但不显示具体命令，也可以加@符号抑制命令输出</p>
+<p>-w 显示执行前执行后的路径</p>
+<p>-C dir 指定makefile所在的目录</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus">gcc add<span class="hljs-selector-class">.cpp</span> sub<span class="hljs-selector-class">.cpp</span> multi<span class="hljs-selector-class">.cpp</span> calc<span class="hljs-selector-class">.cpp</span> -o calc<br></code></pre></td></tr></table></figure>
+
+<p>上面这种写法可以实现编译并输出一个calc.o的目标文件，但是这种写法显然是有弊端的，弊端在于当只修改了其中一个文件时仍需对所有文件编译，然后就会浪费编译时间，这对于开发者开发大型项目时是不可接受的，所以一般会用目标：依赖    [tab]命令这种方式分开写每个文件，每个.cpp文件都有自己的.o文件</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs stylus">#这样分开来写，保证只编译有改动的代码，耗时短<br>calc:add<span class="hljs-selector-class">.o</span> sub<span class="hljs-selector-class">.o</span> multi<span class="hljs-selector-class">.o</span><br>	gcc add<span class="hljs-selector-class">.o</span> sub<span class="hljs-selector-class">.o</span> multi<span class="hljs-selector-class">.o</span> calc<span class="hljs-selector-class">.cpp</span> -o calc<br>	<br>add<span class="hljs-selector-class">.o</span>:add<span class="hljs-selector-class">.cpp</span><br>	gcc -c add<span class="hljs-selector-class">.cpp</span> -o add<span class="hljs-selector-class">.o</span><br><br>sub<span class="hljs-selector-class">.o</span>:sub<span class="hljs-selector-class">.cpp</span><br>	gcc -c sub<span class="hljs-selector-class">.cpp</span> -o sub<span class="hljs-selector-class">.o</span><br>	<br>multi<span class="hljs-selector-class">.o</span>:multi<span class="hljs-selector-class">.cpp</span><br>	gcc -c multi<span class="hljs-selector-class">.cpp</span> -o multi<span class="hljs-selector-class">.o</span>	<br></code></pre></td></tr></table></figure>
+
+<p>gcc命令可以拆解为几个“子”命令</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs stylus">gcc -lstdc++ <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.cpp</span><br><br>#把过程拆分<br>#预处理 gcc -E <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.cpp</span> &gt;<span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.ii</span><br>#编译 gcc -S <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.ii</span>		 得到名为<span class="hljs-selector-tag">main</span>.s的汇编文件<br>#汇编 gcc -c <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.s</span>		 得到名为<span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.o</span>(.obj)的二进制文件<br>#链接 gcc -lstdc++ <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.o</span>  得到名为<span class="hljs-selector-tag">a</span>.out的可执行文件<br></code></pre></td></tr></table></figure>
+
+<h3 id="makefile中的变量"><a href="#makefile中的变量" class="headerlink" title="makefile中的变量"></a>makefile中的变量</h3><h4 id="自定义变量"><a href="#自定义变量" class="headerlink" title="自定义变量"></a>自定义变量</h4><p>定义：变量名&#x3D;变量值</p>
+<p>使用：$(变量名)或${变量名}</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs stylus">OBJ = add<span class="hljs-selector-class">.o</span> sub<span class="hljs-selector-class">.o</span> multi<span class="hljs-selector-class">.o</span> calc<span class="hljs-selector-class">.o</span><br>TARGET = calc<br><br>$(TARGET):$(OBJ)<br>	gcc $(OBJ) -o $(TARGET)<br>	<br>add<span class="hljs-selector-class">.o</span>:add<span class="hljs-selector-class">.cpp</span><br>	gcc -c add<span class="hljs-selector-class">.cpp</span> -o add<span class="hljs-selector-class">.o</span><br><br>sub<span class="hljs-selector-class">.o</span>:sub<span class="hljs-selector-class">.cpp</span><br>	gcc -c sub<span class="hljs-selector-class">.cpp</span> -o sub<span class="hljs-selector-class">.o</span><br>	<br>multi<span class="hljs-selector-class">.o</span>:multi<span class="hljs-selector-class">.cpp</span><br>	gcc -c multi<span class="hljs-selector-class">.cpp</span> -o multi<span class="hljs-selector-class">.o</span><br>	<br>calc<span class="hljs-selector-class">.o</span>:calc<span class="hljs-selector-class">.cpp</span><br>	gcc -c calc<span class="hljs-selector-class">.cpp</span> -o calc<span class="hljs-selector-class">.o</span><br>	<br>clean:<br>	rm -f *<span class="hljs-selector-class">.o</span> $(TARGET)<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="系统变量"><a href="#系统变量" class="headerlink" title="系统变量"></a>系统变量</h4><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs crystal"><span class="hljs-variable">$*</span> <span class="hljs-comment">#不包括扩展名的目标文件名称</span><br><span class="hljs-variable">$+</span> <span class="hljs-comment">#所有的依赖文件，以空格分隔</span><br><span class="hljs-variable">$&lt;</span> <span class="hljs-comment">#表示规则中的第一个条件</span><br><span class="hljs-variable">$?</span> <span class="hljs-comment">#所有时间戳比目标文件晚的依赖文件，以空格分隔</span><br><span class="hljs-variable">$@</span> <span class="hljs-comment">#目标文件的完整名称</span><br><span class="hljs-variable">$^</span> <span class="hljs-comment">#所有不重复的依赖文件，以空格分隔</span><br><span class="hljs-variable">$%</span> <span class="hljs-comment">#如果目标是归档成员，则该变量表示目标的归档成员名称</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">calc:add.o sub.o multi.o calc.o</span><br>	gcc <span class="hljs-variable">$^</span> -o <span class="hljs-variable">$@</span><br>	<br><span class="hljs-section">add.o:add.cpp</span><br>	gcc -c <span class="hljs-variable">$^</span> -o <span class="hljs-variable">$@</span><br><br><span class="hljs-section">sub.o:sub.cpp</span><br>	gcc -c <span class="hljs-variable">$^</span> -o <span class="hljs-variable">$@</span><br>	<br><span class="hljs-section">multi.o:multi.cpp</span><br>	gcc -c <span class="hljs-variable">$^</span> -o <span class="hljs-variable">$@</span><br>	<br><span class="hljs-section">calc.o:calc.cpp</span><br>	gcc -c <span class="hljs-variable">$^</span> -o <span class="hljs-variable">$@</span><br>	<br><span class="hljs-section">clean:</span><br>	rm -f *.o calc<br><br></code></pre></td></tr></table></figure>
+
+<h4 id="系统常量"><a href="#系统常量" class="headerlink" title="系统常量"></a>系统常量</h4><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs powershell">AS	<span class="hljs-comment">#汇编程序的名称，默认为as</span><br>CC	<span class="hljs-comment">#C编译器名称，默认为cc</span><br><span class="hljs-built_in">CPP</span>	<span class="hljs-comment">#C预编译器名称，默认为cc -E</span><br>CXX	<span class="hljs-comment">#C++编译器名称，默认为g++</span><br><span class="hljs-built_in">RM</span>	<span class="hljs-comment">#文件删除程序别名，默认rm -f</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs stylus">#$(CC)可替换为$(CXX)，因为$(CXX)可实现跨平台<br>calc:add<span class="hljs-selector-class">.o</span> sub<span class="hljs-selector-class">.o</span> multi<span class="hljs-selector-class">.o</span> calc<span class="hljs-selector-class">.o</span><br>	$(CC) add<span class="hljs-selector-class">.o</span> sub<span class="hljs-selector-class">.o</span> multi<span class="hljs-selector-class">.o</span> calc<span class="hljs-selector-class">.o</span> -o calc<br>	<br>add<span class="hljs-selector-class">.o</span>:add<span class="hljs-selector-class">.cpp</span><br>	$(CC) -c add<span class="hljs-selector-class">.cpp</span> -o add<span class="hljs-selector-class">.o</span><br><br>sub<span class="hljs-selector-class">.o</span>:sub<span class="hljs-selector-class">.cpp</span><br>	$(CC) -c sub<span class="hljs-selector-class">.cpp</span> -o sub<span class="hljs-selector-class">.o</span><br>	<br>multi<span class="hljs-selector-class">.o</span>:multi<span class="hljs-selector-class">.cpp</span><br>	$(CC) -c multi<span class="hljs-selector-class">.cpp</span> -o multi<span class="hljs-selector-class">.o</span><br>	<br>calc<span class="hljs-selector-class">.o</span>:calc<span class="hljs-selector-class">.cpp</span><br>	$(CC) -c calc<span class="hljs-selector-class">.cpp</span> -o calc<span class="hljs-selector-class">.o</span><br>	<br>clean:<br>	$(RM) *<span class="hljs-selector-class">.o</span> calc<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="伪目标与模式匹配"><a href="#伪目标与模式匹配" class="headerlink" title="伪目标与模式匹配"></a>伪目标与模式匹配</h3><h4 id="伪目标"><a href="#伪目标" class="headerlink" title="伪目标"></a>伪目标</h4><p>.PHONY:目标	<br>声明目标为伪目标之后，makefile将不会判断目标是否存在或该目标是否需要更新</p>
+<ul>
+<li>如果项目路径中有与clean同名的文件，<code>make clean</code>命令无法执行，需要在makefile文件中添加<code>.PHONY:clean</code>，才能使命令正常执行</li>
+</ul>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-selector-class">.PHONY</span>:clean<br>OBJ = add<span class="hljs-selector-class">.o</span> sub<span class="hljs-selector-class">.o</span> multi<span class="hljs-selector-class">.o</span> calc<span class="hljs-selector-class">.o</span><br>TARGET = calc<br><br>$(TARGET):$(OBJ)<br>	gcc $(OBJ) -o $(TARGET)<br>	<br>add<span class="hljs-selector-class">.o</span>:add<span class="hljs-selector-class">.cpp</span><br>	gcc -c add<span class="hljs-selector-class">.cpp</span> -o add<span class="hljs-selector-class">.o</span><br><br>sub<span class="hljs-selector-class">.o</span>:sub<span class="hljs-selector-class">.cpp</span><br>	gcc -c sub<span class="hljs-selector-class">.cpp</span> -o sub<span class="hljs-selector-class">.o</span><br>	<br>multi<span class="hljs-selector-class">.o</span>:multi<span class="hljs-selector-class">.cpp</span><br>	gcc -c multi<span class="hljs-selector-class">.cpp</span> -o multi<span class="hljs-selector-class">.o</span><br>	<br>calc<span class="hljs-selector-class">.o</span>:calc<span class="hljs-selector-class">.cpp</span><br>	gcc -c calc<span class="hljs-selector-class">.cpp</span> -o calc<span class="hljs-selector-class">.o</span><br>	<br>clean:<br>	rm -f *<span class="hljs-selector-class">.o</span> $(TARGET)<br></code></pre></td></tr></table></figure>
+
+<h4 id="模式匹配"><a href="#模式匹配" class="headerlink" title="模式匹配"></a>模式匹配</h4><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-section">%目标:%依赖	#目标和依赖相同部分，可以用%来通配</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>依赖中的<code>add.o sub.o multi.o calc.o</code>都可以通过使用<code>%.o:%.cpp</code>产生</li>
+</ul>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs makefile">OBJ = add.o sub.o multi.o calc.o<br>TARGET = calc<br><br><span class="hljs-variable">$(TARGET)</span>:<span class="hljs-variable">$(OBJ)</span><br>	gcc <span class="hljs-variable">$(OBJ)</span> -o <span class="hljs-variable">$(TARGET)</span><br>	<br><span class="hljs-section">%.o:%.cpp</span><br>	gcc -c <span class="hljs-variable">$^</span> -o <span class="hljs-variable">$@</span><br>	<br><span class="hljs-section">clean:</span><br>	rm -f *.o <span class="hljs-variable">$(TARGET)</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h4><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-variable">$(<span class="hljs-built_in">wildcard</span> 文件列表)</span>	<span class="hljs-comment">#获取对应文件路径下的对应模式的文件名</span><br><span class="hljs-variable">$(<span class="hljs-built_in">patsubst</span> 源模式, 目标模式, 文件列表)</span>	<span class="hljs-comment">#将文件列表中想要改变的源模式替换成想要的目标模式</span><br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>$(wildcard ./\*.cpp)</code>\获取当前目录下所有的.cpp</strong>文件名</li>
+<li><strong><code>$(patsubst %.cpp, %.o, $(wildcard ./\*.cpp))</code>*<em>将对应的*</em>.cpp**文件替换为</strong>.o**文件</li>
+</ul>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-comment">#OBJ = add.o sub.o multi.o calc.o</span><br>OBJ = <span class="hljs-variable">$(<span class="hljs-built_in">patsubst</span> %.cpp, %.o, $(<span class="hljs-built_in">wildcard</span> ./*.cpp)</span>)<br>TARGET = calc<br><br><span class="hljs-variable">$(TARGET)</span>:<span class="hljs-variable">$(OBJ)</span><br>	gcc <span class="hljs-variable">$(OBJ)</span> -o <span class="hljs-variable">$(TARGET)</span><br>	<br><span class="hljs-section">%.o:%.cpp</span><br>	gcc -c <span class="hljs-variable">$^</span> -o <span class="hljs-variable">$@</span><br>	<br><span class="hljs-section">clean:</span><br>	rm -f *.o <span class="hljs-variable">$(TARGET)</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="makefile中编译动态链接库"><a href="#makefile中编译动态链接库" class="headerlink" title="makefile中编译动态链接库"></a>makefile中编译动态链接库</h4><p><strong>动态链接库</strong>：不会把代码编译到二进制文件中，而是在<strong>运行时</strong>才去加载，所以需要维护一个地址</p>
+<ul>
+<li><strong>动态</strong>：动态加载，运行时才加载</li>
+<li><strong>链接</strong>：指库文件和二进制程序分离，用某种手段维护两者之间的关系</li>
+<li><strong>库</strong>：库文件<ul>
+<li><strong>Windows</strong> 中后缀为 <strong>.dll</strong></li>
+<li><strong>Linux</strong> 中后缀为 <strong>.so</strong></li>
+</ul>
+</li>
+</ul>
+<p>**优点：**程序可以和库文件分离，可以分别发版，然后库文件可以被多处共享</p>
+<p>这里举个例子来看看正常是怎么得到动态链接库的</p>
+<p><strong>soTest.h</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">soTest</span>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func1</span>()</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func2</span>()</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func3</span>()</span> = <span class="hljs-number">0</span>;<br>&#125;;<br><br></code></pre></td></tr></table></figure>
+
+<p><strong>soTest.cpp</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;soTest.h&quot;</span></span><br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">sotest::func1</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;func1\n&quot;</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">sotest::func2</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;func2\n&quot;</span>);<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">g++ -<span class="hljs-keyword">shared</span> -fPIC soTest.cpp -o libSoTest.so<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>soTest.cpp</strong>编译后会产生<strong>libsoTest.so</strong>，不用担心文件名不同会出现问题，在后续引用中，<strong>lib</strong>自动会被丢弃</li>
+</ul>
+<p><strong>项目发布：</strong></p>
+<p><strong>soTest.h</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-keyword">class</span> <span class="hljs-title">soTest</span>&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">func1</span>()</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func2</span>()</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">virtual</span> <span class="hljs-keyword">void</span> <span class="hljs-title">func3</span>()</span> = <span class="hljs-number">0</span>;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p><strong>main.cpp</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;soTest.h&quot;</span></span><br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MainTest</span>:<span class="hljs-keyword">public</span> soTest&#123;<br><span class="hljs-keyword">public</span>:<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func2</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;MainTest-func2\n&quot;</span>);<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">func3</span><span class="hljs-params">()</span></span>&#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;MainTest-func3\n&quot;</span>);<br>    &#125;<br>&#125;;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br>    MainTest t1;<br>    t<span class="hljs-number">1.f</span>unc1();<br>    t<span class="hljs-number">1.f</span>unc2();<br>    t<span class="hljs-number">1.f</span>unc3();  <br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">g</span>++ -lsoTest -L./<span class="hljs-number">001</span> <span class="hljs-selector-tag">main</span><span class="hljs-selector-class">.cpp</span> -o <span class="hljs-selector-tag">main</span><br></code></pre></td></tr></table></figure>
+
+<p>编译时指定了要依赖的动态库，但运行时，会无法找到**.so**文件<br><strong>解决方法：</strong></p>
+<ul>
+<li>将动态库文件移动到main.cpp文件同级目录下</li>
+<li>运行时手动指定动态库文件所在目录</li>
+</ul>
+<p><strong>Linux环境下的命令</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">LD_LIBRARY_PATH</span> = ./<span class="hljs-number">001</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros"><span class="hljs-built_in">export</span> LD_LIBRARY_PATH<br></code></pre></td></tr></table></figure>
+
+<p><strong>001&#x2F;Makefile</strong></p>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs stata"><span class="hljs-keyword">Test</span>:libsoTest.<span class="hljs-keyword">so</span><br>	$(CXX) -lsoTest -<span class="hljs-keyword">L</span>./ <span class="hljs-keyword">Test</span>.cpp -o <span class="hljs-keyword">Test</span><br>	cp libsoTest.<span class="hljs-keyword">so</span> /usr/lib  #路径最好为main.cpp同级目录<br>libsoTest.<span class="hljs-keyword">so</span>:<br>	$(CXX) -shared -fPIC soTest.cpp -o libsoTest.<span class="hljs-keyword">so</span><br>	<br>clean:<br>	$(<span class="hljs-keyword">RM</span>) *.<span class="hljs-keyword">so</span> <span class="hljs-keyword">Test</span><br></code></pre></td></tr></table></figure>
+
+
+<p>cp libsoTest.so &#x2F;usr&#x2F;lib将动态库文件复制到动态链接库默认路径下 不推荐复制，污染原库环境</p>
+<p><strong>Linux 默认动态库路径配置文件</strong></p>
+<ul>
+<li><p>&#x2F;etc&#x2F;ld.so.conf</p>
+</li>
+<li><p>&#x2F;etc&#x2F;ld.so.conf.d&#x2F;*.conf</p>
+</li>
+</ul>
 
                 
               </div>
