@@ -19,18 +19,19 @@
   <meta name="author" content="jiawei xu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="HAL库和LL库（可以混合使用） hal库：函数复杂，但是直接对寄存器调用，移植方便 LL库：使用很多内联函数（省去进入和退出函数的时间）高效速度快 hal库： 以_IT为后缀结尾表示中断方式 用cubemx配高速时钟注意检查晶振大小要相同  HAL_Init:配置NVIC 更新全局变量SystemCoreClock（此时用的还是内部HSI48M时钟） SystemClock_Config:配置时">
+    <meta name="description" content="robomaster C板陀螺仪驱动调试寄录首先robomaster官方C板用户手册有关于陀螺仪的使用说明和例程，但是细看会发现很多代码只是勉强能跑，只能用于学习，想要有良好的性能实现比赛场上的高强度运行，必须重新编写自己的驱动。队内上一届表现最好的全向移植的是南航开源的IMU驱动版本，但是我对其代码风格不太感冒，所以打算自己移植BMI088官方的驱动库然后再加上自己从南航的版本中学到的一些小技巧">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HAL库和LL库整体框架学习">
-<meta property="og:url" content="https://chesterforever.github.io/2023/11/05/HAL%E5%BA%93%E5%92%8CLL%E5%BA%93%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:title" content="DJI robomaster C板陀螺仪驱动调试寄录">
+<meta property="og:url" content="https://chesterforever.github.io/2023/11/08/DJI%20robomaster%20C%E6%9D%BF%E9%99%80%E8%9E%BA%E4%BB%AA%E9%A9%B1%E5%8A%A8%E8%B0%83%E8%AF%95%E5%AF%84%E5%BD%95/index.html">
 <meta property="og:site_name" content="技术挖掘师">
-<meta property="og:description" content="HAL库和LL库（可以混合使用） hal库：函数复杂，但是直接对寄存器调用，移植方便 LL库：使用很多内联函数（省去进入和退出函数的时间）高效速度快 hal库： 以_IT为后缀结尾表示中断方式 用cubemx配高速时钟注意检查晶振大小要相同  HAL_Init:配置NVIC 更新全局变量SystemCoreClock（此时用的还是内部HSI48M时钟） SystemClock_Config:配置时">
+<meta property="og:description" content="robomaster C板陀螺仪驱动调试寄录首先robomaster官方C板用户手册有关于陀螺仪的使用说明和例程，但是细看会发现很多代码只是勉强能跑，只能用于学习，想要有良好的性能实现比赛场上的高强度运行，必须重新编写自己的驱动。队内上一届表现最好的全向移植的是南航开源的IMU驱动版本，但是我对其代码风格不太感冒，所以打算自己移植BMI088官方的驱动库然后再加上自己从南航的版本中学到的一些小技巧">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
-<meta property="article:published_time" content="2023-11-05T01:05:24.000Z">
-<meta property="article:modified_time" content="2025-09-27T14:34:16.577Z">
+<meta property="article:published_time" content="2023-11-08T15:48:54.000Z">
+<meta property="article:modified_time" content="2025-10-12T14:44:23.136Z">
 <meta property="article:author" content="jiawei xu">
-<meta property="article:tag" content="MCU">
+<meta property="article:tag" content="IMU">
+<meta property="article:tag" content="robomaster">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
   
@@ -38,7 +39,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>HAL库和LL库整体框架学习 - 技术挖掘师</title>
+  <title>DJI robomaster C板陀螺仪驱动调试寄录 - 技术挖掘师</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="HAL库和LL库整体框架学习"></span>
+            <span id="subtitle" data-typed-text="DJI robomaster C板陀螺仪驱动调试寄录"></span>
           
         </div>
 
@@ -236,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          305 字
+          2.4k 字
         
       </span>
     
@@ -247,7 +248,7 @@
         
         
         
-          3 分钟
+          21 分钟
         
       </span>
     
@@ -293,21 +294,44 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">HAL库和LL库整体框架学习</h1>
+            <h1 id="seo-header">DJI robomaster C板陀螺仪驱动调试寄录</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>HAL库和LL库</strong>（可以混合使用）</p>
-<p>hal库：函数复杂，但是直接对寄存器调用，移植方便</p>
-<p>LL库：使用很多内联函数（省去进入和退出函数的时间）高效速度快</p>
-<p><strong>hal库：</strong></p>
-<p>以_IT为后缀结尾表示中断方式</p>
-<p>用cubemx配高速时钟注意检查晶振大小要相同</p>
-<p> HAL_Init:配置NVIC 更新全局变量SystemCoreClock（此时用的还是内部HSI48M时钟）</p>
-<p>SystemClock_Config:配置时钟电压范围（不同电压对应不同主频）配置时钟结构体</p>
-<p>​                                     更新时钟HAL_InitTick(此时用的是更新后时钟)</p>
-<p>学习这些库的目的也是为了方便调用，比如用hal库初始化，然后自己写寄存器操作代码造点轮子，最后就能很快地搭建起整个代码框架</p>
+                <h1 id="robomaster-C板陀螺仪驱动调试寄录"><a href="#robomaster-C板陀螺仪驱动调试寄录" class="headerlink" title="robomaster C板陀螺仪驱动调试寄录"></a>robomaster C板陀螺仪驱动调试寄录</h1><p>首先robomaster官方C板用户手册有关于陀螺仪的使用说明和例程，但是细看会发现很多代码只是勉强能跑，只能用于学习，想要有良好的性能实现比赛场上的高强度运行，必须重新编写自己的驱动。队内上一届表现最好的全向移植的是南航开源的IMU驱动版本，但是我对其代码风格不太感冒，所以打算自己移植BMI088官方的驱动库然后再加上自己从南航的版本中学到的一些小技巧。从结果上看，我只能说相比于MPU6050，BMI088在性能上完爆但是开发体验并不是很好</p>
+<h2 id="移植步骤"><a href="#移植步骤" class="headerlink" title="移植步骤"></a>移植步骤</h2><p>首先根据README给出的指引，我们只需要编写读写SPI的函数与微秒延时函数即可。微秒级延时可以直接用Systick当计数器完成（后面了解到其实最好用DWT），而SPI通信的移植就比较复杂了</p>
+<h3 id="SPI通信"><a href="#SPI通信" class="headerlink" title="SPI通信"></a>SPI通信</h3><p>C板参考例程内CubeMX的SPI速率配置为300k，根据测试和计算，这个速率肯定是太慢了。按照每次只读取6个字节（三轴加速度计与三轴角速度计数据都是2Byte，实际只会更多）共48bit来算，至少0.2ms的时间耗费在SPI通信上。但是根据官方数据手册上给出的SPI参数，最大速率能达到到10Mhz，再根据在<a target="_blank" rel="noopener" href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/application_notes_1/bst-mis-an006.pdf">Application Note</a>内提到推荐2Mhz以上的通信速率。最终通过计算应用层的数据链路传输频率，我将SPI速率配置为2.625Mbps，后续经过测试，基本能实现生产和消费之间的平衡（其实不需要这么精确，只是我对于性能有强迫症）</p>
+<p>![img](F:\xjw_blog\source_posts\DJI robomaster C板陀螺仪驱动调试寄录\spi-speed.png)</p>
+<p>接下来就是软件方面上我从南航的代码中学到的小技巧了，SPI的读写如果使用HAL库的spi函数进行一次传输，传输速度是慢于直接用寄存器完成传输的，对于像BMI088这样对实时性要求极强的IMU，应该直接对寄存器操作来减小开销</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">uint8_t</span> <span class="hljs-title">spi_rw_byte</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> <span class="hljs-type">byte</span>)</span></span>&#123;<br>	<span class="hljs-built_in">SET_BIT</span>(BMI088_SPI-&gt;CR1, SPI_CR1_SPE);<br>    <span class="hljs-keyword">while</span>((BMI088_SPI-&gt;SR &amp; SPI_SR_TXE) == RESET);<br>	BMI088_SPI-&gt;DR = <span class="hljs-type">byte</span>;<br>    <span class="hljs-keyword">while</span>((BMI088_SPI-&gt;SR &amp; SPI_SR_RXNE) == RESET);<br>    <span class="hljs-keyword">return</span> BMI088_SPI-&gt;DR;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>IMU加速度计与角速度计在同一个SPI总线上通过不同CS引脚选中，对应到BMI088官方库的移植函数则是通过传入的<code>intf_ptr</code>指明，其值是初始化中的<code>intf_ptr_accel</code>或<code>intf_ptr_gyro</code>，这里只需要判断传入参数拉低对应的片选脚即可</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">BMI08X_INTF_RET_TYPE bmi08x_spi_read(<span class="hljs-built_in">uint8</span>_t reg_addr, <span class="hljs-built_in">uint8</span>_t *reg_data, <span class="hljs-built_in">uint32</span>_t len, <span class="hljs-built_in">void</span> *<span class="hljs-built_in">int</span>f_ptr);<br>BMI08X_INTF_RET_TYPE bmi08x_spi_write(<span class="hljs-built_in">uint8</span>_t reg_addr, <span class="hljs-keyword">const</span> <span class="hljs-built_in">uint8</span>_t *reg_data, <span class="hljs-built_in">uint32</span>_t len, <span class="hljs-built_in">void</span> *<span class="hljs-built_in">int</span>f_ptr);<br></code></pre></td></tr></table></figure>
+
+<p>还有一个我遇到的SPI通信中比较特殊的问题是，在每次与<strong>加速度计</strong>通信时不论是读单个寄存器还是连续读都需要先接收一个Dummy Byte，这个东西实际上是没有意义的内容。DJI C板手册中似乎没有写对这个问题的处理，但是看了一下BMI088官方的驱动是有相关的处理方式的</p>
+<p>![img](F:\xjw_blog\source_posts\DJI robomaster C板陀螺仪驱动调试寄录\spi-comm.png)</p>
+<h3 id="初始化流程"><a href="#初始化流程" class="headerlink" title="初始化流程"></a>初始化流程</h3><p>我认为不管哪款IMU，初始化都是最难且最有可能出问题的那一步。作为MEMS器件，在上电之后需要静置稳定，不论是等待加速度计的数据稳定还是角速度计元件的起振，并且BMI088没有任何办法告诉主机它是否已经完全就绪。</p>
+<p>通过手册得知，IMU内部也有电源管理，其数字接口与模拟部分可以分别供电且电源模式分为Suspend Mode和Normal Mode，电源模式之间的切换也需要等待稳定。了解这个是非常重要的，因为从寄存器的初始值来看，BMI088经过上电复位后加速度计是处于Suspend Mode，而角速度计是处于Normal Mode</p>
+<p>总之按照数据手册的说法和我实际不加延时的测试，BMI088的初始化的等待至少需要</p>
+<ul>
+<li>加速度计上电等待1ms，切换电源模式进入Normal Mode后等待50ms</li>
+<li>角速度计上电或切换电源模式都需要等待30ms</li>
+<li>SPI两次写入间至少需要有2us</li>
+</ul>
+<p>于是我们可以分析一下，一个完整的初始化流程应该是这样的</p>
+<ul>
+<li>上电复位，等待30ms至IMU完全就绪</li>
+<li>分别切换角速度计和加速度计的电源模式，每次切换等待30ms或50ms</li>
+<li>写入输出速率，量程大小等配置，每次写入需要确保间隔2us以上（写间隔可在移植的SPI读写函数内完成）</li>
+<li>等待数据采集</li>
+</ul>
+<p>其实在各种电源模式下读写寄存器的时序连官方自己都搞不太清，在移植驱动的过程中官方的仓库一直在更新，但是好在目前我移植过程还算顺利</p>
+<p>（2024.6.18更新）我发现了一个很有意思的点，博世的官方驱动在初始化程序里给BM088上传一个类似通过软件更新固件一样的包，通过调用<code>bmi08a_load_config_file</code>函数。我在逛博世论坛时发现有人提出了这个问题并做了解释，这个东西没什么用处除非你要使用数据同步的特性（这个功能C板没戏，硬件连线都没有引出来），所以最好不要加这个以免出现不必要的初始化错误。</p>
+<p>最后放一下我的参考资料，希望我的踩坑寄录能帮助到后续开发的同学</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/RoboMaster/DevelopmentBoard-Examples">C板官方例程</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/BoschSensortec">BoschSensortec</a>&#x2F;<a target="_blank" rel="noopener" href="https://github.com/BoschSensortec/BMI08x-Sensor-API">BMI08x-Sensor-API</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf">BMI088 DataSheet</a></p>
 
                 
               </div>
@@ -320,7 +344,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/MCU/" class="print-no-link">#MCU</a>
+        <a href="/tags/robomaster/" class="print-no-link">#robomaster</a>
+      
+        <a href="/tags/IMU/" class="print-no-link">#IMU</a>
       
     </div>
   
@@ -332,8 +358,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>HAL库和LL库整体框架学习</div>
-      <div>https://chesterforever.github.io/2023/11/05/HAL库和LL库整体框架学习/</div>
+      <div>DJI robomaster C板陀螺仪驱动调试寄录</div>
+      <div>https://chesterforever.github.io/2023/11/08/DJI robomaster C板陀螺仪驱动调试寄录/</div>
     </div>
     <div class="license-meta">
       
@@ -345,7 +371,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月5日</div>
+          <div>2023年11月8日</div>
         </div>
       
       
@@ -377,15 +403,21 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/08/DJI%20robomaster%20C%E6%9D%BF%E9%99%80%E8%9E%BA%E4%BB%AA%E9%A9%B1%E5%8A%A8%E8%B0%83%E8%AF%95%E5%AF%84%E5%BD%95/" title="DJI robomaster C板陀螺仪驱动调试寄录">
+                      <a href="/2024/04/20/NVIC%E4%B8%AD%E6%96%AD%E7%AE%A1%E7%90%86%E5%92%8C%E4%BC%98%E5%85%88%E7%BA%A7%E5%8A%A8%E6%80%81%E5%88%86%E9%85%8D/" title="NVIC中断管理和优先级动态分配">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">DJI robomaster C板陀螺仪驱动调试寄录</span>
+                        <span class="hidden-mobile">NVIC中断管理和优先级动态分配</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2023/11/05/HAL%E5%BA%93%E5%92%8CLL%E5%BA%93%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/" title="HAL库和LL库整体框架学习">
+                        <span class="hidden-mobile">HAL库和LL库整体框架学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
