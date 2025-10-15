@@ -19,19 +19,18 @@
   <meta name="author" content="jiawei xu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="robomaster C板陀螺仪驱动调试寄录首先robomaster官方C板用户手册有关于陀螺仪的使用说明和例程，但是细看会发现很多代码只是勉强能跑，只能用于学习，想要有良好的性能实现比赛场上的高强度运行，必须重新编写自己的驱动。队内上一届表现最好的全向移植的是南航开源的IMU驱动版本，但是我对其代码风格不太感冒，所以打算自己移植BMI088官方的驱动库然后再加上自己从南航的版本中学到的一些小技巧">
+    <meta name="description" content="从零学习写makefile（1）background一.为什么要写makefile？这个问题的答案可以先去看我的另外一篇博客（一篇文章讲明白代码编译，链接，烧录全过程（尽可能涵盖不同芯片和不同编译器） - 技术挖掘师），于是我们知道makefile其实是为代码如何编译和链接制订规则的。 正常来讲，比如用keil IDE，你点击build执行代码编译时，keil实际上就会动态生成一个makefile">
 <meta property="og:type" content="article">
-<meta property="og:title" content="DJI robomaster C板陀螺仪驱动调试寄录">
-<meta property="og:url" content="https://chesterforever.github.io/2023/11/08/DJI%20robomaster%20C%E6%9D%BF%E9%99%80%E8%9E%BA%E4%BB%AA%E9%A9%B1%E5%8A%A8%E8%B0%83%E8%AF%95%E5%AF%84%E5%BD%95/index.html">
+<meta property="og:title" content="从零学习写makefile（1）background">
+<meta property="og:url" content="https://chesterforever.github.io/2025/10/01/%E4%BB%8E%E9%9B%B6%E5%AD%A6%E4%B9%A0%E5%A6%82%E4%BD%95%E5%86%99makefile(1)background/index.html">
 <meta property="og:site_name" content="技术挖掘师">
-<meta property="og:description" content="robomaster C板陀螺仪驱动调试寄录首先robomaster官方C板用户手册有关于陀螺仪的使用说明和例程，但是细看会发现很多代码只是勉强能跑，只能用于学习，想要有良好的性能实现比赛场上的高强度运行，必须重新编写自己的驱动。队内上一届表现最好的全向移植的是南航开源的IMU驱动版本，但是我对其代码风格不太感冒，所以打算自己移植BMI088官方的驱动库然后再加上自己从南航的版本中学到的一些小技巧">
+<meta property="og:description" content="从零学习写makefile（1）background一.为什么要写makefile？这个问题的答案可以先去看我的另外一篇博客（一篇文章讲明白代码编译，链接，烧录全过程（尽可能涵盖不同芯片和不同编译器） - 技术挖掘师），于是我们知道makefile其实是为代码如何编译和链接制订规则的。 正常来讲，比如用keil IDE，你点击build执行代码编译时，keil实际上就会动态生成一个makefile">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
-<meta property="article:published_time" content="2023-11-08T15:48:54.000Z">
-<meta property="article:modified_time" content="2025-10-14T05:50:20.060Z">
+<meta property="article:published_time" content="2025-09-30T16:42:24.000Z">
+<meta property="article:modified_time" content="2025-10-04T15:12:09.077Z">
 <meta property="article:author" content="jiawei xu">
-<meta property="article:tag" content="IMU">
-<meta property="article:tag" content="robomaster">
+<meta property="article:tag" content="学习记录">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
   
@@ -39,7 +38,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>DJI robomaster C板陀螺仪驱动调试寄录 - 技术挖掘师</title>
+  <title>从零学习写makefile（1）background - 技术挖掘师</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +215,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="DJI robomaster C板陀螺仪驱动调试寄录"></span>
+            <span id="subtitle" data-typed-text="从零学习写makefile（1）background"></span>
           
         </div>
 
@@ -237,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.3k 字
+          3.3k 字
         
       </span>
     
@@ -248,7 +247,7 @@
         
         
         
-          20 分钟
+          28 分钟
         
       </span>
     
@@ -294,46 +293,60 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">DJI robomaster C板陀螺仪驱动调试寄录</h1>
+            <h1 id="seo-header">从零学习写makefile（1）background</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="robomaster-C板陀螺仪驱动调试寄录"><a href="#robomaster-C板陀螺仪驱动调试寄录" class="headerlink" title="robomaster C板陀螺仪驱动调试寄录"></a>robomaster C板陀螺仪驱动调试寄录</h1><p>首先robomaster官方C板用户手册有关于陀螺仪的使用说明和例程，但是细看会发现很多代码只是勉强能跑，只能用于学习，想要有良好的性能实现比赛场上的高强度运行，必须重新编写自己的驱动。队内上一届表现最好的全向移植的是南航开源的IMU驱动版本，但是我对其代码风格不太感冒，所以打算自己移植BMI088官方的驱动库然后再加上自己从南航的版本中学到的一些小技巧。从结果上看，我只能说相比于MPU6050，BMI088在性能上完爆但是开发体验并不是很好</p>
-<h2 id="移植步骤"><a href="#移植步骤" class="headerlink" title="移植步骤"></a>移植步骤</h2><p>首先根据README给出的指引，我们只需要编写读写SPI的函数与微秒延时函数即可。微秒级延时可以直接用Systick当计数器完成（后面了解到其实最好用DWT），而SPI通信的移植就比较复杂了</p>
-<h3 id="SPI通信"><a href="#SPI通信" class="headerlink" title="SPI通信"></a>SPI通信</h3><p>C板参考例程内CubeMX的SPI速率配置为300k，根据测试和计算，这个速率肯定是太慢了。按照每次只读取6个字节（三轴加速度计与三轴角速度计数据都是2Byte，实际只会更多）共48bit来算，至少0.2ms的时间耗费在SPI通信上。但是根据官方数据手册上给出的SPI参数，最大速率能达到到10Mhz，再根据在<a target="_blank" rel="noopener" href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/application_notes_1/bst-mis-an006.pdf">Application Note</a>内提到推荐2Mhz以上的通信速率。最终通过计算应用层的数据链路传输频率，我将SPI速率配置为2.625Mbps，后续经过测试，基本能实现生产和消费之间的平衡（其实不需要这么精确，只是我对于性能有强迫症）</p>
-<img src="/2023/11/08/DJI%20robomaster%20C%E6%9D%BF%E9%99%80%E8%9E%BA%E4%BB%AA%E9%A9%B1%E5%8A%A8%E8%B0%83%E8%AF%95%E5%AF%84%E5%BD%95/spi-speed.png" srcset="/img/loading.gif" lazyload class="">
-
-<p>接下来就是软件方面上我从南航的代码中学到的小技巧了，SPI的读写如果使用HAL库的spi函数进行一次传输，传输速度是慢于直接用寄存器完成传输的，对于像BMI088这样对实时性要求极强的IMU，应该直接对寄存器操作来减小开销</p>
-<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">uint8_t</span> <span class="hljs-title">spi_rw_byte</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> <span class="hljs-type">byte</span>)</span></span>&#123;<br>	<span class="hljs-built_in">SET_BIT</span>(BMI088_SPI-&gt;CR1, SPI_CR1_SPE);<br>    <span class="hljs-keyword">while</span>((BMI088_SPI-&gt;SR &amp; SPI_SR_TXE) == RESET);<br>	BMI088_SPI-&gt;DR = <span class="hljs-type">byte</span>;<br>    <span class="hljs-keyword">while</span>((BMI088_SPI-&gt;SR &amp; SPI_SR_RXNE) == RESET);<br>    <span class="hljs-keyword">return</span> BMI088_SPI-&gt;DR;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>IMU加速度计与角速度计在同一个SPI总线上通过不同CS引脚选中，对应到BMI088官方库的移植函数则是通过传入的<code>intf_ptr</code>指明，其值是初始化中的<code>intf_ptr_accel</code>或<code>intf_ptr_gyro</code>，这里只需要判断传入参数拉低对应的片选脚即可</p>
-<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">BMI08X_INTF_RET_TYPE bmi08x_spi_read(<span class="hljs-built_in">uint8</span>_t reg_addr, <span class="hljs-built_in">uint8</span>_t *reg_data, <span class="hljs-built_in">uint32</span>_t len, <span class="hljs-built_in">void</span> *<span class="hljs-built_in">int</span>f_ptr);<br>BMI08X_INTF_RET_TYPE bmi08x_spi_write(<span class="hljs-built_in">uint8</span>_t reg_addr, <span class="hljs-keyword">const</span> <span class="hljs-built_in">uint8</span>_t *reg_data, <span class="hljs-built_in">uint32</span>_t len, <span class="hljs-built_in">void</span> *<span class="hljs-built_in">int</span>f_ptr);<br></code></pre></td></tr></table></figure>
-
-<p>还有一个我遇到的SPI通信中比较特殊的问题是，在每次与<strong>加速度计</strong>通信时不论是读单个寄存器还是连续读都需要先接收一个Dummy Byte，这个东西实际上是没有意义的内容。DJI C板手册中似乎没有写对这个问题的处理，但是看了一下BMI088官方的驱动是有相关的处理方式的</p>
-<img src="/2023/11/08/DJI%20robomaster%20C%E6%9D%BF%E9%99%80%E8%9E%BA%E4%BB%AA%E9%A9%B1%E5%8A%A8%E8%B0%83%E8%AF%95%E5%AF%84%E5%BD%95/spi-comm.png" srcset="/img/loading.gif" lazyload class="">
-
-<h3 id="初始化流程"><a href="#初始化流程" class="headerlink" title="初始化流程"></a>初始化流程</h3><p>我认为不管哪款IMU，初始化都是最难且最有可能出问题的那一步。作为MEMS器件，在上电之后需要静置稳定，不论是等待加速度计的数据稳定还是角速度计元件的起振，并且BMI088没有任何办法告诉主机它是否已经完全就绪。</p>
-<p>通过手册得知，IMU内部也有电源管理，其数字接口与模拟部分可以分别供电且电源模式分为Suspend Mode和Normal Mode，电源模式之间的切换也需要等待稳定。了解这个是非常重要的，因为从寄存器的初始值来看，BMI088经过上电复位后加速度计是处于Suspend Mode，而角速度计是处于Normal Mode</p>
-<p>总之按照数据手册的说法和我实际不加延时的测试，BMI088的初始化的等待至少需要</p>
+                <h1 id="从零学习写makefile（1）background"><a href="#从零学习写makefile（1）background" class="headerlink" title="从零学习写makefile（1）background"></a>从零学习写makefile（1）background</h1><h2 id="一-为什么要写makefile？"><a href="#一-为什么要写makefile？" class="headerlink" title="一.为什么要写makefile？"></a>一.为什么要写makefile？</h2><p>这个问题的答案可以先去看我的另外一篇博客（<a href="https://chesterforever.github.io/2025/08/03/%E4%BB%A3%E7%A0%81%E7%BC%96%E8%AF%91%EF%BC%8C%E9%93%BE%E6%8E%A5%EF%BC%8C%E7%83%A7%E5%BD%95%E5%85%A8%E8%BF%87%E7%A8%8B/">一篇文章讲明白代码编译，链接，烧录全过程（尽可能涵盖不同芯片和不同编译器） - 技术挖掘师</a>），于是我们知道makefile其实是为代码如何编译和链接制订规则的。</p>
+<p>正常来讲，比如用keil IDE，你点击build执行代码编译时，keil实际上就会动态生成一个makefile在临时目录中，然后调用工具链来执行这个makefile,然后得到.o文件交给链接器（.sct）处理。keil提供了一体化的开发环境，让初学者能很快地上手嵌入式开发，但也为进阶学习造成了障碍。</p>
 <ul>
-<li>加速度计上电等待1ms，切换电源模式进入Normal Mode后等待50ms</li>
-<li>角速度计上电或切换电源模式都需要等待30ms</li>
-<li>SPI两次写入间至少需要有2us</li>
+<li><strong>编译器</strong>：ARMCC&#x2F;ARMCLANG（专为 ARM 优化）</li>
+<li><strong>链接器</strong>：自动处理分散加载（<code>.sct</code>文件）</li>
+<li><strong>调试器</strong>：无缝支持硬件调试（无需额外配置 GDB）</li>
+<li><strong>芯片支持包</strong>：内置寄存器定义、启动文件、驱动库</li>
 </ul>
-<p>于是我们可以分析一下，一个完整的初始化流程应该是这样的</p>
-<ul>
-<li>上电复位，等待30ms至IMU完全就绪</li>
-<li>分别切换角速度计和加速度计的电源模式，每次切换等待30ms或50ms</li>
-<li>写入输出速率，量程大小等配置，每次写入需要确保间隔2us以上（写间隔可在移植的SPI读写函数内完成）</li>
-<li>等待数据采集</li>
-</ul>
-<p>其实在各种电源模式下读写寄存器的时序连官方自己都搞不太清，在移植驱动的过程中官方的仓库一直在更新，但是好在目前我移植过程还算顺利</p>
-<p>（2024.6.18更新）我发现了一个很有意思的点，博世的官方驱动在初始化程序里给BM088上传一个类似通过软件更新固件一样的包，通过调用<code>bmi08a_load_config_file</code>函数。我在逛博世论坛时发现有人提出了这个问题并做了解释，这个东西没什么用处除非你要使用数据同步的特性（这个功能C板没戏，硬件连线都没有引出来），所以最好不要加这个以免出现不必要的初始化错误。</p>
-<p>最后放一下我的参考资料，希望我的踩坑寄录能帮助到后续开发的同学</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/RoboMaster/DevelopmentBoard-Examples">C板官方例程</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/BoschSensortec">BoschSensortec</a>&#x2F;<a target="_blank" rel="noopener" href="https://github.com/BoschSensortec/BMI08x-Sensor-API">BMI08x-Sensor-API</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf">BMI088 DataSheet</a></p>
+<p>而vscode，它是一种代码编辑器+插件平台，无内置编译器和调试器，所以它适用于通用开发，所有工具链，构建系统，调试器都需自己配置</p>
+<p>下面是我让ai生成的keil的makefile结构，仅作参考</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs c"># 示例：Keil 自动生成的 Makefile 结构<br>PROJECT_NAME = MyProject<br>TARGET = Project.axf<br>DEVICE = STM32F103ZE<br>TOOLCHAIN = ARMCC<br><br># 工具定义<br>CC = armcc<br>AS = armasm<br>LD = armlink<br>OBJCOPY = fromelf<br><br># 包含路径<br>INCLUDES = -I./Inc -I./Drivers/STM32F1xx/Include -I./Drivers/CMSIS/Include<br><br># 编译选项<br>CFLAGS = --c99 --cpu=Cortex-M3 -g -O1 -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD<br>ASFLAGS = --cpu=Cortex-M3 --pd <span class="hljs-string">&quot;__MICROLIB SETA 1&quot;</span><br>LDFLAGS = --cpu=Cortex-M3 --library_type=microlib --scatter <span class="hljs-string">&quot;.\Objects\Project.sct&quot;</span><br><br># 源文件列表<br>C_SOURCES = \<br>    Src/main.c \<br>    Src/stm32f10x_it.c \<br>    Drivers/STM32F1xx/Src/stm32f10x_gpio.c \<br>    Drivers/STM32F1xx/Src/stm32f10x_rcc.c<br><br>ASM_SOURCES = \<br>    Startup/startup_stm32f10x_hd.s<br><br># 目标文件列表<br>OBJECTS = $(C_SOURCES:.c=.o) $(ASM_SOURCES:.s=.o)<br><br># 默认目标<br>all: $(TARGET)<br><br># 链接目标<br>$(TARGET): $(OBJECTS)<br>    $(LD) $(LDFLAGS) --<span class="hljs-built_in">map</span> --<span class="hljs-built_in">list</span> ./Listings/Project.<span class="hljs-built_in">map</span> -o $@ $^<br><br># 编译 C 文件<br>%.o: %.c<br>    $(CC) $(CFLAGS) $(INCLUDES) -o $@ $&lt;<br><br># 编译汇编文件<br>%.o: %.s<br>    $(AS) $(ASFLAGS) -o $@ $&lt;<br><br>clean:<br>    del $(OBJECTS) $(TARGET)<br></code></pre></td></tr></table></figure>
+
+<p>在了解上述这些知识背景后，通过比对就知道了为什么要自己写makefile，原因无非是以下几点：</p>
+<ol>
+<li><p>灵活性与控制力</p>
+<p>Keil 提供了一个图形化界面（GUI），你通过点击复选框和填写输入框来配置项目。这很方便，但同时也是一种“黑箱”操作。</p>
+<p>Makefile 是“白箱“：你可以精确地控制编译过程的每一个步骤：用了哪个编译器（<code>arm-none-eabi-gcc</code>）、哪些编译标志（<code>-O2</code>, <code>-mcpu=cortex-m4</code>）、链接顺序、链接脚本的位置、预处理器的定义等。当遇到极其棘手的链接错误或优化问题时，这种细粒度的控制是无可替代的。</p>
+<p>超越 IDE 的限制：Keil 的配置选项是有限的。如果你需要使用一个非常冷门的编译器特性，或者想实现一些复杂的构建前&#x2F;后步骤（比如自动生成版本号、加密固件、调用自定义的代码生成工具），在 Makefile 中可以轻松实现，而在 Keil 中可能非常困难甚至不可能。</p>
+</li>
+<li><p>自动化与持续集成&#x2F;持续部署</p>
+<p>命令行驱动：Makefile 可以通过简单的 <code>make</code>命令在终端中运行。这意味着它可以被轻松地集成到各种自动化流程中。</p>
+<p>CI&#x2F;CD 流水线：在 Jenkins, GitLab CI, GitHub Actions 等自动化平台上，你可以直接调用 <code>make</code>命令来编译整个项目。服务器上不需要安装和配置庞大的 Keil IDE，只需要安装轻量级的编译器工具链（如 GNU Arm Embedded Toolchain）即可。这实现了快速、可重复的自动化构建、测试和发布。</p>
+<p>夜间构建：可以设置服务器在每晚自动拉取最新代码，用 Makefile 编译，并报告成功与否。</p>
+</li>
+<li><p>跨平台与团队协作</p>
+<p>操作系统无关性：Keil 主要面向 Windows。而 GNU Make 和 GCC 工具链是跨平台的，可以在 Windows（通过 MSYS2、WSL）、Linux 和 macOS 上完美运行。这对于使用不同操作系统的开发团队（尤其是在Linux上做开发的团队）至关重要。</p>
+<p>统一的构建方式：团队中每个成员，无论使用什么电脑，都可以用同一套 Makefile 获得完全一致的构建结果，避免了因 IDE 配置差异导致的问题。</p>
+<p>与版本控制系统完美契合：Makefile 是纯文本文件，可以很好地被 Git 等版本控制系统管理。你可以清晰地看到构建配置的每一次变更。而 Keil 的 <code>.uvprojx</code>项目文件是 XML格式，虽然也能版本控制，但可读性和可维护性远不如 Makefile。</p>
+</li>
+<li><p>可维护性与可复用性</p>
+<p>模块化：一个编写良好的 Makefile 可以非常模块化，通过变量和包含其他 Makefile 片段来管理大型项目，使得代码结构清晰。</p>
+<p>知识复用：Makefile 的知识是通用的。你为 ARM 处理器写的 Makefile，其核心思想（目标、依赖、规则）可以应用到编译 Linux C++ 程序、Go 语言项目甚至文档生成上。而熟练使用 Keil 的技能，其通用性相对较低。</p>
+<p>依赖管理：对于复杂的项目，尤其是需要集成多个第三方库（如 FreeRTOS, LWIP, FatFs）时，用 Makefile 来管理这些依赖关系可能比在 Keil 中手动添加文件更加清晰和自动化。</p>
+</li>
+<li><p>成本与开源文化</p>
+<p>Keil 是商业软件：虽然有针对芯片厂商的免费版本（有代码大小限制），但完整版价格昂贵。</p>
+<p>GNU 工具链是开源免费的：GCC + Make 的组合是完全免费且开源的，这符合许多项目和公司的预算及技术选型策略。整个开源的嵌入式生态（如 Zephyr RTOS, ESP-IDF 等）都基于 Makefile&#x2F;CMake 这类构建系统。</p>
+</li>
+</ol>
+<h2 id="二-Makefile，Make，CMake的关系"><a href="#二-Makefile，Make，CMake的关系" class="headerlink" title="二.Makefile，Make，CMake的关系"></a>二.Makefile，Make，CMake的关系</h2><p>CMake (CMakeLists.txt) → 生成 Makefile → 由 Make 执行编译</p>
+<p><strong>CMake</strong> 是一个 跨平台的高级构建系统生成器，它不直接编译代码，而是：</p>
+<ol>
+<li>读取 <code>CMakeLists.txt</code>（项目配置文件）</li>
+<li>生成 平台相关的构建文件**（如 <code>Makefile</code>、<code>Visual Studio.sln</code>、<code>Ninja</code>）</li>
+<li>调用底层工具（<code>make</code>、<code>msbuild</code>、<code>ninja</code>）执行编译</li>
+</ol>
+<p><strong>Make</strong> 是一个命令行工具，用于解析Makefile并执行构建任务。它根据文件修改时间（<code>timestamp</code>）决定哪些文件需要重新编译。</p>
+<p><strong>Makefile</strong> 是一个纯文本文件，定义了如何编译、链接和构建项目的规则。它描述了源文件（<code>.c</code>、<code>.cpp</code>）如何编译成目标文件（<code>.o</code>），目标文件如何链接成可执行文件（<code>.elf</code>、<code>.exe</code>），依赖关系（哪些文件需要重新编译）清理规则（<code>make clean</code>删除临时文件）</p>
+<p>由于这篇博客主要以学习记录为主，所以暂时不会接触CMake，等我学完makefile后如果有需要再来看看cmake相关的知识点。</p>
 
                 
               </div>
@@ -346,9 +359,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/robomaster/" class="print-no-link">#robomaster</a>
-      
-        <a href="/tags/IMU/" class="print-no-link">#IMU</a>
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" class="print-no-link">#学习记录</a>
       
     </div>
   
@@ -360,8 +371,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>DJI robomaster C板陀螺仪驱动调试寄录</div>
-      <div>https://chesterforever.github.io/2023/11/08/DJI robomaster C板陀螺仪驱动调试寄录/</div>
+      <div>从零学习写makefile（1）background</div>
+      <div>https://chesterforever.github.io/2025/10/01/从零学习如何写makefile(1)background/</div>
     </div>
     <div class="license-meta">
       
@@ -373,7 +384,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年11月8日</div>
+          <div>2025年10月1日</div>
         </div>
       
       
@@ -405,9 +416,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/01/05/%E5%AE%87%E6%A0%91GO8010%E7%94%B5%E6%9C%BA%E6%96%AD%E8%81%94%E9%97%AE%E9%A2%98%E5%AF%84%E5%BD%95/" title="宇树GO8010电机断联问题寄录">
+                      <a href="/2025/10/04/%E4%BB%8E%E9%9B%B6%E5%AD%A6%E4%B9%A0%E5%A6%82%E4%BD%95%E5%86%99makefile(2)improve/" title="从零学习写makefile（2）基础学习">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">宇树GO8010电机断联问题寄录</span>
+                        <span class="hidden-mobile">从零学习写makefile（2）基础学习</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -415,8 +426,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/11/05/HAL%E5%BA%93%E5%92%8CLL%E5%BA%93%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/" title="HAL库和LL库整体框架学习">
-                        <span class="hidden-mobile">HAL库和LL库整体框架学习</span>
+                      <a href="/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" title="对于代码架构和分层的一些思考">
+                        <span class="hidden-mobile">对于代码架构和分层的一些思考</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
