@@ -19,18 +19,18 @@
   <meta name="author" content="jiawei xu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="面向3D打印机的OS编写前言最近实习用了ubuntu系统，虽然没有基于linux做驱动开发，但是出于个人兴趣，我还是去学习了一下linux内核。学完linux内核之后，感觉有点手痒，想写一个自己的OS。但是市面上已经有很多成熟的OS了，如果只是出于学习目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目，但我觉得没什么意思，于是又充分发挥了面向对象编程的思想，我来挑战写一个面向3D打印">
+    <meta name="description" content="面向3D打印机的OS编写前言最近实习用了ubuntu系统，虽然没有基于linux做驱动开发，但是出于个人兴趣，我还是去学习了一下linux内核。学完linux内核之后，感觉有点手痒，想写一个自己的OS。但是市面上已经有很多成熟的OS了，如果只是出于学习目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目，但我觉得没什么意思，就充分发挥一下面向对象编程的思想，来写一个面向3D打印机的OS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面向3D打印机的OS编写(一)">
 <meta property="og:url" content="https://chesterforever.github.io/2025/10/14/%E9%9D%A2%E5%90%913D%E6%89%93%E5%8D%B0%E6%9C%BA%E7%9A%84OS%E7%BC%96%E5%86%99/index.html">
 <meta property="og:site_name" content="技术挖掘师">
-<meta property="og:description" content="面向3D打印机的OS编写前言最近实习用了ubuntu系统，虽然没有基于linux做驱动开发，但是出于个人兴趣，我还是去学习了一下linux内核。学完linux内核之后，感觉有点手痒，想写一个自己的OS。但是市面上已经有很多成熟的OS了，如果只是出于学习目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目，但我觉得没什么意思，于是又充分发挥了面向对象编程的思想，我来挑战写一个面向3D打印">
+<meta property="og:description" content="面向3D打印机的OS编写前言最近实习用了ubuntu系统，虽然没有基于linux做驱动开发，但是出于个人兴趣，我还是去学习了一下linux内核。学完linux内核之后，感觉有点手痒，想写一个自己的OS。但是市面上已经有很多成熟的OS了，如果只是出于学习目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目，但我觉得没什么意思，就充分发挥一下面向对象编程的思想，来写一个面向3D打印机的OS">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
 <meta property="article:published_time" content="2025-10-14T07:44:54.000Z">
-<meta property="article:modified_time" content="2025-10-14T16:56:07.538Z">
+<meta property="article:modified_time" content="2025-10-18T03:32:18.368Z">
 <meta property="article:author" content="jiawei xu">
-<meta property="article:tag" content="脑子抽了想出来的项目">
+<meta property="article:tag" content="个人项目">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
   
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          600 字
+          596 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          6 分钟
+          5 分钟
         
       </span>
     
@@ -298,7 +298,7 @@
             
               <div class="markdown-body">
                 
-                <h1 id="面向3D打印机的OS编写"><a href="#面向3D打印机的OS编写" class="headerlink" title="面向3D打印机的OS编写"></a>面向3D打印机的OS编写</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近实习用了ubuntu系统，虽然没有基于linux做驱动开发，但是出于个人兴趣，我还是去学习了一下linux内核。学完linux内核之后，感觉有点手痒，想写一个自己的OS。但是市面上已经有很多成熟的OS了，如果只是出于学习目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目，但我觉得没什么意思，于是又充分发挥了面向对象编程的思想，我来挑战写一个面向3D打印机的OS。</p>
+                <h1 id="面向3D打印机的OS编写"><a href="#面向3D打印机的OS编写" class="headerlink" title="面向3D打印机的OS编写"></a>面向3D打印机的OS编写</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近实习用了ubuntu系统，虽然没有基于linux做驱动开发，但是出于个人兴趣，我还是去学习了一下linux内核。学完linux内核之后，感觉有点手痒，想写一个自己的OS。但是市面上已经有很多成熟的OS了，如果只是出于学习目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目，但我觉得没什么意思，就充分发挥一下面向对象编程的思想，来写一个面向3D打印机的OS。</p>
 <p>为什么要挑3D打印机呢，首先作为一个成熟的智能硬件产品，我认为拥有一个私有定制化的OS系统是非常有必要的，对于产品性能和硬件成本的节省有很大的帮助。拿拓竹A1来说，官网查到的资料显示硬件用的是双核 Cortex-M4 处理器，那基本上可以猜测用的应该是同构多核非对称多处理的方案，即</p>
 <ul>
 <li><p>一个实时核，运行硬实时内核，处理硬件外设，简单PID以及硬件监控任务</p>
@@ -320,7 +320,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E8%84%91%E5%AD%90%E6%8A%BD%E4%BA%86%E6%83%B3%E5%87%BA%E6%9D%A5%E7%9A%84%E9%A1%B9%E7%9B%AE/" class="print-no-link">#脑子抽了想出来的项目</a>
+        <a href="/tags/%E4%B8%AA%E4%BA%BA%E9%A1%B9%E7%9B%AE/" class="print-no-link">#个人项目</a>
       
     </div>
   
