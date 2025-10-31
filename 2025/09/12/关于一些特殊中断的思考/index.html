@@ -1,0 +1,720 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jiawei xu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="关于一些特殊中断的思考引言​    最近有一起实习的同学问我PendSV中断在FreeRTOS运行过程中是否会“堆积”导致任务调度失败，答案当然是不会。   ​    这是因为当有任务需要调度时，PendSV中断并不会直接抢占，而是先被systick挂起，由于PendSV中断通常设置为最低优先级，所以在systick中断结束后还需要看是否有其他高优先级的中断需要执行，然后最后才会在空闲时轮到Pen">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于一些特殊中断的思考">
+<meta property="og:url" content="https://chesterforever.github.io/2025/09/12/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E4%B8%AD%E6%96%AD%E7%9A%84%E6%80%9D%E8%80%83/index.html">
+<meta property="og:site_name" content="技术挖掘师">
+<meta property="og:description" content="关于一些特殊中断的思考引言​    最近有一起实习的同学问我PendSV中断在FreeRTOS运行过程中是否会“堆积”导致任务调度失败，答案当然是不会。   ​    这是因为当有任务需要调度时，PendSV中断并不会直接抢占，而是先被systick挂起，由于PendSV中断通常设置为最低优先级，所以在systick中断结束后还需要看是否有其他高优先级的中断需要执行，然后最后才会在空闲时轮到Pen">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
+<meta property="article:published_time" content="2025-09-11T18:11:54.000Z">
+<meta property="article:modified_time" content="2025-10-03T16:10:38.781Z">
+<meta property="article:author" content="jiawei xu">
+<meta property="article:tag" content="MCU">
+<meta property="article:tag" content="RTOS">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>关于一些特殊中断的思考 - 技术挖掘师</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chesterforever.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 8.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="关于一些特殊中断的思考"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        jiawei xu
+      </span>
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">关于一些特殊中断的思考</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="关于一些特殊中断的思考"><a href="#关于一些特殊中断的思考" class="headerlink" title="关于一些特殊中断的思考"></a>关于一些特殊中断的思考</h1><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>​    最近有一起实习的同学问我PendSV中断在FreeRTOS运行过程中是否会“堆积”导致任务调度失败，答案当然是不会。</p>
+<img src="/2025/09/12/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E4%B8%AD%E6%96%AD%E7%9A%84%E6%80%9D%E8%80%83/8489ad8d-8788-4bee-99c0-343256293873.png" srcset="/img/loading.gif" lazyload class="">
+
+<p>​    这是因为当有任务需要调度时，PendSV中断并不会直接抢占，而是先被systick挂起，由于PendSV中断通常设置为最低优先级，所以在systick中断结束后还需要看是否有其他高优先级的中断需要执行，然后最后才会在空闲时轮到PendSV中断。那么这个期间PendSV可能会被多次触发，也就会做多次标记挂起操作，而这其实跟一次标记挂起没什么区别，并不会多次入栈。而执行PendSV时只执行一次上下文切换，合并所有待处理调度请求。</p>
+<p>​    所以我们可以看出这套PendSV中断的架构精髓其实在于挂起这个操作，于是我突发奇想，还有没有中断也是像PendSV中断一样先挂起后执行的。然后我找了一下相关资料发现，<strong>有的兄弟，有的</strong>，像PendSV这样的中断还有很多。</p>
+<h3 id="通信协议相关的中断"><a href="#通信协议相关的中断" class="headerlink" title="通信协议相关的中断"></a>通信协议相关的中断</h3><ul>
+<li><h6 id="DMA完成中断"><a href="#DMA完成中断" class="headerlink" title="DMA完成中断"></a>DMA完成中断</h6><p>DMA传输完成时产生中断，但可能被配置为批量处理，多个DMA完成中断合并为一个延迟处理，减少中断开销，提高吞吐量</p>
+</li>
+<li><h6 id="以太网MAC的RX-TX中断"><a href="#以太网MAC的RX-TX中断" class="headerlink" title="以太网MAC的RX&#x2F;TX中断"></a>以太网MAC的RX&#x2F;TX中断</h6><p>使用NAPI机制，中断被挂起，切换到轮询模式处理多个数据包，减少中断频率，提高网络性能</p>
+</li>
+</ul>
+<h3 id="可挂起的系统异常"><a href="#可挂起的系统异常" class="headerlink" title="可挂起的系统异常"></a>可挂起的系统异常</h3><ul>
+<li><h6 id="SVCall（SV异常）"><a href="#SVCall（SV异常）" class="headerlink" title="SVCall（SV异常）"></a>SVCall（SV异常）</h6><p>超级用户调用，是ARM Cortex-M的一个架构，通常设计为在特定条件下才立即响应，用于实现系统调用。它是在用户态（非特权级）的应用程序代码请求内核态（特权级）操作系统服务的标准机制。通过SVC指令（汇编）配合立即数触发具体的系统服务，然后CPU会完成压栈，更新寄存器，取向量，跳转执行SVC异常处理程序等一系列操作</p>
+</li>
+<li><h6 id="UsageFault，MemManage，BusFault"><a href="#UsageFault，MemManage，BusFault" class="headerlink" title="UsageFault，MemManage，BusFault"></a>UsageFault，MemManage，BusFault</h6><p>这些故障异常通常优先级很高，但是如果使能了“延迟故障处理”特性时，某些内存访问故障可能被挂起</p>
+</li>
+</ul>
+<h3 id="外部中断的特殊模式"><a href="#外部中断的特殊模式" class="headerlink" title="外部中断的特殊模式"></a>外部中断的特殊模式</h3><ul>
+<li><h6 id="电平触发中断"><a href="#电平触发中断" class="headerlink" title="电平触发中断"></a>电平触发中断</h6><p>中断信号必须保持有效直到ISR开始执行，如果中断被屏蔽，请求会持续挂起，直到解除屏蔽</p>
+</li>
+<li><h6 id="后期到达中断"><a href="#后期到达中断" class="headerlink" title="后期到达中断"></a>后期到达中断</h6><p>这个是ARM Cortex-M的一个特性，当处理器正在处理中断入口时，新到达的更高优先级中断会被记录但延迟处理，直到当前中断入口序列完成后再评估抢占</p>
+</li>
+</ul>
+<h3 id="处理器特定的挂起机制"><a href="#处理器特定的挂起机制" class="headerlink" title="处理器特定的挂起机制"></a>处理器特定的挂起机制</h3><ul>
+<li><h6 id="x86的APIC"><a href="#x86的APIC" class="headerlink" title="x86的APIC"></a>x86的APIC</h6><p>支持中断优先级和重定向；低优先级中断可能被挂起，直到高优先级任务完成；TPR可动态屏蔽特定优先级范围的中断；</p>
+</li>
+<li><h6 id="RISC-V的CLIC"><a href="#RISC-V的CLIC" class="headerlink" title="RISC-V的CLIC"></a>RISC-V的CLIC</h6><p>支持中断挂起和优先级阈值配置；可配置某些中断为非抢占模式；</p>
+</li>
+</ul>
+<p>其实写到这里我就发现挂起作为中断的一种状态，其实先挂起后运行并不是一种特殊现象，而是中断的一种常规用法，哈哈，写都写了，先这样吧。</p>
+<h3 id="额外思考"><a href="#额外思考" class="headerlink" title="额外思考"></a>额外思考</h3><ul>
+<li><h6 id="像PendSV中断这样的挂起和OS任务的挂起有什么区别？"><a href="#像PendSV中断这样的挂起和OS任务的挂起有什么区别？" class="headerlink" title="像PendSV中断这样的挂起和OS任务的挂起有什么区别？"></a>像PendSV中断这样的挂起和OS任务的挂起有什么区别？</h6><p>PendSV的挂起操作属于硬件中断层，是通过设置SCB-&gt;ICSR寄存器的PENDSVSET位实现的，目的就是为了延迟上下文切换，确保高优先级中断能及时响应。而OS任务挂起操作属于任务管理层，是通过OS提供的API为了任务管理而实现的，调用后任务会临时停止直到调用API恢复，这种任务状态的迁移不参与任务的调度。</p>
+</li>
+<li><h6 id="freertos中中断优先级肯定比任务优先级高吗？"><a href="#freertos中中断优先级肯定比任务优先级高吗？" class="headerlink" title="freertos中中断优先级肯定比任务优先级高吗？"></a>freertos中中断优先级肯定比任务优先级高吗？</h6><p>针对这个问题，首先得知道freertos的一个概念：中断屏蔽范围。这个是freertos的一个可设置项，用于定义可屏蔽的中断优先级范围。为了不搞混中断优先级和任务优先级，先说明中断优先级0-15，优先级数值越大，优先级越低，而任务优先级0-15，优先级数值越大，优先级越高。中断屏蔽范围通常从0开始，到设定值例如5，那么0-5优先级的中断都会直接被OS屏蔽。</p>
+<p>现在有两个问题：</p>
+<p>1.被屏蔽的中断在任务运行时能进行抢占吗；</p>
+<p>2.为什么不屏蔽低优先级中断反而屏蔽高优先级中断；</p>
+<p>针对第一个问题，首先答案是不能。从字面意思上看，中断都被os屏蔽了，那肯定影响不到os的任务啊。具体来讲，被屏蔽的中断触发时，中断信号会被CPU接收，但不会立即执行，CPU会将中断请求挂起，直到屏蔽解除（RTOS退出临界区或离开调度器锁定的代码段），CPU开始从被挂起的最高优先级中断开始执行。为什么os要这么设计呢，其实是考虑到为了平衡实时性和安全性，因为0-5优先级的中断通常仅处理硬件紧急事件（比如NMI和HardFault），不能依赖RTOS，而6-15优先级的中断一般与外设有关，并且需要与OS交互，所以不能屏蔽，这也解释了第二个问题。未被屏蔽的中断抢占权高于所有OS任务（中断硬件优先级需高于CPU优先级）。</p>
+<p>通过这个问题我们也发现了，如果用了freertos，那么0-5中断就不要用于外设了。</p>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MCU/" class="print-no-link">#MCU</a>
+      
+        <a href="/tags/RTOS/" class="print-no-link">#RTOS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>关于一些特殊中断的思考</div>
+      <div>https://chesterforever.github.io/2025/09/12/关于一些特殊中断的思考/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jiawei xu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年9月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" title="对于代码架构和分层的一些思考">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">对于代码架构和分层的一些思考</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/09/05/%E5%85%AB%E8%82%A1%E5%A4%A7%E6%9D%82%E7%83%A9/" title="八股大杂烩">
+                        <span class="hidden-mobile">八股大杂烩</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

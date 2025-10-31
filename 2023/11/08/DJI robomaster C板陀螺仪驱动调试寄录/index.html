@@ -1,0 +1,714 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jiawei xu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="robomaster C板陀螺仪驱动调试寄录首先robomaster官方C板用户手册有关于陀螺仪的使用说明和例程，但是细看会发现很多代码只是勉强能跑，只能用于学习，想要有良好的性能实现比赛场上的高强度运行，必须重新编写自己的驱动。队内上一届表现最好的全向移植的是南航开源的IMU驱动版本，但是我对其代码风格不太感冒，所以打算自己移植BMI088官方的驱动库然后再加上自己从南航的版本中学到的一些小技巧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DJI robomaster C板陀螺仪驱动调试寄录">
+<meta property="og:url" content="https://chesterforever.github.io/2023/11/08/DJI%20robomaster%20C%E6%9D%BF%E9%99%80%E8%9E%BA%E4%BB%AA%E9%A9%B1%E5%8A%A8%E8%B0%83%E8%AF%95%E5%AF%84%E5%BD%95/index.html">
+<meta property="og:site_name" content="技术挖掘师">
+<meta property="og:description" content="robomaster C板陀螺仪驱动调试寄录首先robomaster官方C板用户手册有关于陀螺仪的使用说明和例程，但是细看会发现很多代码只是勉强能跑，只能用于学习，想要有良好的性能实现比赛场上的高强度运行，必须重新编写自己的驱动。队内上一届表现最好的全向移植的是南航开源的IMU驱动版本，但是我对其代码风格不太感冒，所以打算自己移植BMI088官方的驱动库然后再加上自己从南航的版本中学到的一些小技巧">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
+<meta property="article:published_time" content="2023-11-08T15:48:54.000Z">
+<meta property="article:modified_time" content="2025-10-14T05:50:20.060Z">
+<meta property="article:author" content="jiawei xu">
+<meta property="article:tag" content="IMU">
+<meta property="article:tag" content="robomaster">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>DJI robomaster C板陀螺仪驱动调试寄录 - 技术挖掘师</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chesterforever.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 8.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="DJI robomaster C板陀螺仪驱动调试寄录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        jiawei xu
+      </span>
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">DJI robomaster C板陀螺仪驱动调试寄录</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="robomaster-C板陀螺仪驱动调试寄录"><a href="#robomaster-C板陀螺仪驱动调试寄录" class="headerlink" title="robomaster C板陀螺仪驱动调试寄录"></a>robomaster C板陀螺仪驱动调试寄录</h1><p>首先robomaster官方C板用户手册有关于陀螺仪的使用说明和例程，但是细看会发现很多代码只是勉强能跑，只能用于学习，想要有良好的性能实现比赛场上的高强度运行，必须重新编写自己的驱动。队内上一届表现最好的全向移植的是南航开源的IMU驱动版本，但是我对其代码风格不太感冒，所以打算自己移植BMI088官方的驱动库然后再加上自己从南航的版本中学到的一些小技巧。从结果上看，我只能说相比于MPU6050，BMI088在性能上完爆但是开发体验并不是很好</p>
+<h2 id="移植步骤"><a href="#移植步骤" class="headerlink" title="移植步骤"></a>移植步骤</h2><p>首先根据README给出的指引，我们只需要编写读写SPI的函数与微秒延时函数即可。微秒级延时可以直接用Systick当计数器完成（后面了解到其实最好用DWT），而SPI通信的移植就比较复杂了</p>
+<h3 id="SPI通信"><a href="#SPI通信" class="headerlink" title="SPI通信"></a>SPI通信</h3><p>C板参考例程内CubeMX的SPI速率配置为300k，根据测试和计算，这个速率肯定是太慢了。按照每次只读取6个字节（三轴加速度计与三轴角速度计数据都是2Byte，实际只会更多）共48bit来算，至少0.2ms的时间耗费在SPI通信上。但是根据官方数据手册上给出的SPI参数，最大速率能达到到10Mhz，再根据在<a target="_blank" rel="noopener" href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/application_notes_1/bst-mis-an006.pdf">Application Note</a>内提到推荐2Mhz以上的通信速率。最终通过计算应用层的数据链路传输频率，我将SPI速率配置为2.625Mbps，后续经过测试，基本能实现生产和消费之间的平衡（其实不需要这么精确，只是我对于性能有强迫症）</p>
+<img src="/2023/11/08/DJI%20robomaster%20C%E6%9D%BF%E9%99%80%E8%9E%BA%E4%BB%AA%E9%A9%B1%E5%8A%A8%E8%B0%83%E8%AF%95%E5%AF%84%E5%BD%95/spi-speed.png" srcset="/img/loading.gif" lazyload class="">
+
+<p>接下来就是软件方面上我从南航的代码中学到的小技巧了，SPI的读写如果使用HAL库的spi函数进行一次传输，传输速度是慢于直接用寄存器完成传输的，对于像BMI088这样对实时性要求极强的IMU，应该直接对寄存器操作来减小开销</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-function"><span class="hljs-type">uint8_t</span> <span class="hljs-title">spi_rw_byte</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> <span class="hljs-type">byte</span>)</span></span>&#123;<br>	<span class="hljs-built_in">SET_BIT</span>(BMI088_SPI-&gt;CR1, SPI_CR1_SPE);<br>    <span class="hljs-keyword">while</span>((BMI088_SPI-&gt;SR &amp; SPI_SR_TXE) == RESET);<br>	BMI088_SPI-&gt;DR = <span class="hljs-type">byte</span>;<br>    <span class="hljs-keyword">while</span>((BMI088_SPI-&gt;SR &amp; SPI_SR_RXNE) == RESET);<br>    <span class="hljs-keyword">return</span> BMI088_SPI-&gt;DR;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>IMU加速度计与角速度计在同一个SPI总线上通过不同CS引脚选中，对应到BMI088官方库的移植函数则是通过传入的<code>intf_ptr</code>指明，其值是初始化中的<code>intf_ptr_accel</code>或<code>intf_ptr_gyro</code>，这里只需要判断传入参数拉低对应的片选脚即可</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs angelscript">BMI08X_INTF_RET_TYPE bmi08x_spi_read(<span class="hljs-built_in">uint8</span>_t reg_addr, <span class="hljs-built_in">uint8</span>_t *reg_data, <span class="hljs-built_in">uint32</span>_t len, <span class="hljs-built_in">void</span> *<span class="hljs-built_in">int</span>f_ptr);<br>BMI08X_INTF_RET_TYPE bmi08x_spi_write(<span class="hljs-built_in">uint8</span>_t reg_addr, <span class="hljs-keyword">const</span> <span class="hljs-built_in">uint8</span>_t *reg_data, <span class="hljs-built_in">uint32</span>_t len, <span class="hljs-built_in">void</span> *<span class="hljs-built_in">int</span>f_ptr);<br></code></pre></td></tr></table></figure>
+
+<p>还有一个我遇到的SPI通信中比较特殊的问题是，在每次与<strong>加速度计</strong>通信时不论是读单个寄存器还是连续读都需要先接收一个Dummy Byte，这个东西实际上是没有意义的内容。DJI C板手册中似乎没有写对这个问题的处理，但是看了一下BMI088官方的驱动是有相关的处理方式的</p>
+<img src="/2023/11/08/DJI%20robomaster%20C%E6%9D%BF%E9%99%80%E8%9E%BA%E4%BB%AA%E9%A9%B1%E5%8A%A8%E8%B0%83%E8%AF%95%E5%AF%84%E5%BD%95/spi-comm.png" srcset="/img/loading.gif" lazyload class="">
+
+<h3 id="初始化流程"><a href="#初始化流程" class="headerlink" title="初始化流程"></a>初始化流程</h3><p>我认为不管哪款IMU，初始化都是最难且最有可能出问题的那一步。作为MEMS器件，在上电之后需要静置稳定，不论是等待加速度计的数据稳定还是角速度计元件的起振，并且BMI088没有任何办法告诉主机它是否已经完全就绪。</p>
+<p>通过手册得知，IMU内部也有电源管理，其数字接口与模拟部分可以分别供电且电源模式分为Suspend Mode和Normal Mode，电源模式之间的切换也需要等待稳定。了解这个是非常重要的，因为从寄存器的初始值来看，BMI088经过上电复位后加速度计是处于Suspend Mode，而角速度计是处于Normal Mode</p>
+<p>总之按照数据手册的说法和我实际不加延时的测试，BMI088的初始化的等待至少需要</p>
+<ul>
+<li>加速度计上电等待1ms，切换电源模式进入Normal Mode后等待50ms</li>
+<li>角速度计上电或切换电源模式都需要等待30ms</li>
+<li>SPI两次写入间至少需要有2us</li>
+</ul>
+<p>于是我们可以分析一下，一个完整的初始化流程应该是这样的</p>
+<ul>
+<li>上电复位，等待30ms至IMU完全就绪</li>
+<li>分别切换角速度计和加速度计的电源模式，每次切换等待30ms或50ms</li>
+<li>写入输出速率，量程大小等配置，每次写入需要确保间隔2us以上（写间隔可在移植的SPI读写函数内完成）</li>
+<li>等待数据采集</li>
+</ul>
+<p>其实在各种电源模式下读写寄存器的时序连官方自己都搞不太清，在移植驱动的过程中官方的仓库一直在更新，但是好在目前我移植过程还算顺利</p>
+<p>（2024.6.18更新）我发现了一个很有意思的点，博世的官方驱动在初始化程序里给BM088上传一个类似通过软件更新固件一样的包，通过调用<code>bmi08a_load_config_file</code>函数。我在逛博世论坛时发现有人提出了这个问题并做了解释，这个东西没什么用处除非你要使用数据同步的特性（这个功能C板没戏，硬件连线都没有引出来），所以最好不要加这个以免出现不必要的初始化错误。</p>
+<p>最后放一下我的参考资料，希望我的踩坑寄录能帮助到后续开发的同学</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/RoboMaster/DevelopmentBoard-Examples">C板官方例程</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/BoschSensortec">BoschSensortec</a>&#x2F;<a target="_blank" rel="noopener" href="https://github.com/BoschSensortec/BMI08x-Sensor-API">BMI08x-Sensor-API</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bmi088-ds001.pdf">BMI088 DataSheet</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/robomaster/" class="print-no-link">#robomaster</a>
+      
+        <a href="/tags/IMU/" class="print-no-link">#IMU</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>DJI robomaster C板陀螺仪驱动调试寄录</div>
+      <div>https://chesterforever.github.io/2023/11/08/DJI robomaster C板陀螺仪驱动调试寄录/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jiawei xu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年11月8日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/01/05/%E5%AE%87%E6%A0%91GO8010%E7%94%B5%E6%9C%BA%E6%96%AD%E8%81%94%E9%97%AE%E9%A2%98%E5%AF%84%E5%BD%95/" title="宇树GO8010电机断联问题寄录">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">宇树GO8010电机断联问题寄录</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/11/05/HAL%E5%BA%93%E5%92%8CLL%E5%BA%93%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0/" title="HAL库和LL库整体框架学习">
+                        <span class="hidden-mobile">HAL库和LL库整体框架学习</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

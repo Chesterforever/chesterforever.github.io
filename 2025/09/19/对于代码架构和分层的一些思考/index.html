@@ -1,0 +1,813 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jiawei xu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="对于嵌入式代码架构和分层的一些思考引言在我刚接触嵌入式软件的时候，其实就对这个问题非常感兴趣，所以在之后的学习中，比如在打rm的时候有时候看到别的战队的源码或者实习时拿到一份新的需要交接的源码，我都会先分析整个代码文件的架构并画图记录，这也极大地帮助我快速上手理解代码。所以这篇文章，我会从个人开发和企业开发两个角度，去讨论嵌入式代码架构和分层，以及介绍一些我目前接触学习到的架构，最后介绍一下如何用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对于代码架构和分层的一些思考">
+<meta property="og:url" content="https://chesterforever.github.io/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/index.html">
+<meta property="og:site_name" content="技术挖掘师">
+<meta property="og:description" content="对于嵌入式代码架构和分层的一些思考引言在我刚接触嵌入式软件的时候，其实就对这个问题非常感兴趣，所以在之后的学习中，比如在打rm的时候有时候看到别的战队的源码或者实习时拿到一份新的需要交接的源码，我都会先分析整个代码文件的架构并画图记录，这也极大地帮助我快速上手理解代码。所以这篇文章，我会从个人开发和企业开发两个角度，去讨论嵌入式代码架构和分层，以及介绍一些我目前接触学习到的架构，最后介绍一下如何用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
+<meta property="article:published_time" content="2025-09-18T16:33:14.000Z">
+<meta property="article:modified_time" content="2025-10-04T06:07:38.051Z">
+<meta property="article:author" content="jiawei xu">
+<meta property="article:tag" content="MCU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>对于代码架构和分层的一些思考 - 技术挖掘师</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chesterforever.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 8.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="对于代码架构和分层的一些思考"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        jiawei xu
+      </span>
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          49 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">对于代码架构和分层的一些思考</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="对于嵌入式代码架构和分层的一些思考"><a href="#对于嵌入式代码架构和分层的一些思考" class="headerlink" title="对于嵌入式代码架构和分层的一些思考"></a>对于嵌入式代码架构和分层的一些思考</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在我刚接触嵌入式软件的时候，其实就对这个问题非常感兴趣，所以在之后的学习中，比如在打rm的时候有时候看到别的战队的源码或者实习时拿到一份新的需要交接的源码，我都会先分析整个代码文件的架构并画图记录，这也极大地帮助我快速上手理解代码。所以这篇文章，我会从个人开发和企业开发两个角度，去讨论嵌入式代码架构和分层，以及介绍一些我目前接触学习到的架构，最后介绍一下如何用draw.io或配合cursor ai去画架构图或UML图。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="一、为什么要对代码进行架构设计"><a href="#一、为什么要对代码进行架构设计" class="headerlink" title="一、为什么要对代码进行架构设计"></a>一、为什么要对代码进行架构设计</h3><p>这个重要性不言而喻，这里用了ai回答这个问题，比我自己总结的更全面一些</p>
+<ol>
+<li><strong>可维护性</strong>：清晰的层次使得定位问题、修改功能、增加新特性变得容易。新人也能更快上手。</li>
+<li><strong>可移植性</strong>：将硬件相关的代码与业务逻辑分离。当更换MCU（如从STM32换成ESP32）时，只需重写底层驱动，核心业务代码几乎不用动。</li>
+<li><strong>可测试性</strong>：分层后，可以对每一层进行独立的单元测试。例如，可以在PC上模拟硬件层，直接测试业务逻辑，而不需要每次都烧录到硬件上。</li>
+<li><strong>可扩展性</strong>：良好的架构便于功能模块的添加和删除，遵循“开闭原则”。</li>
+<li><strong>团队协作</strong>：不同的工程师可以并行开发不同的层（如驱动工程师和应用工程师），只要定义好清晰的接口即可。</li>
+</ol>
+<h3 id="二、经典的分层架构模型"><a href="#二、经典的分层架构模型" class="headerlink" title="二、经典的分层架构模型"></a>二、经典的分层架构模型</h3><p><strong>分层是手段，不是目的。</strong> 最适合项目的架构，是能够以可接受的复杂度，清晰地表达当前系统、并能较好地适应未来变化的那一个。从三层开始，当遇到痛点（如测试难、移植麻烦、业务逻辑混乱）时，再考虑引入更多层次来解决特定问题。层级分的太多，隔离的太彻底，有时候反而增加了无谓的损耗。很多厂家其实都是直接分3层，底层，中间层，应用层，简单粗暴。</p>
+<p>一般来说，个人总结有几个原则：</p>
+<blockquote>
+<ol>
+<li><strong>接口是上下级调用，很少跨层调用</strong>。即第4层的代码一般不会直接去第1&#x2F;2层调用接口，非要用的话，就从第3层透传封装一下。（5层架构的应用层同时依赖3，4层）</li>
+<li><strong>同层级的模块间尽量避免相互调用</strong>，需要的数据都是通过高一层的接口获取再下传</li>
+</ol>
+</blockquote>
+<h4 id="1-三层架构"><a href="#1-三层架构" class="headerlink" title="1.三层架构"></a>1.三层架构</h4><h5 id="a-硬件层"><a href="#a-硬件层" class="headerlink" title="a. 硬件层"></a>a. 硬件层</h5><p>直接与MCU外设（GPIO, UART, SPI, I2C, ADC等）寄存器打交道的代码。负责最底层的初始化、读写操作。</p>
+<p>封装硬件差异，向上提供统一的、硬件无关的操作接口。</p>
+<h5 id="b-中间件层"><a href="#b-中间件层" class="headerlink" title="b. 中间件层"></a>b. 中间件层</h5><p>在硬件抽象层之上，实现具体的、可复用的功能模块和服务。它不关心具体的业务逻辑，而是提供“工具”。将通用的、复杂的操作封装成更高级、更易用的API。</p>
+<p><strong>操作系统</strong>：如FreeRTOS, Zephyr的任务、信号量、队列等抽象。</p>
+<p><strong>协议栈</strong>：如TCP&#x2F;IP, USB, 文件系统FatFS。</p>
+<p><strong>算法库</strong>：如PID控制器、滤波器、数学库。</p>
+<p><strong>设备驱动</strong>：针对具体外围芯片（如传感器BME280、显示屏SSD1306）的驱动。这部分有时也会被归入硬件抽象层，但更倾向于放在这一层，因为它依赖底层的SPI&#x2F;I2C HAL。</p>
+<h5 id="c-应用层"><a href="#c-应用层" class="headerlink" title="c. 应用层"></a>c. 应用层</h5><p>实现产品的核心功能和业务流程。它协调下层各个模块来完成最终的用户需求。</p>
+<p>这一层代码应该完全不包含任何硬件特性（如寄存器地址、延时函数 <code>HAL_Delay</code>）。它只调用下层提供的服务接口。</p>
+<h4 id="2-四层架构"><a href="#2-四层架构" class="headerlink" title="2.四层架构"></a>2.四层架构</h4><p>在业务逻辑复杂后，三层架构会遇到一个问题：中间件层既包含通用服务，又包含针对具体硬件的驱动实现，导致应用层仍然对具体设备有依赖。</p>
+<p>四层架构通常通过拆分中间件层来解决这个问题，引入一个专门负责抽象接口和适配的层次。</p>
+<h5 id="a-硬件驱动层"><a href="#a-硬件驱动层" class="headerlink" title="a. 硬件驱动层"></a>a. 硬件驱动层</h5><p>最底层的芯片寄存器操作</p>
+<h5 id="b-硬件抽象层"><a href="#b-硬件抽象层" class="headerlink" title="b. 硬件抽象层"></a>b. 硬件抽象层</h5><p>抽象操作系统和核心外设。定义接口，并提供具体设备的适配器</p>
+<blockquote>
+<p><strong>硬件抽象层和硬件驱动层的主要区别</strong><br>硬件抽象层使用的芯片内本身的资源（芯片手册都有介绍），而硬件驱动层使用的是芯片本身不存在的资源，而且需要编写相应代码才能实现的资源。</p>
+<p>比如正点原子STM32中CAN使用的TJA1050芯片，CAN属于STM32的片内资源，TJA1050属于片外资源，但由于TJA1050不需要额外的代码就能通过STM32中CAN本身提供API函数正常 工作；因此可以认为TJA1050不属于硬件驱动层，而若使用TJA1041，则需要编写额外代码才能使正常工作才能使STM32中CAN本身提供API函数正常工作，因此可以将TJA1041归为硬件驱动层。</p>
+</blockquote>
+<h5 id="c-功能模块层"><a href="#c-功能模块层" class="headerlink" title="c. 功能模块层"></a>c. 功能模块层</h5><p>实现具体、可复用的功能</p>
+<h5 id="d-应用层"><a href="#d-应用层" class="headerlink" title="d. 应用层"></a>d. 应用层</h5><p>纯业务逻辑，协调下层服务</p>
+<h4 id="3-五层架构"><a href="#3-五层架构" class="headerlink" title="3.五层架构"></a>3.五层架构</h4><p>当业务逻辑变得极其复杂，包含大量的状态、规则和核心算法时，我们会发现应用层变得过于臃肿。这时，我们需要将核心的、与外部完全无关的业务规则独立出来，形成一个新的层次——<strong>领域模型层</strong>。</p>
+<h5 id="a-硬件驱动层-1"><a href="#a-硬件驱动层-1" class="headerlink" title="a. 硬件驱动层"></a>a. 硬件驱动层</h5><h5 id="b-硬件抽象层-1"><a href="#b-硬件抽象层-1" class="headerlink" title="b. 硬件抽象层"></a>b. 硬件抽象层</h5><h5 id="c-功能模块层-1"><a href="#c-功能模块层-1" class="headerlink" title="c. 功能模块层"></a>c. 功能模块层</h5><p>提供基础服务，如传感器数据融合、GPS解析、RC指令解码等。</p>
+<h5 id="d-领域模型层"><a href="#d-领域模型层" class="headerlink" title="d. 领域模型层"></a>d. 领域模型层</h5><p>系统的核心。包含核心业务实体、状态机和算法。这一层应该是纯的、平台无关的，可以被任何语言（C&#x2F;C++&#x2F;Python）实现。</p>
+<h5 id="e-应用协调层"><a href="#e-应用协调层" class="headerlink" title="e.应用协调层"></a>e.应用协调层</h5><p>协调任务，处理外部事件。如接收遥控器信号、处理地面站指令、触发飞行模式切换。它不包含核心飞行规则。</p>
+<h4 id="4-六层架构"><a href="#4-六层架构" class="headerlink" title="4.六层架构"></a>4.六层架构</h4><p>六层架构通常出现在大型系统或需要提供明确API给第三方开发的场景中。它通过在应用层之上再抽象一层，提供一个清晰的、稳定的、版本化的接口。</p>
+<h5 id="a-硬件驱动层-2"><a href="#a-硬件驱动层-2" class="headerlink" title="a. 硬件驱动层"></a>a. 硬件驱动层</h5><h5 id="b-硬件抽象层-2"><a href="#b-硬件抽象层-2" class="headerlink" title="b. 硬件抽象层"></a>b. 硬件抽象层</h5><h5 id="c-功能模块层-2"><a href="#c-功能模块层-2" class="headerlink" title="c. 功能模块层"></a>c. 功能模块层</h5><h5 id="d-领域模型层-1"><a href="#d-领域模型层-1" class="headerlink" title="d. 领域模型层"></a>d. 领域模型层</h5><h5 id="e-应用协调层-1"><a href="#e-应用协调层-1" class="headerlink" title="e.应用协调层"></a>e.应用协调层</h5><h5 id="f-API层"><a href="#f-API层" class="headerlink" title="f.API层"></a>f.API层</h5><p>对外提供统一的访问接口。可以是RESTful API、gRPC、MQTT主题，或者简单的函数库接口。负责协议转换、版本管理、权限校验。</p>
+<h4 id="5-本人rm时期的工程机器人的架构（仅作参考）"><a href="#5-本人rm时期的工程机器人的架构（仅作参考）" class="headerlink" title="5.本人rm时期的工程机器人的架构（仅作参考）"></a>5.本人rm时期的工程机器人的架构（仅作参考）</h4><p>工程机器人嵌入式软件系统架构分为 6 层。下面从顶层到底层分别介绍。</p>
+<ol>
+<li><p>应用层：包括 CAN 中断回调函数、 USB 回调函数、 UART 回调函数、定时器回调函数、主循环的具体实现。</p>
+</li>
+<li><p>功能模块层：用类的方式实现各个功能模块的参数和成员函数。包括底盘、云台、机械臂。底盘包括麦轮速度解算等、轮速控制 PID 等。云台包括控制图传模块航向和俯仰的相关成员函数。</p>
+</li>
+<li><p>硬件驱动层：用类的方式实现各个硬件的驱动。包括 A 板开关电源的驱动程序、 M3508电机的驱动程序、达妙 4310 电机驱动程序、遥控器驱动程序和裁判系统驱动程序。包含发送命令、接收反馈、数据处理、 PID 计算等功能。</p>
+</li>
+<li><p>中间件层：包含 PID 算法的功能包（类）以及自定义数学运算（如矩阵运算、限幅函数、大小端转换等）。</p>
+</li>
+<li><p>硬件抽象层：对 HAL 库中 CAN、 UART 等单片机外设库的重新封装。</p>
+</li>
+<li><p>HAL 库：由 stm32cubeMX 生成的开发者库。</p>
+</li>
+</ol>
+<h3 id="三、层级之间的“连接”架构模型"><a href="#三、层级之间的“连接”架构模型" class="headerlink" title="三、层级之间的“连接”架构模型"></a>三、层级之间的“连接”架构模型</h3><h4 id="1-生产者-消费者模型（数据流控制）"><a href="#1-生产者-消费者模型（数据流控制）" class="headerlink" title="1.生产者-消费者模型（数据流控制）"></a>1.生产者-消费者模型（数据流控制）</h4><p>硬件层提供生产者ISR负责数据采集，中间件层提供消息队列负责数据协调，应用层提供消费者任务负责数据处理，这样分层实现了</p>
+<ul>
+<li>解耦：生产者和消费者可以独立变化</li>
+<li>并发：生产和消费可以并行执行</li>
+<li>流量控制：缓冲区满时生产者阻塞，空时消费者阻塞</li>
+</ul>
+<h4 id="2-工厂模式（对象生命周期管理）"><a href="#2-工厂模式（对象生命周期管理）" class="headerlink" title="2.工厂模式（对象生命周期管理）"></a>2.工厂模式（对象生命周期管理）</h4><p>工厂模型多了一个工厂层，通过创建函数类很方便地实现了C语言下的多态的实现（个人简单的理解，不知道准不准确，因为我没用过）</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs cpp">实际案例：智能家居设备管理<br><span class="hljs-comment">// device_manager.c (应用层)</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">manage_devices</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> </span>&#123;<br>    <span class="hljs-type">device_factory_t</span> factories[] = &#123;<br>        &amp;sensor_factory,      <span class="hljs-comment">// 中间件层工厂</span><br>        &amp;actuator_factory,    <span class="hljs-comment">// 中间件层工厂</span><br>        &amp;display_factory      <span class="hljs-comment">// HAL层工厂</span><br>    &#125;;<br>    <br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) &#123;<br>        <span class="hljs-type">device_t</span>* dev = factories[i]-&gt;<span class="hljs-built_in">create</span>();<br>        dev-&gt;<span class="hljs-built_in">init</span>();<br>        registered_devices[i] = dev;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// HAL层具体工厂</span><br><span class="hljs-function"><span class="hljs-type">device_t</span>* <span class="hljs-title">display_factory_create</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> </span>&#123;<br>    <span class="hljs-type">static</span> <span class="hljs-type">display_device_t</span> disp_dev;<br>    <span class="hljs-built_in">oled_init</span>(&amp;disp_dev);  <span class="hljs-comment">// 硬件层初始化</span><br>    <span class="hljs-keyword">return</span> &amp;disp_dev.base;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>通过这种分层工厂设计，系统获得以下特性：</p>
+<ul>
+<li>硬件更换只需修改工厂实现</li>
+<li>新增设备类型只需扩展工厂接口</li>
+<li>各层级之间的依赖关系清晰可见</li>
+<li>运行时动态检测硬件成为可能</li>
+</ul>
+<h4 id="3-发布-订阅模型"><a href="#3-发布-订阅模型" class="headerlink" title="3.发布-订阅模型"></a>3.发布-订阅模型</h4><p>硬件层提供发布者，中间件层提供事件总线，应用层提供订阅者</p>
+<ul>
+<li><strong>动态响应</strong>：订阅者可随时注册&#x2F;注销</li>
+<li><strong>广播通信</strong>：一个事件可触发多个处理流程</li>
+<li><strong>松耦合</strong>：发布者无需知道订阅者存在</li>
+</ul>
+<h4 id="4-代理模式"><a href="#4-代理模式" class="headerlink" title="4. 代理模式"></a>4. 代理模式</h4><p>硬件层提供实际服务，中间件层提供代理接口，应用层提供客户端</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 中间件层：网络代理接口</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>    <span class="hljs-type">bool</span> (*send)(<span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span>* data, <span class="hljs-type">uint16_t</span> len);<br>    <span class="hljs-type">bool</span> (*receive)(<span class="hljs-type">uint8_t</span>* buf, <span class="hljs-type">uint16_t</span>* len);<br>&#125; <span class="hljs-type">network_proxy_t</span>;<br><br><span class="hljs-comment">// 硬件层：实际实现（WiFi驱动）</span><br><span class="hljs-type">bool</span> <span class="hljs-title function_">wifi_send</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span>* data, <span class="hljs-type">uint16_t</span> len)</span> &#123;<br>    <span class="hljs-keyword">return</span> WiFi_Transmit(data, len);<br>&#125;<br><br><span class="hljs-comment">// 应用层：客户端</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">send_telemetry</span><span class="hljs-params">(<span class="hljs-type">network_proxy_t</span>* proxy)</span> &#123;<br>    <span class="hljs-type">uint8_t</span> data[] = &#123;<span class="hljs-number">0x01</span>, <span class="hljs-number">0x02</span>&#125;;<br>    proxy-&gt;send(data, <span class="hljs-keyword">sizeof</span>(data)); <span class="hljs-comment">// 通过代理发送</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>访问控制</strong>：代理可添加权限检查</li>
+<li><strong>延迟初始化</strong>：实际硬件按需初始化</li>
+<li><strong>远程访问</strong>：代理可跨处理器通信（如协处理器）</li>
+</ul>
+<h4 id="5-门面模式"><a href="#5-门面模式" class="headerlink" title="5. 门面模式"></a>5. 门面模式</h4><ul>
+<li>统一接口（门面）</li>
+<li>子系统集合（各硬件模块）</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">// 中间件层：系统门面</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> &#123;</span><br>    <span class="hljs-type">void</span> (*power_on)(<span class="hljs-type">void</span>);<br>    <span class="hljs-type">void</span> (*enter_low_power)(<span class="hljs-type">void</span>);<br>    <span class="hljs-type">void</span> (*get_sensor_data)(<span class="hljs-type">sensor_data_t</span>*);<br>&#125; <span class="hljs-type">system_facade_t</span>;<br><br><span class="hljs-comment">// 子系统整合</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">system_power_on</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> &#123;<br>    PMIC_Enable();<br>    Sensor_Init();<br>    Wireless_Start();<br>&#125;<br><br><span class="hljs-comment">// 应用层：通过门面操作</span><br><span class="hljs-type">void</span> <span class="hljs-title function_">app_main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> &#123;<br>    <span class="hljs-type">system_facade_t</span> sys = &#123;<br>        .power_on = system_power_on,<br>        <span class="hljs-comment">// ...其他操作</span><br>    &#125;;<br>    sys.power_on();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>简化接口</strong>：隐藏子系统的复杂性</li>
+<li><strong>降低依赖</strong>：应用层只依赖门面接口</li>
+<li><strong>集中管理</strong>：子系统变化不影响上层</li>
+</ul>
+<h4 id="6-管道-过滤器模式"><a href="#6-管道-过滤器模式" class="headerlink" title="6. 管道-过滤器模式"></a>6. 管道-过滤器模式</h4><ul>
+<li>数据源（硬件层）</li>
+<li>过滤器链（中间件层）</li>
+<li>数据接收端（应用层）</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">// 中间件层：过滤器接口</span><br><span class="hljs-function"><span class="hljs-keyword">typedef</span> <span class="hljs-title">void</span> <span class="hljs-params">(*<span class="hljs-type">data_filter_t</span>)</span><span class="hljs-params">(<span class="hljs-type">float</span>* data)</span></span>;<br><br><span class="hljs-comment">// 过滤器链</span><br><span class="hljs-type">data_filter_t</span> filters[] = &#123;<br>    moving_average_filter,<br>    temperature_compensate,<br>    scale_to_engineering_units<br>&#125;;<br><br><span class="hljs-comment">// 应用层：处理流水线</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">process_pipeline</span><span class="hljs-params">(<span class="hljs-type">float</span> raw_data)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>; i&lt;<span class="hljs-number">3</span>; i++) &#123;<br>        filters[i](&amp;raw_data); <span class="hljs-comment">// 数据依次通过各过滤器</span><br>    &#125;<br>    <span class="hljs-built_in">display_data</span>(raw_data);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>模块化处理</strong>：每个过滤器独立可替换</li>
+<li><strong>灵活重组</strong>：可动态调整过滤器顺序</li>
+<li><strong>并行处理</strong>：不同过滤器可运行在不同核上</li>
+</ul>
+<h4 id="7-适配器模式"><a href="#7-适配器模式" class="headerlink" title="7. 适配器模式"></a>7. 适配器模式</h4><ul>
+<li>目标接口（应用层期望的）</li>
+<li>适配器（中间件层）</li>
+<li>被适配者（硬件层）</li>
+</ul>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-comment">// 应用层：期望的通用传感器接口</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-built_in">float</span> (*read)(<span class="hljs-type">void</span>);<br>&#125; <span class="hljs-type">sensor_t</span>;<br><br><span class="hljs-comment">// 硬件层：特定传感器（不兼容接口）</span><br><span class="hljs-function"><span class="hljs-type">float</span> <span class="hljs-title">DS18B20_ReadTemp</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> </span>&#123;<br>    <span class="hljs-comment">// 返回原始整型温度值</span><br>    <span class="hljs-keyword">return</span> (<span class="hljs-type">float</span>)<span class="hljs-built_in">DS18B20_Read_Raw</span>();<br>&#125;<br><br><span class="hljs-comment">// 中间件层：适配器</span><br><span class="hljs-function"><span class="hljs-type">float</span> <span class="hljs-title">ds18b20_adapter</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> </span>&#123;<br>    <span class="hljs-type">float</span> temp = <span class="hljs-built_in">DS18B20_ReadTemp</span>();<br>    <span class="hljs-keyword">return</span> temp / <span class="hljs-number">16.0f</span>; <span class="hljs-comment">// 转换为实际温度值</span><br>&#125;<br><br><span class="hljs-comment">// 使用适配器</span><br><span class="hljs-type">sensor_t</span> temp_sensor = &#123;<br>    .read = ds18b20_adapter<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>接口转换</strong>：使不兼容的接口能协同工作</li>
+<li><strong>遗留代码复用</strong>：适配旧硬件驱动</li>
+<li><strong>多平台支持</strong>：同一接口适配不同实现</li>
+</ul>
+<h3 id="四、使用draw-io或配合cursor-ai画架构图或UML图"><a href="#四、使用draw-io或配合cursor-ai画架构图或UML图" class="headerlink" title="四、使用draw.io或配合cursor ai画架构图或UML图"></a>四、使用draw.io或配合cursor ai画架构图或UML图</h3><h4 id="draw-io的下载"><a href="#draw-io的下载" class="headerlink" title="draw.io的下载"></a>draw.io的下载</h4><p>draw.io有网页端，桌面端，也可以在vscode这样的开发工具中通过插件方式使用</p>
+<p>draw.io桌面端是开源免费的，这里给出下载网址<a target="_blank" rel="noopener" href="https://github.com/jgraph/drawio-desktop/releases">Releases · jgraph&#x2F;drawio-desktop</a></p>
+<p>根据电脑自身系统下载对应的最新版本，我是windows系统，直接点击windows installer下载或下载如下图所示的文件</p>
+<img src="/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/2ff7c3c44b16d3895549a51466c6f193.png" srcset="/img/loading.gif" lazyload class="">
+
+<p>下载过程没什么坑，改下安装路径即可，如果需要桌面上的快捷方式需要手动创建</p>
+<h4 id="在vscode中通过插件方式配合cursor使用（无需下载draw-io本体）"><a href="#在vscode中通过插件方式配合cursor使用（无需下载draw-io本体）" class="headerlink" title="在vscode中通过插件方式配合cursor使用（无需下载draw.io本体）"></a>在vscode中通过插件方式配合cursor使用（无需下载draw.io本体）</h4><p>在vscode中的拓展安装Draw.io Integration插件</p>
+<p>在vscode中新建.drawio文件，然后最好改一下颜色主题，深色完全看不清</p>
+<p>向Cursor描述你的需求：</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc">请帮我生成一个微服务架构图，包含：<br><span class="hljs-bullet">- </span>API网关<br><span class="hljs-bullet">- </span>用户服务<br><span class="hljs-bullet">- </span>订单服务<br><span class="hljs-bullet">- </span>支付服务<br><span class="hljs-bullet">- </span>数据库集群<br>使用Mermaid语法<br></code></pre></td></tr></table></figure>
+
+<p>然后将得到的代码按如下图方式插入到draw.io中</p>
+<img src="/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/64c62b5b-66ce-433a-a970-ef3fc867a339.png" srcset="/img/loading.gif" lazyload class="">
+
+<p>最终结果</p>
+<img src="/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/e82700be-d5ed-49e4-a5d3-92a74bbb795e.png" srcset="/img/loading.gif" lazyload class="">
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/MCU/" class="print-no-link">#MCU</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>对于代码架构和分层的一些思考</div>
+      <div>https://chesterforever.github.io/2025/09/19/对于代码架构和分层的一些思考/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jiawei xu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年9月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/10/01/%E4%BB%8E%E9%9B%B6%E5%AD%A6%E4%B9%A0%E5%A6%82%E4%BD%95%E5%86%99makefile(%E4%B8%80)background/" title="从零学习写makefile(一)background">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">从零学习写makefile(一)background</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/09/12/%E5%85%B3%E4%BA%8E%E4%B8%80%E4%BA%9B%E7%89%B9%E6%AE%8A%E4%B8%AD%E6%96%AD%E7%9A%84%E6%80%9D%E8%80%83/" title="关于一些特殊中断的思考">
+                        <span class="hidden-mobile">关于一些特殊中断的思考</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,736 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jiawei xu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="TI AM243x-LP USB驱动开发记录不得不承认之前被ST的软件生态养的太好了，第一次用TI的Soc开发板，踩了很多坑，但是狠狠恶补了一波多核和Soc的知识点，不亏。 相关资料TI官网上给开发者提供的相关资料有  AM243x芯片手册 AM243x-LP开发板硬件手册 SDK（最新版本SDK分为mcu+sdk，motor control sdk，industrial sdk三种） SDK使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TI AM243x-LP USB驱动开发记录">
+<meta property="og:url" content="https://chesterforever.github.io/2025/10/31/TI%20AM243x-LP%20USB%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="技术挖掘师">
+<meta property="og:description" content="TI AM243x-LP USB驱动开发记录不得不承认之前被ST的软件生态养的太好了，第一次用TI的Soc开发板，踩了很多坑，但是狠狠恶补了一波多核和Soc的知识点，不亏。 相关资料TI官网上给开发者提供的相关资料有  AM243x芯片手册 AM243x-LP开发板硬件手册 SDK（最新版本SDK分为mcu+sdk，motor control sdk，industrial sdk三种） SDK使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
+<meta property="article:published_time" content="2025-10-31T15:41:05.000Z">
+<meta property="article:modified_time" content="2025-10-31T18:36:11.303Z">
+<meta property="article:author" content="jiawei xu">
+<meta property="article:tag" content="Soc">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>TI AM243x-LP USB驱动开发记录 - 技术挖掘师</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chesterforever.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 8.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="TI AM243x-LP USB驱动开发记录"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        jiawei xu
+      </span>
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          23 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">TI AM243x-LP USB驱动开发记录</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="TI-AM243x-LP-USB驱动开发记录"><a href="#TI-AM243x-LP-USB驱动开发记录" class="headerlink" title="TI AM243x-LP USB驱动开发记录"></a>TI AM243x-LP USB驱动开发记录</h1><p>不得不承认之前被ST的软件生态养的太好了，第一次用TI的Soc开发板，踩了很多坑，但是狠狠恶补了一波多核和Soc的知识点，不亏。</p>
+<h2 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h2><p>TI官网上给开发者提供的相关资料有</p>
+<ul>
+<li>AM243x芯片手册</li>
+<li>AM243x-LP开发板硬件手册</li>
+<li>SDK（最新版本SDK分为mcu+sdk，motor control sdk，industrial sdk三种）</li>
+<li>SDK使用手册</li>
+</ul>
+<p>SDK使用手册直接用浏览器打开然后用浏览器的翻译功能就行,芯片手册和开发板硬件手册只有英文版pdf，所以我用了Zotero+pdf2zh插件进行翻译（这个是github开源的pdf翻译方案，而且有双语对照功能，还是挺好用的）</p>
+<p>我把翻译好的芯片手册和开发板硬件手册的链接放在下面</p>
+<h2 id="踩坑过程"><a href="#踩坑过程" class="headerlink" title="踩坑过程"></a>踩坑过程</h2><h4 id="BOOT过程"><a href="#BOOT过程" class="headerlink" title="BOOT过程"></a>BOOT过程</h4><p>因为网上关于TI开发板的视频资料较少，所以基本上是直接根据SDK使用手册一步一步做的，这就导致了一旦使用手册里有写的不明确的地方，就要在这些地方卡一段时间去试错。</p>
+<p>我遇到的第一个问题是芯片如何正确启动并初始化。就像其他的高级Soc一样，TI为AM2434的启动设置了多阶段引导加载程序，也就是多级bootloader。</p>
+<img src="/2025/10/31/TI%20AM243x-LP%20USB%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/0f634769-308d-424b-a8dc-9764f103067d.png" srcset="/img/loading.gif" lazyload class="">
+
+<p>首先是第一级bootloader，出于安全考虑，TI在芯片出厂前将其保存在安全的只读内存ROM中，称为ROM引导加载程序（RBL）。RBL程序负责引导进入下一级bootloader，而不需要知道芯片的其他内核。</p>
+<p>然后是第二级bootloader，主要负责处理不同内核上的复杂引导加载，称为SBL（second bootloader）。加载多核应用程序比加载单核应用程序要复杂很多，要考虑映像准备和共享内存访问等问题。好在TI提供了相关的makefile文件<code>makefile_ccs_bootimage_gen</code>，方便用户自定义编译出需要的SBL文件。</p>
+<p>在了解完这些前置知识点后，我就老老实实一步一步跟着SDK使用手册的步骤。</p>
+<p>对于AM243X-LP开发板来说，TI提供了多种启动方法（通过UART,SD卡或CCS脚本）需要注意的是这里的启动只需要我们将TI提供的SBL想办法放到芯片的二级启动地址下，对应使用手册中的命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">cd</span> <span class="hljs-variable">$&#123;SDK_INSTALL_PATH&#125;</span>/tools/boot<br> python uart_uniflash.py -p COM&lt;x&gt; --cfg=sbl_prebuilt/am243x-lp/default_sbl_null.cfg<br></code></pre></td></tr></table></figure>
+
+<p>然而我在执行这一步时就卡住了，问题现象时是正常执行第一条命令，在执行第二条命令时会卡住并应执行超时而失败，失败原因是XMODEM协议校验不通过</p>
+<img src="/2025/10/31/TI%20AM243x-LP%20USB%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/f55d9c0c2143326082f46bf8f2b85083.jpg" srcset="/img/loading.gif" lazyload class="">
+
+<p>于是我尝试了其他的启动方案比如用CCS脚本，甚至为此去下载了TI官方的烧录工具uniflash，最后也没能成功。没办法，只能去TI的论坛下面求助，那天刚好是星期五，周末TI不上班，最后星期二才回我</p>
+<img src="/2025/10/31/TI%20AM243x-LP%20USB%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/da0a6b92-1163-467f-af45-1a8772a4f39f.png" srcset="/img/loading.gif" lazyload class="">
+
+<p>这个时候我才知道原来TI的这款芯片还分了三种安全等级，分别对应</p>
+<ul>
+<li>GG 非安全   适用固件后缀为无后缀</li>
+<li>HS 高安全   适用固件后缀为_hs</li>
+<li>FS 现场安全   适用固件后缀为_fs</li>
+</ul>
+<p>除了看芯片丝印信息这一方法来得知安全等级信息，在逛TI论坛时我还发现了一个方法来看自己的芯片是GP还是HS_FS，这里就不多介绍了，放个链接[<a target="_blank" rel="noopener" href="https://e2echina.ti.com/support/machine-translation/mt-processors/f/mt-processors-forum/1010320/faq-tda4vm-gp-fs?tisearch=e2e-sitesearch&keymatch=GP#">FAQ] [参考译文] [常见问题解答] TDA4VM：如何检查器件类型(GP FS)？ - 处理器（参考译文帖）(Read Only) - 处理器（参考译文帖） - E2E™ 设计支持</a></p>
+<p>但其实从22年9月后TI就逐渐取消了对GP型号的生产和支持，SDK在9.0版本后就完全不支持GP型号了，所以基本上现在市面上买到的器件都是HS_FS型号的，所以不用担心这个问题，直接用最新版的SDK就行。</p>
+<p>而我的芯片由于是GP型号的，只能去官网上下载了08030018版本的SDK和1.12.1版本的sysconfig工具，并导入到CCS的product中。如果是HS_FS型号的开发板，版本下载官网最新的就行。</p>
+<p>在经历了这些后，我终于在老版本的SDK上找到了后缀不带.hs_fs的SBL文件并成功复现了SDK使用手册中的步骤。这个时候就可以将LP启动模式切换到OSPI模式了，然后跟着使用手册的步骤应该没有什么坑了，遇到问题就问AI，大概率能解决。执行完OSPI boot之后，就可以直接用CCS直接烧录和调试程序了，不需要每次切换回UART boot模式。</p>
+<blockquote>
+<blockquote>
+<p>在终端执行命令行时尽量用相对路径而不用绝对路径，这样能有效避免应命令引用路径过长导致的问题</p>
+</blockquote>
+<blockquote>
+<p>如果是HS_FS型号的开发板，要装OpenSSL，当编译好一个程序镜像后，TI 的构建流程会调用 OpenSSL 来生成一个数字签名（就像给软件盖一个加密的印章）。芯片上的 ROM 引导程序或二级引导程序在加载应用前，会使用预先烧录在芯片中的公钥来验证这个签名。如果验证失败，说明软件可能被篡改，芯片将拒绝执行，从而防止恶意代码运行</p>
+</blockquote>
+</blockquote>
+<h4 id="示例代码的调试与运行"><a href="#示例代码的调试与运行" class="headerlink" title="示例代码的调试与运行"></a>示例代码的调试与运行</h4><p>示例代码的使用在使用手册中的开发者指南有详细的教学，包括怎么导入，编译和烧录。</p>
+<p>主要讲一下烧录，只需将tool文件夹复制到工作区，然后修改default_sbl_ospi.cfg文件，将第四个命令的file对象改为自己编译出来的.appimage文件，第五行命令是执行XIP image文件的，直接注释就行</p>
+<img src="/2025/10/31/TI%20AM243x-LP%20USB%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/4ac3ee73-0cc1-41e3-80f7-7b88a189df08.png" srcset="/img/loading.gif" lazyload class="">
+
+<blockquote>
+<p><strong>XIP Image</strong> 的全称是 <strong>eXecute-In-Place Image</strong>，中文可译为 <strong>“就地执行映像”</strong> 或 <strong>“直接执行映像”</strong>。</p>
+<p>它是一种<strong>存储在非易失性存储器（如 Flash）中，且能够被 CPU 直接从中读取并执行的程序二进制文件</strong>，而无需将其先复制到 RAM（内存）中，这个是由链接脚本决定的。</p>
+<p>用于快速启动，节省RAM空间，但是执行速度较慢，写入困难</p>
+</blockquote>
+<p>在debug的时候能注意到左边的线程中有很多内核对象，我查了一下它们的命名规则</p>
+<img src="/2025/10/31/TI%20AM243x-LP%20USB%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/f6cd1f99-f18d-4784-a251-4ff17ddb3ddd.png" srcset="/img/loading.gif" lazyload class="">
+
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs 1c">MAIN_Cortex_R5_0_0  <span class="hljs-comment">// 集群0，核心0</span><br>MAIN_Cortex_R5_0_1  <span class="hljs-comment">// 集群0，核心1  </span><br>MAIN_Cortex_R5_1_0  <span class="hljs-comment">// 集群1，核心0</span><br>MAIN_Cortex_R5_1_1  <span class="hljs-comment">// 集群1，核心1</span><br>DMSC_Cortex_M3_0    <span class="hljs-comment">// 设备管理安全控制器</span><br>ICSS_G0_PRU_0       <span class="hljs-comment">// 可编程实时单元0</span><br>ICSS_G0_RTU_PRU_0   <span class="hljs-comment">// 实时单元PRU0</span><br>ICSS_G0_TX_PRU_0    <span class="hljs-comment">// 发送PRU0</span><br>ICSS_G0_PRU_1       <span class="hljs-comment">// 可编程实时单元1</span><br>BLAZAR_Cortex_M4F_0 <span class="hljs-comment">// 通用处理核心</span><br></code></pre></td></tr></table></figure>
+
+<p>最后放一下执行USB CDC示例代码后的运行效果</p>
+<img src="/2025/10/31/TI%20AM243x-LP%20USB%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91%E8%AE%B0%E5%BD%95/d4798e5b0d2a2a31b548aa669d8c6a5a.png" srcset="/img/loading.gif" lazyload class="">
+
+
+
+
+
+<h4 id="将示例代码从R5F内核移植到M4F内核上"><a href="#将示例代码从R5F内核移植到M4F内核上" class="headerlink" title="将示例代码从R5F内核移植到M4F内核上"></a>将示例代码从R5F内核移植到M4F内核上</h4><p>（持续更新中）</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Soc/" class="print-no-link">#Soc</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>TI AM243x-LP USB驱动开发记录</div>
+      <div>https://chesterforever.github.io/2025/10/31/TI AM243x-LP USB驱动开发记录/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jiawei xu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年10月31日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/10/23/%E5%85%B8%E4%B8%AD%E5%85%B8%E4%B9%8B%E6%9C%80%E5%AE%B9%E6%98%93%E8%A2%AB%E9%81%97%E5%BF%98%E7%9A%84ADC%E5%8E%9F%E7%90%86/" title="典中典之最容易被遗忘的ADC原理">
+                        <span class="hidden-mobile">典中典之最容易被遗忘的ADC原理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

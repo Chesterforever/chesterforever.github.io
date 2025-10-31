@@ -1,0 +1,725 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="jiawei xu">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="从零学习写makefile(一)background一.为什么要写makefile？这个问题的答案可以先去看我的另外一篇博客（一篇文章讲明白代码编译，链接，烧录全过程（尽可能涵盖不同芯片和不同编译器） - 技术挖掘师），于是我们知道makefile其实是为代码如何编译和链接制订规则的。 正常来讲，比如用keil IDE，你点击build执行代码编译时，keil实际上就会动态生成一个makefile">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零学习写makefile(一)background">
+<meta property="og:url" content="https://chesterforever.github.io/2025/10/01/%E4%BB%8E%E9%9B%B6%E5%AD%A6%E4%B9%A0%E5%A6%82%E4%BD%95%E5%86%99makefile(%E4%B8%80)background/index.html">
+<meta property="og:site_name" content="技术挖掘师">
+<meta property="og:description" content="从零学习写makefile(一)background一.为什么要写makefile？这个问题的答案可以先去看我的另外一篇博客（一篇文章讲明白代码编译，链接，烧录全过程（尽可能涵盖不同芯片和不同编译器） - 技术挖掘师），于是我们知道makefile其实是为代码如何编译和链接制订规则的。 正常来讲，比如用keil IDE，你点击build执行代码编译时，keil实际上就会动态生成一个makefile">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
+<meta property="article:published_time" content="2025-09-30T16:42:24.000Z">
+<meta property="article:modified_time" content="2025-10-23T01:40:43.237Z">
+<meta property="article:author" content="jiawei xu">
+<meta property="article:tag" content="学习记录">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>从零学习写makefile(一)background - 技术挖掘师</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"chesterforever.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 8.0.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>个人博客</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="从零学习写makefile(一)background"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        jiawei xu
+      </span>
+    
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          28 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">从零学习写makefile(一)background</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="从零学习写makefile-一-background"><a href="#从零学习写makefile-一-background" class="headerlink" title="从零学习写makefile(一)background"></a>从零学习写makefile(一)background</h1><h2 id="一-为什么要写makefile？"><a href="#一-为什么要写makefile？" class="headerlink" title="一.为什么要写makefile？"></a>一.为什么要写makefile？</h2><p>这个问题的答案可以先去看我的另外一篇博客（<a href="https://chesterforever.github.io/2025/08/03/%E4%BB%A3%E7%A0%81%E7%BC%96%E8%AF%91%EF%BC%8C%E9%93%BE%E6%8E%A5%EF%BC%8C%E7%83%A7%E5%BD%95%E5%85%A8%E8%BF%87%E7%A8%8B/">一篇文章讲明白代码编译，链接，烧录全过程（尽可能涵盖不同芯片和不同编译器） - 技术挖掘师</a>），于是我们知道makefile其实是为代码如何编译和链接制订规则的。</p>
+<p>正常来讲，比如用keil IDE，你点击build执行代码编译时，keil实际上就会动态生成一个makefile在临时目录中，然后调用工具链来执行这个makefile,然后得到.o文件交给链接器（.sct）处理。keil提供了一体化的开发环境，让初学者能很快地上手嵌入式开发，但也为进阶学习造成了障碍。</p>
+<ul>
+<li><strong>编译器</strong>：ARMCC&#x2F;ARMCLANG（专为 ARM 优化）</li>
+<li><strong>链接器</strong>：自动处理分散加载（<code>.sct</code>文件）</li>
+<li><strong>调试器</strong>：无缝支持硬件调试（无需额外配置 GDB）</li>
+<li><strong>芯片支持包</strong>：内置寄存器定义、启动文件、驱动库</li>
+</ul>
+<p>而vscode，它是一种代码编辑器+插件平台，无内置编译器和调试器，所以它适用于通用开发，所有工具链，构建系统，调试器都需自己配置</p>
+<p>下面是我让ai生成的keil的makefile结构，仅作参考</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs c"># 示例：Keil 自动生成的 Makefile 结构<br>PROJECT_NAME = MyProject<br>TARGET = Project.axf<br>DEVICE = STM32F103ZE<br>TOOLCHAIN = ARMCC<br><br># 工具定义<br>CC = armcc<br>AS = armasm<br>LD = armlink<br>OBJCOPY = fromelf<br><br># 包含路径<br>INCLUDES = -I./Inc -I./Drivers/STM32F1xx/Include -I./Drivers/CMSIS/Include<br><br># 编译选项<br>CFLAGS = --c99 --cpu=Cortex-M3 -g -O1 -DUSE_STDPERIPH_DRIVER -DSTM32F10X_HD<br>ASFLAGS = --cpu=Cortex-M3 --pd <span class="hljs-string">&quot;__MICROLIB SETA 1&quot;</span><br>LDFLAGS = --cpu=Cortex-M3 --library_type=microlib --scatter <span class="hljs-string">&quot;.\Objects\Project.sct&quot;</span><br><br># 源文件列表<br>C_SOURCES = \<br>    Src/main.c \<br>    Src/stm32f10x_it.c \<br>    Drivers/STM32F1xx/Src/stm32f10x_gpio.c \<br>    Drivers/STM32F1xx/Src/stm32f10x_rcc.c<br><br>ASM_SOURCES = \<br>    Startup/startup_stm32f10x_hd.s<br><br># 目标文件列表<br>OBJECTS = $(C_SOURCES:.c=.o) $(ASM_SOURCES:.s=.o)<br><br># 默认目标<br>all: $(TARGET)<br><br># 链接目标<br>$(TARGET): $(OBJECTS)<br>    $(LD) $(LDFLAGS) --<span class="hljs-built_in">map</span> --<span class="hljs-built_in">list</span> ./Listings/Project.<span class="hljs-built_in">map</span> -o $@ $^<br><br># 编译 C 文件<br>%.o: %.c<br>    $(CC) $(CFLAGS) $(INCLUDES) -o $@ $&lt;<br><br># 编译汇编文件<br>%.o: %.s<br>    $(AS) $(ASFLAGS) -o $@ $&lt;<br><br>clean:<br>    del $(OBJECTS) $(TARGET)<br></code></pre></td></tr></table></figure>
+
+<p>在了解上述这些知识背景后，通过比对就知道了为什么要自己写makefile，原因无非是以下几点：</p>
+<ol>
+<li><p>灵活性与控制力</p>
+<p>Keil 提供了一个图形化界面（GUI），你通过点击复选框和填写输入框来配置项目。这很方便，但同时也是一种“黑箱”操作。</p>
+<p>Makefile 是“白箱“：你可以精确地控制编译过程的每一个步骤：用了哪个编译器（<code>arm-none-eabi-gcc</code>）、哪些编译标志（<code>-O2</code>, <code>-mcpu=cortex-m4</code>）、链接顺序、链接脚本的位置、预处理器的定义等。当遇到极其棘手的链接错误或优化问题时，这种细粒度的控制是无可替代的。</p>
+<p>超越 IDE 的限制：Keil 的配置选项是有限的。如果你需要使用一个非常冷门的编译器特性，或者想实现一些复杂的构建前&#x2F;后步骤（比如自动生成版本号、加密固件、调用自定义的代码生成工具），在 Makefile 中可以轻松实现，而在 Keil 中可能非常困难甚至不可能。</p>
+</li>
+<li><p>自动化与持续集成&#x2F;持续部署</p>
+<p>命令行驱动：Makefile 可以通过简单的 <code>make</code>命令在终端中运行。这意味着它可以被轻松地集成到各种自动化流程中。</p>
+<p>CI&#x2F;CD 流水线：在 Jenkins, GitLab CI, GitHub Actions 等自动化平台上，你可以直接调用 <code>make</code>命令来编译整个项目。服务器上不需要安装和配置庞大的 Keil IDE，只需要安装轻量级的编译器工具链（如 GNU Arm Embedded Toolchain）即可。这实现了快速、可重复的自动化构建、测试和发布。</p>
+<p>夜间构建：可以设置服务器在每晚自动拉取最新代码，用 Makefile 编译，并报告成功与否。</p>
+</li>
+<li><p>跨平台与团队协作</p>
+<p>操作系统无关性：Keil 主要面向 Windows。而 GNU Make 和 GCC 工具链是跨平台的，可以在 Windows（通过 MSYS2、WSL）、Linux 和 macOS 上完美运行。这对于使用不同操作系统的开发团队（尤其是在Linux上做开发的团队）至关重要。</p>
+<p>统一的构建方式：团队中每个成员，无论使用什么电脑，都可以用同一套 Makefile 获得完全一致的构建结果，避免了因 IDE 配置差异导致的问题。</p>
+<p>与版本控制系统完美契合：Makefile 是纯文本文件，可以很好地被 Git 等版本控制系统管理。你可以清晰地看到构建配置的每一次变更。而 Keil 的 <code>.uvprojx</code>项目文件是 XML格式，虽然也能版本控制，但可读性和可维护性远不如 Makefile。</p>
+</li>
+<li><p>可维护性与可复用性</p>
+<p>模块化：一个编写良好的 Makefile 可以非常模块化，通过变量和包含其他 Makefile 片段来管理大型项目，使得代码结构清晰。</p>
+<p>知识复用：Makefile 的知识是通用的。你为 ARM 处理器写的 Makefile，其核心思想（目标、依赖、规则）可以应用到编译 Linux C++ 程序、Go 语言项目甚至文档生成上。而熟练使用 Keil 的技能，其通用性相对较低。</p>
+<p>依赖管理：对于复杂的项目，尤其是需要集成多个第三方库（如 FreeRTOS, LWIP, FatFs）时，用 Makefile 来管理这些依赖关系可能比在 Keil 中手动添加文件更加清晰和自动化。</p>
+</li>
+<li><p>成本与开源文化</p>
+<p>Keil 是商业软件：虽然有针对芯片厂商的免费版本（有代码大小限制），但完整版价格昂贵。</p>
+<p>GNU 工具链是开源免费的：GCC + Make 的组合是完全免费且开源的，这符合许多项目和公司的预算及技术选型策略。整个开源的嵌入式生态（如 Zephyr RTOS, ESP-IDF 等）都基于 Makefile&#x2F;CMake 这类构建系统。</p>
+</li>
+</ol>
+<h2 id="二-Makefile，Make，CMake的关系"><a href="#二-Makefile，Make，CMake的关系" class="headerlink" title="二.Makefile，Make，CMake的关系"></a>二.Makefile，Make，CMake的关系</h2><p>CMake (CMakeLists.txt) → 生成 Makefile → 由 Make 执行编译</p>
+<p><strong>CMake</strong> 是一个 跨平台的高级构建系统生成器，它不直接编译代码，而是：</p>
+<ol>
+<li>读取 <code>CMakeLists.txt</code>（项目配置文件）</li>
+<li>生成 平台相关的构建文件**（如 <code>Makefile</code>、<code>Visual Studio.sln</code>、<code>Ninja</code>）</li>
+<li>调用底层工具（<code>make</code>、<code>msbuild</code>、<code>ninja</code>）执行编译</li>
+</ol>
+<p><strong>Make</strong> 是一个命令行工具，用于解析Makefile并执行构建任务。它根据文件修改时间（<code>timestamp</code>）决定哪些文件需要重新编译。</p>
+<p><strong>Makefile</strong> 是一个纯文本文件，定义了如何编译、链接和构建项目的规则。它描述了源文件（<code>.c</code>、<code>.cpp</code>）如何编译成目标文件（<code>.o</code>），目标文件如何链接成可执行文件（<code>.elf</code>、<code>.exe</code>），依赖关系（哪些文件需要重新编译）清理规则（<code>make clean</code>删除临时文件）</p>
+<p>由于这篇博客主要以学习记录为主，所以暂时不会接触CMake，等我学完makefile后如果有需要再来看看cmake相关的知识点。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AD%A6%E4%B9%A0%E8%AE%B0%E5%BD%95/" class="print-no-link">#学习记录</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>从零学习写makefile(一)background</div>
+      <div>https://chesterforever.github.io/2025/10/01/从零学习如何写makefile(一)background/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>jiawei xu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年10月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/10/04/%E4%BB%8E%E9%9B%B6%E5%AD%A6%E4%B9%A0%E5%A6%82%E4%BD%95%E5%86%99makefile(%E4%BA%8C)improve/" title="从零学习写makefile(二)基础学习">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">从零学习写makefile(二)基础学习</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/09/19/%E5%AF%B9%E4%BA%8E%E4%BB%A3%E7%A0%81%E6%9E%B6%E6%9E%84%E5%92%8C%E5%88%86%E5%B1%82%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%9D%E8%80%83/" title="对于代码架构和分层的一些思考">
+                        <span class="hidden-mobile">对于代码架构和分层的一些思考</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
