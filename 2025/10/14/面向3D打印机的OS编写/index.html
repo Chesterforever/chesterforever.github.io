@@ -21,14 +21,14 @@
   
     <meta name="description" content="面向3D打印机的OS编写前言最近实习用了ubuntu系统，虽然没有基于linux做驱动开发，但是出于个人兴趣，我还是去学习了一下linux内核。学完linux内核之后，感觉有点手痒，想写一个自己的OS。但是市面上已经有很多成熟的OS了，如果只是出于学习目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目，但我觉得没什么意思，就充分发挥一下面向对象编程的思想，来写一个面向3D打印机的OS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="面向3D打印机的OS编写(一)">
+<meta property="og:title" content="面向3D打印机的OS编写">
 <meta property="og:url" content="https://chesterforever.github.io/2025/10/14/%E9%9D%A2%E5%90%913D%E6%89%93%E5%8D%B0%E6%9C%BA%E7%9A%84OS%E7%BC%96%E5%86%99/index.html">
 <meta property="og:site_name" content="技术挖掘师">
 <meta property="og:description" content="面向3D打印机的OS编写前言最近实习用了ubuntu系统，虽然没有基于linux做驱动开发，但是出于个人兴趣，我还是去学习了一下linux内核。学完linux内核之后，感觉有点手痒，想写一个自己的OS。但是市面上已经有很多成熟的OS了，如果只是出于学习目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目，但我觉得没什么意思，就充分发挥一下面向对象编程的思想，来写一个面向3D打印机的OS">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
 <meta property="article:published_time" content="2025-10-14T07:44:54.000Z">
-<meta property="article:modified_time" content="2025-10-18T03:32:18.368Z">
+<meta property="article:modified_time" content="2025-11-05T04:15:03.827Z">
 <meta property="article:author" content="jiawei xu">
 <meta property="article:tag" content="个人项目">
 <meta name="twitter:card" content="summary_large_image">
@@ -38,7 +38,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>面向3D打印机的OS编写(一) - 技术挖掘师</title>
+  <title>面向3D打印机的OS编写 - 技术挖掘师</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +215,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="面向3D打印机的OS编写(一)"></span>
+            <span id="subtitle" data-typed-text="面向3D打印机的OS编写"></span>
           
         </div>
 
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          596 字
+          715 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          5 分钟
+          6 分钟
         
       </span>
     
@@ -293,7 +293,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">面向3D打印机的OS编写(一)</h1>
+            <h1 id="seo-header">面向3D打印机的OS编写</h1>
             
             
               <div class="markdown-body">
@@ -306,6 +306,11 @@
 <li><p>一个应用核，运行一个类unix并剪裁过的OS，处理所有软实时和复杂逻辑任务比如UI界面，运动规划算法，SD文件系统，网络和手机应用通信</p>
 </li>
 </ul>
+<blockquote>
+<p>同构Cortex-A多核由Linux负责内核通信，IPC进程通信，高性能 </p>
+<p>同构Cortex-M&#x2F;R多核有多种通信机制，如FreeRTOS SMP、MU、IPC、信号量、Mailbox、共享内存、CPU中断等 </p>
+<p>异构多核通常用AMP等机制</p>
+</blockquote>
 <h2 id="当前思路"><a href="#当前思路" class="headerlink" title="当前思路"></a>当前思路</h2><p>我认为对我而言最有难度的是核间通信和内核裁剪，这也是第一次接触到多核的软件架构，所以硬件选择上我选择了较为熟悉的ST系列的STM32MP157，核心配置是异构cortex-A7*2+cortex-M4，可以同时运行linux（A核）和实时OS系统（M核），而且资料文档很丰富，软件生态很完整。</p>
 <p>（待更新）</p>
 
@@ -332,7 +337,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>面向3D打印机的OS编写(一)</div>
+      <div>面向3D打印机的OS编写</div>
       <div>https://chesterforever.github.io/2025/10/14/面向3D打印机的OS编写/</div>
     </div>
     <div class="license-meta">
