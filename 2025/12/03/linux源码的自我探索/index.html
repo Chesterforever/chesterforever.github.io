@@ -19,18 +19,18 @@
   <meta name="author" content="jiawei xu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="stm32mp157网络环境搭建终极解决方案问题描述在使用正点原子stm32mp157开发板实现NFS和TFTP网络服务器搭建时，正点原子官方手册和视频只提供了开发板有线连接路由器实现网络连接的解决方案。但是现实是，在大部分情况下是没有有线连接的，于是尝试寻找解决方案。 参考方案https:&#x2F;&#x2F;blog.csdn.net&#x2F;lnwechag&#x2F;article&#x2F;details&#x2F;120478765 这个方">
+    <meta name="description" content="linux内核源码初探1.原子操作在内核中是如何实现的123typedef struct &#123;  int counter;&#125; atomic_t;  atomic_t在type.h中定义，没想到原子对象结构体的定义这么朴实无华 1#define ATOMIC_INIT(i)	&#123; (i) &#125;  ATOMIC_INIT定义原子变量并进行初始化，源码在不同架构下分别重">
 <meta property="og:type" content="article">
-<meta property="og:title" content="stm32mp157网络环境搭建终极解决方案">
-<meta property="og:url" content="https://chesterforever.github.io/2025/11/27/%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90stm32mp157%E5%BC%80%E5%8F%91%E6%9D%BF%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:title" content="linux源码初探">
+<meta property="og:url" content="https://chesterforever.github.io/2025/12/03/linux%E6%BA%90%E7%A0%81%E7%9A%84%E8%87%AA%E6%88%91%E6%8E%A2%E7%B4%A2/index.html">
 <meta property="og:site_name" content="技术挖掘师">
-<meta property="og:description" content="stm32mp157网络环境搭建终极解决方案问题描述在使用正点原子stm32mp157开发板实现NFS和TFTP网络服务器搭建时，正点原子官方手册和视频只提供了开发板有线连接路由器实现网络连接的解决方案。但是现实是，在大部分情况下是没有有线连接的，于是尝试寻找解决方案。 参考方案https:&#x2F;&#x2F;blog.csdn.net&#x2F;lnwechag&#x2F;article&#x2F;details&#x2F;120478765 这个方">
+<meta property="og:description" content="linux内核源码初探1.原子操作在内核中是如何实现的123typedef struct &#123;  int counter;&#125; atomic_t;  atomic_t在type.h中定义，没想到原子对象结构体的定义这么朴实无华 1#define ATOMIC_INIT(i)	&#123; (i) &#125;  ATOMIC_INIT定义原子变量并进行初始化，源码在不同架构下分别重">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
-<meta property="article:published_time" content="2025-11-27T15:00:00.000Z">
-<meta property="article:modified_time" content="2025-12-05T05:27:59.908Z">
+<meta property="article:published_time" content="2025-12-03T05:42:54.000Z">
+<meta property="article:modified_time" content="2025-12-08T03:11:01.105Z">
 <meta property="article:author" content="jiawei xu">
-<meta property="article:tag" content="mpu">
+<meta property="article:tag" content="linux">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://chesterforever.github.io/img/avatar.png">
   
@@ -38,7 +38,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>stm32mp157网络环境搭建终极解决方案 - 技术挖掘师</title>
+  <title>linux源码初探 - 技术挖掘师</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -215,7 +215,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="stm32mp157网络环境搭建终极解决方案"></span>
+            <span id="subtitle" data-typed-text="linux源码初探"></span>
           
         </div>
 
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          1.1k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          18 分钟
+          10 分钟
         
       </span>
     
@@ -293,54 +293,26 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">stm32mp157网络环境搭建终极解决方案</h1>
+            <h1 id="seo-header">linux源码初探</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="stm32mp157网络环境搭建终极解决方案"><a href="#stm32mp157网络环境搭建终极解决方案" class="headerlink" title="stm32mp157网络环境搭建终极解决方案"></a>stm32mp157网络环境搭建终极解决方案</h1><h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>在使用正点原子stm32mp157开发板实现NFS和TFTP网络服务器搭建时，正点原子官方手册和视频只提供了开发板有线连接路由器实现网络连接的解决方案。但是现实是，在大部分情况下是没有有线连接的，于是尝试寻找解决方案。</p>
-<h2 id="参考方案"><a href="#参考方案" class="headerlink" title="参考方案"></a>参考方案</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lnwechag/article/details/120478765">https://blog.csdn.net/lnwechag/article/details/120478765</a></p>
-<p>这个方案提供了仅靠一根网线实现主机，虚拟机，开发板三者互联，但是没有解决虚拟机无法上网的问题。我的方案基本参考这篇博客，同时解决了虚拟机无法上网的问题。</p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/hannibaychty/article/details/126894422">https://blog.csdn.net/hannibaychty/article/details/126894422</a></p>
-<p>这个方案用到了交换机，但是也为我提供了一些思路。</p>
-<blockquote>
-<p>正点原子官方20年有个视频有相应解决方案，但需要关闭主机的无线网络连接，而且很多地方讲得不是很好，完全不建议作为参考</p>
-</blockquote>
-<h2 id="前置知识点"><a href="#前置知识点" class="headerlink" title="前置知识点"></a>前置知识点</h2><p>所谓格物致知，在此之前我的网络知识只有SSH局域网下的连接和大学时的计算机网络课程，以及服务端配置docker时使用traefik实现路由转发，所以趁此机会恶补了一波相关知识点。</p>
-<p>VMware在给虚拟机配置网络提供了三种模式，分别是桥接模式，NAT模式和主机模式。在安装VMware的时候就会自动创建三个虚拟网卡分别对应三种模式，VMnet0对应桥接模式，VMnet1对应主机模式，VMnet8对应NAT模式。</p>
-<p>桥接模式就是将主机网卡与虚拟的网卡利用虚拟网桥进行通信，类似于把物理主机虚拟为一个交换机，所有桥接设置的虚拟机连接到这个交换机的一个接口上，物理主机也同样插在这个交换机当中，所以所有桥接下的网卡与网卡都是交换模式的，相互可以访问而不干扰。在桥接模式下，虚拟机IP地址需要与主机在同一网段，如果需要联网，则网关与DNS需要与主机网卡一致。 所以正常使用虚拟机时只需简单配置为桥接模式就能实现虚拟机的网络连接。</p>
-<p>NAT模式下连接net8虚拟交换机时，虚拟机会将虚拟NAT设备连接到虚拟交换机上。说人话就是这个模式下不靠虚拟网卡连接外网，而是主机充当路由器给虚拟机分发地址，最终虚拟机通过真实主机的ip访问外网。</p>
-<p>主机模式其实是仅主机模式，一般不用这个模式实现联网。</p>
-<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>只用一根网线连接开发板和主机，主机通过wifi连接网络，实现开发板，主机，虚拟机三者的网络互联。</p>
-<p><strong>步骤如下</strong></p>
-<p>首先先在主机控制台ipconfig看一下网络连接情况，正常笔记本只会有一个网卡和一个无线网卡，对应“以太网适配器 以太网”和“无线局域网适配器 WLAN”，可以在网络适配器中进行配置。无线网卡是无法手动分配IP地址的，这是因为无线网卡需要连接路由器，所以路由器会自动分配地址。而普通网卡可以选择手动或者自动配置，这里我们选择手动配置。先看ipconfig后无线网络IPv4的结果，比如192.168.2.21，那么192.168.2.1到192.168.2.255都属于这一网段，而配置普通网卡的IPv4地址不能选择这一网段，其他网段可以随意选择比如我选择192.168.1.29。相应地，子网掩码255.255.255.0，IPv4网关192.168.1.1。自此，主机端的配置就结束了。</p>
-<img src="/2025/11/27/%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90stm32mp157%E5%BC%80%E5%8F%91%E6%9D%BF%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/windows.png" srcset="/img/loading.gif" lazyload class="">
+                <h1 id="linux内核源码初探"><a href="#linux内核源码初探" class="headerlink" title="linux内核源码初探"></a>linux内核源码初探</h1><h2 id="1-原子操作在内核中是如何实现的"><a href="#1-原子操作在内核中是如何实现的" class="headerlink" title="1.原子操作在内核中是如何实现的"></a>1.原子操作在内核中是如何实现的</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> &#123;<br>  <span class="hljs-type">int</span> counter;<br>&#125; <span class="hljs-type">atomic_t</span>;<br></code></pre></td></tr></table></figure>
 
-<p>虚拟机端比较复杂，细分为VMware端和Ubuntu端。</p>
-<p>先说VMware端，先给虚拟机设置两个虚拟网络适配器并分别设置为桥接模式和NAT模式，然后在顶端编辑栏打开虚拟网络编辑器，再点击更改设置</p>
-<img src="/2025/11/27/%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90stm32mp157%E5%BC%80%E5%8F%91%E6%9D%BF%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/xuniji.png" srcset="/img/loading.gif" lazyload class="">
+<p>atomic_t在type.h中定义，没想到原子对象结构体的定义这么朴实无华</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-selector-id">#define</span> <span class="hljs-built_in">ATOMIC_INIT</span>(i)	&#123; (i) &#125;<br></code></pre></td></tr></table></figure>
 
-<img src="/2025/11/27/%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90stm32mp157%E5%BC%80%E5%8F%91%E6%9D%BF%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/gengai.png" srcset="/img/loading.gif" lazyload class="">
+<p>ATOMIC_INIT定义原子变量并进行初始化，源码在不同架构下分别重新定义了这个函数（arm架构下就是这个实现，之后讲到其他原子操作的API也统一用arm架构下的实现）</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * On ARM, ordinary assignment (str instruction) doesn&#x27;t clear the local</span><br><span class="hljs-comment"> * strex/ldrex monitor on some implementations. The reason we can use it for</span><br><span class="hljs-comment"> * atomic_set() is the clrex or dummy strex done on every exception return.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-selector-id">#define</span> <span class="hljs-built_in">atomic_read</span>(v)	<span class="hljs-built_in">READ_ONCE</span>((v)-&gt;counter)<br><span class="hljs-selector-id">#define</span> <span class="hljs-built_in">atomic_set</span>(v,i)	<span class="hljs-built_in">WRITE_ONCE</span>(((v)-&gt;counter), (i))<br></code></pre></td></tr></table></figure>
 
-<p>然后选择VMnet0,将桥接至从默认的自动改为网卡（通常是PCIe），然后VMware端配置结束。</p>
-<img src="/2025/11/27/%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90stm32mp157%E5%BC%80%E5%8F%91%E6%9D%BF%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/wangka.png" srcset="/img/loading.gif" lazyload class="">
+<p>读写的原子操作在源码中函数嵌套太复杂了，但是抽丝剥茧一下还是稍微可以理解一下的，可以分解成赋值操作<code>*(__u8 *)res = *(volatile __u8 *)p;</code>和屏障操作和锁操作<code>\#define read_barrier_depends()    do { } while (0)</code>，剩下的我也分析不来了，还是看看别人的文章吧<a target="_blank" rel="noopener" href="https://blog.csdn.net/quinta_2018_01_09/article/details/140072126">原子变量原理剖析_原子变量的实现原理-CSDN博客</a></p>
+<h3 id="自旋锁的实现"><a href="#自旋锁的实现" class="headerlink" title="自旋锁的实现"></a>自旋锁的实现</h3><p>原理简单来看就是把锁看成变量a，然后一直查询a的值，直到a从零变为一。等待自旋锁的线程会一直处于自旋状态，浪费CPU资源，所以自旋锁只适用于短时期的轻量级加锁。</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs gauss">typedef <span class="hljs-keyword">struct</span> <span class="hljs-type">spinlock</span> &#123;<br>	<span class="hljs-built_in">union</span> &#123;<br>		<span class="hljs-keyword">struct</span> <span class="hljs-type">raw_spinlock</span> rlock;<br><br><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> CONFIG_DEBUG_LOCK_ALLOC</span><br><span class="hljs-meta"># <span class="hljs-keyword">define</span> LOCK_PADSIZE (offsetof(struct raw_spinlock, dep_map))</span><br>		<span class="hljs-keyword">struct</span> &#123;<br>			u8 __padding[LOCK_PADSIZE];<br>			<span class="hljs-keyword">struct</span> <span class="hljs-type">lockdep_map</span> dep_map;<br>		&#125;;<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>	&#125;;<br>&#125; spinlock_t;<br></code></pre></td></tr></table></figure>
 
-<p>打开Ubuntu(or whatever),先控制台输入<code>ufw disable</code> 关掉防火墙，然后重启Ubuntu（忘记说了，主机端的防火墙也要关，如果装了卡巴斯基或者类似的软件一定要关闭服务，在我的电脑下实测一定要关掉卡巴斯基才能ping通！！！）然后去设置网络，会发现此时出现了两个以太网，这是因为虚拟机配置了两个虚拟网络适配器。那么我们怎么知道哪个以太网对应是哪个模式的网络适配器呢，事实上ens33总是对应桥接模式（我遇到的情况都是这样），然后另外一个对应NAT模式。</p>
-<img src="/2025/11/27/%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90stm32mp157%E5%BC%80%E5%8F%91%E6%9D%BF%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/ubuntu.png" srcset="/img/loading.gif" lazyload class="">
-
-<p>然后需要更改桥接模式对应的那个以太网，IPv4下设置方式改为手动，具体地址设置与主机端的普通网卡的地址设置为同一网段，比如我设置为192.168.1.30对应上面的192.168.1.29。子网掩码和网关同上。NAT模式的以太网不用管，默认为自动模式就行。自此，虚拟机端的设置也结束了。</p>
-<img src="/2025/11/27/%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90stm32mp157%E5%BC%80%E5%8F%91%E6%9D%BF%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/qiaojie.png" srcset="/img/loading.gif" lazyload class="">
-
-<p>直接先放开发板uboot命令行模式下的图片吧</p>
-<img src="/2025/11/27/%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90stm32mp157%E5%BC%80%E5%8F%91%E6%9D%BF%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/kaifaban1.png" srcset="/img/loading.gif" lazyload class="">
-
-<img src="/2025/11/27/%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90stm32mp157%E5%BC%80%E5%8F%91%E6%9D%BF%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/kaifaban2.png" srcset="/img/loading.gif" lazyload class="">
-
-<img src="/2025/11/27/%E6%AD%A3%E7%82%B9%E5%8E%9F%E5%AD%90stm32mp157%E5%BC%80%E5%8F%91%E6%9D%BF%E7%BD%91%E7%BB%9C%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/kaifaban3.png" srcset="/img/loading.gif" lazyload class="">
-
-<p>主要就是ip地址设置为同一网段下即可，我这里设置为192.168.1.33，可以看到最后已经可以ping通主机和虚拟机了。图片中这个地方的serverip设置错了，应该设置为192.168.1.30，也就是ubuntu的ip地址，设置错了会影响后面的TFTP网络服务器搭建。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个方案应该就是现有硬件条件下最终的解决方案了，即实现了三个系统间的网络互连又不影响正常的网络使用，其实只是集众人之长罢了。总之解决完这个问题后，就可以继续愉快地学习linux驱动和内核开发啦。</p>
-
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36781842/article/details/134385291">ARM64 linux并发与同步之经典自旋锁_arm 自旋锁-CSDN博客</a></p>
+<p>还是直接放别人的文章吧，直接看原文减少信息传播损耗</p>
+<h2 id="2-中断"><a href="#2-中断" class="headerlink" title="2.中断"></a>2.中断</h2><h3 id="软中断"><a href="#软中断" class="headerlink" title="软中断"></a>软中断</h3><h4 id="tasklet"><a href="#tasklet" class="headerlink" title="tasklet"></a>tasklet</h4>
                 
               </div>
             
@@ -352,7 +324,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/mpu/" class="print-no-link">#mpu</a>
+        <a href="/tags/linux/" class="print-no-link">#linux</a>
       
     </div>
   
@@ -364,8 +336,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>stm32mp157网络环境搭建终极解决方案</div>
-      <div>https://chesterforever.github.io/2025/11/27/正点原子stm32mp157开发板网络环境搭建解决方案/</div>
+      <div>linux源码初探</div>
+      <div>https://chesterforever.github.io/2025/12/03/linux源码的自我探索/</div>
     </div>
     <div class="license-meta">
       
@@ -377,7 +349,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年11月27日</div>
+          <div>2025年12月3日</div>
         </div>
       
       
@@ -409,18 +381,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/12/02/%E5%9B%9E%E5%BD%92%E5%9F%BA%E6%9C%AC%E5%8A%9F%E4%B9%8B%E5%AF%84%E5%AD%98%E5%99%A8%E7%BC%96%E7%A8%8B/" title="回归基本功之寄存器编程">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">回归基本功之寄存器编程</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/11/18/%E8%BF%9B%E7%A8%8B%EF%BC%8C%E7%BA%BF%E7%A8%8B%EF%BC%8CIPC/" title="进程，线程，IPC">
-                        <span class="hidden-mobile">进程，线程，IPC</span>
+                      <a href="/2025/12/02/%E5%9B%9E%E5%BD%92%E5%9F%BA%E6%9C%AC%E5%8A%9F%E4%B9%8B%E5%AF%84%E5%AD%98%E5%99%A8%E7%BC%96%E7%A8%8B/" title="回归基本功之寄存器编程">
+                        <span class="hidden-mobile">回归基本功之寄存器编程</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

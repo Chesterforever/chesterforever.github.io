@@ -19,16 +19,16 @@
   <meta name="author" content="jiawei xu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="面向3D打印机的OS编写前言最近出于个人兴趣，去学习了一下linux内核。学完linux内核之后有点手痒，想写一个OS。如果只是出于巩固学习的目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目。但这样写起来实在没什么意思，写到一半容易丧失动力，就充分发挥一下面向对象编程的思想，来写一个面向3D打印机的OS。  （后记）经过了解后发现市面上已经有很多成熟的3D打印机的OS了，刚开始是有">
+    <meta name="description" content="面向3D打印机的OS编写前言个人3D打印OS固件项目，参考了目前市面主流的klipper框架，使用正点原子stm32mp157开发板，尽可能完成3D打印机所需的功能在这块开发板的适配，持续更新中…… 思路整理硬件选择了较为熟悉的ST系列的STM32MP157，核心配置是异构cortex-A7*2+cortex-M4，可以同时运行linux（A核）和实时OS系统（M核），而且资料文档很丰富，软件生态">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面向3D打印机的OS编写">
 <meta property="og:url" content="https://chesterforever.github.io/2025/10/14/%E9%9D%A2%E5%90%913D%E6%89%93%E5%8D%B0%E6%9C%BA%E7%9A%84OS%E7%BC%96%E5%86%99/index.html">
 <meta property="og:site_name" content="技术挖掘师">
-<meta property="og:description" content="面向3D打印机的OS编写前言最近出于个人兴趣，去学习了一下linux内核。学完linux内核之后有点手痒，想写一个OS。如果只是出于巩固学习的目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目。但这样写起来实在没什么意思，写到一半容易丧失动力，就充分发挥一下面向对象编程的思想，来写一个面向3D打印机的OS。  （后记）经过了解后发现市面上已经有很多成熟的3D打印机的OS了，刚开始是有">
+<meta property="og:description" content="面向3D打印机的OS编写前言个人3D打印OS固件项目，参考了目前市面主流的klipper框架，使用正点原子stm32mp157开发板，尽可能完成3D打印机所需的功能在这块开发板的适配，持续更新中…… 思路整理硬件选择了较为熟悉的ST系列的STM32MP157，核心配置是异构cortex-A7*2+cortex-M4，可以同时运行linux（A核）和实时OS系统（M核），而且资料文档很丰富，软件生态">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
 <meta property="article:published_time" content="2025-10-14T07:44:54.000Z">
-<meta property="article:modified_time" content="2025-11-19T15:27:49.930Z">
+<meta property="article:modified_time" content="2025-12-08T13:05:33.576Z">
 <meta property="article:author" content="jiawei xu">
 <meta property="article:tag" content="个人项目">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          749 字
+          2.9k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          7 分钟
+          25 分钟
         
       </span>
     
@@ -298,14 +298,133 @@
             
               <div class="markdown-body">
                 
-                <h1 id="面向3D打印机的OS编写"><a href="#面向3D打印机的OS编写" class="headerlink" title="面向3D打印机的OS编写"></a>面向3D打印机的OS编写</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近出于个人兴趣，去学习了一下linux内核。学完linux内核之后有点手痒，想写一个OS。如果只是出于巩固学习的目的写一个最小系统的OS,其实写好了也可以作为一个不错的个人项目。但这样写起来实在没什么意思，写到一半容易丧失动力，就充分发挥一下面向对象编程的思想，来写一个面向3D打印机的OS。</p>
+                <h1 id="面向3D打印机的OS编写"><a href="#面向3D打印机的OS编写" class="headerlink" title="面向3D打印机的OS编写"></a>面向3D打印机的OS编写</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>个人3D打印OS固件项目，参考了目前市面主流的klipper框架，使用正点原子stm32mp157开发板，尽可能完成3D打印机所需的功能在这块开发板的适配，持续更新中……</p>
+<h2 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h2><p>硬件选择了较为熟悉的ST系列的STM32MP157，核心配置是异构cortex-A7*2+cortex-M4，可以同时运行linux（A核）和实时OS系统（M核），而且资料文档很丰富，软件生态很完整。其中ST厂商将两个cortex-A核分为了安全核和非安全核，暂时不知道怎么处理，开发时遇到问题再看。</p>
+<p>linux内核和Uboot使用ST的出厂源码，linux文件系统目前使用正点原子的rootfs，省去前期环境搭建的时间，后面如果有时间再看看怎么优化。（文件系统尝试了一下使用buildroot搭建，发现太多坑了，即便有图形化配置还是存在很多配置冲突的奇怪问题，比如设置开机密码导致的权限问题）</p>
+<p>首先分析一个3D打印机需要哪些模块化的功能，需要哪些外设：</p>
+<ul>
+<li><p>x个串口用于步进电机的控制和加热头的控制</p>
+</li>
+<li><p>温度检测有两个方案：一个是热敏电阻+ADC，一个是温度传感器，前者我认为做不到3D打印机所需的精确温控，所以采用温度传感器方案，需要看厂商给的信号协议</p>
+</li>
+<li><p>散热风扇：同样看厂商给的信号协议</p>
+</li>
+<li><p>摄像头模块OV5640</p>
+</li>
+<li><p>异核间通信</p>
+</li>
+<li><p>LCD屏幕驱动</p>
+</li>
+<li><p>电容多点触摸FT5426模块驱动</p>
+</li>
+<li><p>红外模块（用于安全监测）</p>
+</li>
+<li><p>SDmmc模块</p>
+</li>
+<li><p>USB驱动(OTG,HUB)</p>
+<p>（想到再补充）</p>
+</li>
+</ul>
+<p>然后根据这些外设看看怎么分配开发板资源</p>
+<table>
+<thead>
+<tr>
+<th>所需功能</th>
+<th>外设资源</th>
+<th>内核选择</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>串口一</td>
+<td></td>
+<td>M4</td>
+</tr>
+<tr>
+<td>串口二</td>
+<td>PB13(USART5 TX) PB12(USART RX)</td>
+<td>M4</td>
+</tr>
+<tr>
+<td>SPI</td>
+<td>PZ0(SPI1 SCK) PZ1(SPI1 MISO) PZ2(SPI1 MOSI) PZ3(SPI1 NSS)</td>
+<td>A7</td>
+</tr>
+<tr>
+<td>I2C</td>
+<td>PH5(I2C2 SDA) PH4(I2C2 SCL)</td>
+<td>A7</td>
+</tr>
+<tr>
+<td>I2C</td>
+<td>I2C5 SCL    I2C5 SDA</td>
+<td>A7</td>
+</tr>
+<tr>
+<td>USB</td>
+<td></td>
+<td>A7</td>
+</tr>
+<tr>
+<td>普通IO</td>
+<td>DCMI_RESET   DCMI_PWDN</td>
+<td>A7</td>
+</tr>
+<tr>
+<td>TF卡</td>
+<td>PC8 PC9 PC10 PC11 PC12 PD2 PD10</td>
+<td>A7</td>
+</tr>
+<tr>
+<td>异核间通信</td>
+<td>虚拟串口，无需外设资源</td>
+<td>A7&#x2F;M4</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
 <blockquote>
-<p>（后记）经过了解后发现市面上已经有很多成熟的3D打印机的OS了，刚开始是有点失落的，觉得自己的项目失去了价值，但转念一想可以踩在巨人的肩膀上，刚好学习一下国外大佬的编程思维方式，突然又有了动力。</p>
+<p>A7内核800M，M4内核209M，自带32KB的L1 I,Dcache和256KB的L2cache，708KB SRAM，8GB emmc，1GB DDR </p>
 </blockquote>
-<p>为什么要挑3D打印机呢，首先作为一个成熟的智能硬件产品，拥有一个私有定制化的OS系统是非常有必要的，对于产品性能和硬件成本的节省有很大的帮助。拿拓竹目前主攻的H2系列来说，官网查到的资料显示硬件用的相当奢华，运动控制器用了双核Cortex-M4+单核Cortex-M7，应用处理器用了四核ARM处理器+独立NPU（<code>所以极致性能最终的极限还是只能靠硬件资源的堆砌吗</code>）</p>
-<p>如果让我来设计的话，运动控制器无脑用FreeRTOS，没什么好说的，M4双核间用freertos的SMP解决方案，M4双核和M7单核间用AMP解决方案。重点还是在于应用处理器端的OS设计，每个核需要运行的进程是不同的，所以各自需要裁剪的内核也是不同的，关键在于OS设计上怎么和硬件资源相匹配，这样才能最大限度地利用好资源。</p>
-<h2 id="当前思路"><a href="#当前思路" class="headerlink" title="当前思路"></a>当前思路</h2><p>当然作为个人项目没必要搞这么复杂，硬件选择了较为熟悉的ST系列的STM32MP157，核心配置是异构cortex-A7*2+cortex-M4，可以同时运行linux（A核）和实时OS系统（M核），而且资料文档很丰富，软件生态很完整。（当然如果作为需要量产的项目来说还是太贵了）</p>
-<p>（待更新）</p>
+<h2 id="驱动编写"><a href="#驱动编写" class="headerlink" title="驱动编写"></a>驱动编写</h2><blockquote>
+<p>写一半笔记本卡住了，写了很多没保存，虚拟机环境也坏了，很难受</p>
+</blockquote>
+<h3 id="LCD屏幕驱动"><a href="#LCD屏幕驱动" class="headerlink" title="LCD屏幕驱动"></a>LCD屏幕驱动</h3><h4 id="设备树"><a href="#设备树" class="headerlink" title="设备树"></a>设备树</h4><h5 id="1-pinctrl修改"><a href="#1-pinctrl修改" class="headerlink" title="1.pinctrl修改"></a>1.pinctrl修改</h5><p>stm32mp1自带液晶屏幕接口LTDC，可以用于连接RGB LCD的屏幕，ST厂商已经在stm32mp15-pinctrl.dtsi中给出了ltdc_pins_a和ltdc_pins_b，这是两套预设的物理引脚配置，这里用速率更高的ltdc_pins_b。查看模块原理图发现，使用的LCD引脚与ST给出的代码配置一致，所以这里不用修改。</p>
+<h5 id="2-LTDC接口修改"><a href="#2-LTDC接口修改" class="headerlink" title="2.LTDC接口修改"></a>2.LTDC接口修改</h5><p>在stm32mp151.dtsi中查找LTDC，发现已经给出了一部分初始配置</p>
+<pre><code class="hljs">	ltdc: display-controller@5a001000 &#123;
+		compatible = &quot;st,stm32-ltdc&quot;;
+		reg = &lt;0x5a001000 0x400&gt;;
+		interrupts = &lt;GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH&gt;,
+			     &lt;GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH&gt;;
+		clocks = &lt;&amp;rcc LTDC_PX&gt;;
+		clock-names = &quot;lcd&quot;;
+		resets = &lt;&amp;rcc LTDC_R&gt;;
+		status = &quot;disabled&quot;;
+	&#125;;
+</code></pre>
+<p>linux源码下documentation&#x2F;devicetree&#x2F;bindings&#x2F;display&#x2F;st,stm32-ltdc.txt中给出了相关的配置资料，会发现LTDC还支持MIPI屏幕</p>
+<p>在st的基础上进行了追加节点的修改，这里status改为okay后上面👆那段代码的status就不用改了，因为linux的驱动算法会覆盖</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-variable">&amp;ltdc</span> <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">pinctrl-name</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;default&quot;</span>,<span class="hljs-string">&quot;sleep&quot;</span><span class="hljs-punctuation">;</span><br>    pinctrl<span class="hljs-number">-0</span> = <span class="hljs-params">&lt;<span class="hljs-variable">&amp;ltdc_pins_b</span>&gt;</span><span class="hljs-punctuation">;</span><br>    pinctrl<span class="hljs-number">-1</span> = <span class="hljs-params">&lt;<span class="hljs-variable">&amp;ltdc_pins_sleep_b</span>&gt;</span><span class="hljs-punctuation">;</span><br>    <span class="hljs-attr">status</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;okay&quot;</span><br>    <span class="hljs-title class_">port</span> <span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-meta">#address-cells = &lt;1&gt;;</span><br>        <span class="hljs-meta">#size-cells = &lt;0&gt;;</span><br><span class="hljs-symbol"></span><br><span class="hljs-symbol">        ltdc_ep0_out:</span> <span class="hljs-title class_">endpoint@0</span> <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">reg</span> <span class="hljs-operator">=</span> <span class="hljs-params">&lt;<span class="hljs-number">0</span>&gt;</span><span class="hljs-punctuation">;</span><br>            <span class="hljs-attr">remote-endpoint</span> <span class="hljs-operator">=</span> <span class="hljs-params">&lt;<span class="hljs-variable">&amp;rgb_panel_in</span>&gt;</span><span class="hljs-punctuation">;</span><br>        <span class="hljs-punctuation">&#125;;</span><br>    <span class="hljs-punctuation">&#125;;</span><br><span class="hljs-punctuation">&#125;;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="3-编写输出接口"><a href="#3-编写输出接口" class="headerlink" title="3.编写输出接口"></a>3.编写输出接口</h5><p>上面的代码用了rgb_panel_in作为输出口，但是还没进行定义。这个LCD设备树节点应该放在根节点下</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">   panel_rgb:</span> <span class="hljs-title class_">panel-rgb</span> <span class="hljs-punctuation">&#123;</span><br>       <span class="hljs-attr">compatible</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;alientek,lcd-rgb&quot;</span><span class="hljs-punctuation">;</span><br>       <span class="hljs-attr">backlight</span> <span class="hljs-operator">=</span> <span class="hljs-params">&lt;<span class="hljs-variable">&amp;backlight</span>&gt;</span><span class="hljs-punctuation">;</span><br>       <span class="hljs-attr">status</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;okay&quot;</span><span class="hljs-punctuation">;</span><br><br>	<span class="hljs-title class_">port</span> <span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">		rgb_panel_in:</span> <span class="hljs-title class_">endpoint</span> <span class="hljs-punctuation">&#123;</span><br>			<span class="hljs-attr">remote-endpoint</span> <span class="hljs-operator">=</span> <span class="hljs-params">&lt;<span class="hljs-variable">&amp;ltdc_ep0_out</span>&gt;</span><span class="hljs-punctuation">;</span><br>		<span class="hljs-punctuation">&#125;;</span><br>	<span class="hljs-punctuation">&#125;;</span><br><span class="hljs-punctuation">&#125;;</span><br></code></pre></td></tr></table></figure>
+
+<p>说实话，到这里的时候我思路已经乱了，因为我感觉设备树的节点分配很乱，厂商为了适配不同的开发板用了多级文件，节点可能会在某个文件已经定义过了。于是我想有没有办法直观地看设备树，而非看抽象的代码。</p>
+<p>然后就发现DTC工具没有什么特别好的方法，捣鼓一下午也只找到一个比较满意的解决方案</p>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mathematica"><span class="hljs-variable">dtc</span> <span class="hljs-operator">-</span><span class="hljs-built_in">I</span> <span class="hljs-variable">dts</span> <span class="hljs-operator">-</span><span class="hljs-built_in">O</span> <span class="hljs-variable">dts</span> <span class="hljs-operator">-</span><span class="hljs-variable">o</span> <span class="hljs-type">device_tree</span><span class="hljs-type">_formatted</span><span class="hljs-operator">.</span><span class="hljs-variable">dts</span> <span class="hljs-variable">stm32mp157d</span><span class="hljs-operator">-</span><span class="hljs-variable">atk</span><span class="hljs-operator">.</span><span class="hljs-variable">preprocessed</span><span class="hljs-operator">.</span><span class="hljs-variable">dts</span><br></code></pre></td></tr></table></figure>
+
+<p>对于dts和dtsi的嵌套问题倒是在github上找到一些脚本，能简单地输出文件结构树状图</p>
+<h3 id="多点触摸屏I2C驱动"><a href="#多点触摸屏I2C驱动" class="headerlink" title="多点触摸屏I2C驱动"></a>多点触摸屏I2C驱动</h3><p>使用FT5426作为触摸屏控制IC，以linux下的I2C设备驱动框架作为主框架，还要用到中断驱动框架和input子系统框架，使用MT协议的TypeB方式进行I2C传输</p>
+<p>当触摸屏持续被触摸时会一直触发中断，但是I2C最大速度400khz，会花费大量CPU时间，但是触摸对于实时性要求没有那么高，所以应该使用<code>devm_request_threaded_irq</code>申请线程化中断，这种中断可以被赋予优先级，从而保证其他线程可以正常运行  </p>
+<h4 id="设备树修改"><a href="#设备树修改" class="headerlink" title="设备树修改"></a>设备树修改</h4><img src="/2025/10/14/%E9%9D%A2%E5%90%913D%E6%89%93%E5%8D%B0%E6%9C%BA%E7%9A%84OS%E7%BC%96%E5%86%99/dtsi.png" srcset="/img/loading.gif" lazyload class="">
+
+<p>可以看到ST厂商已经写好了I2C的pinctrl相关代码，并且PH4和PH5与我们的期望相符</p>
+<blockquote>
+<p>设备树的pinctrl配置分成了两部分，将提供者系统和消费者系统分离</p>
+</blockquote>
+<p>我们所需做的就是在I2C设备树下追加节点</p>
 
                 
               </div>

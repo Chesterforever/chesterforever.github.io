@@ -19,16 +19,16 @@
   <meta name="author" content="jiawei xu">
   <meta name="keywords" content="">
   
-    <meta name="description" content="常用却不熟悉的编译器拓展学习 需要注意的是有些代码架构其实是ARM编译器或GCC&#x2F;CLANG特有的变量属性，如果高频使用的话可能会导致系统可移植性和鲁棒性变差，可读性也会变差，“在必要处使用，避免炫技”  __attribute____attribute__ ：它是 GNU C 编译器（GCC）提供的一种编译器指令（Compiler Directive） 或扩展语法。它允许开发者向编译器">
+    <meta name="description" content="常用却不熟悉的一些拓展学习 需要注意的是有些代码架构其实是ARM编译器或GCC&#x2F;CLANG特有的变量属性，如果高频使用的话可能会导致系统可移植性和鲁棒性变差，可读性也会变差，“在必要处使用，避免炫技”  __attribute____attribute__ ：它是 GNU C 编译器（GCC）提供的一种编译器指令（Compiler Directive） 或扩展语法。它允许开发者向编译器提">
 <meta property="og:type" content="article">
-<meta property="og:title" content="常用却不熟悉的编译器拓展学习">
+<meta property="og:title" content="常用却不熟悉的拓展学习">
 <meta property="og:url" content="https://chesterforever.github.io/2025/07/05/%E5%B8%B8%E7%94%A8%E4%BD%86%E4%B8%8D%E7%86%9F%E6%82%89%E7%9A%84%E7%BC%96%E8%AF%91%E5%99%A8%E6%8B%93%E5%B1%95%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="技术挖掘师">
-<meta property="og:description" content="常用却不熟悉的编译器拓展学习 需要注意的是有些代码架构其实是ARM编译器或GCC&#x2F;CLANG特有的变量属性，如果高频使用的话可能会导致系统可移植性和鲁棒性变差，可读性也会变差，“在必要处使用，避免炫技”  __attribute____attribute__ ：它是 GNU C 编译器（GCC）提供的一种编译器指令（Compiler Directive） 或扩展语法。它允许开发者向编译器">
+<meta property="og:description" content="常用却不熟悉的一些拓展学习 需要注意的是有些代码架构其实是ARM编译器或GCC&#x2F;CLANG特有的变量属性，如果高频使用的话可能会导致系统可移植性和鲁棒性变差，可读性也会变差，“在必要处使用，避免炫技”  __attribute____attribute__ ：它是 GNU C 编译器（GCC）提供的一种编译器指令（Compiler Directive） 或扩展语法。它允许开发者向编译器提">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
 <meta property="article:published_time" content="2025-07-04T18:20:25.000Z">
-<meta property="article:modified_time" content="2025-09-27T15:34:58.748Z">
+<meta property="article:modified_time" content="2025-11-30T11:25:56.387Z">
 <meta property="article:author" content="jiawei xu">
 <meta property="article:tag" content="ARM">
 <meta property="article:tag" content="MCU">
@@ -39,7 +39,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>常用却不熟悉的编译器拓展学习 - 技术挖掘师</title>
+  <title>常用却不熟悉的拓展学习 - 技术挖掘师</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="常用却不熟悉的编译器拓展学习"></span>
+            <span id="subtitle" data-typed-text="常用却不熟悉的拓展学习"></span>
           
         </div>
 
@@ -237,7 +237,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          5.5k 字
         
       </span>
     
@@ -248,7 +248,7 @@
         
         
         
-          29 分钟
+          46 分钟
         
       </span>
     
@@ -294,12 +294,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">常用却不熟悉的编译器拓展学习</h1>
+            <h1 id="seo-header">常用却不熟悉的拓展学习</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="常用却不熟悉的编译器拓展学习"><a href="#常用却不熟悉的编译器拓展学习" class="headerlink" title="常用却不熟悉的编译器拓展学习"></a>常用却不熟悉的编译器拓展学习</h1><blockquote>
+                <h1 id="常用却不熟悉的一些拓展学习"><a href="#常用却不熟悉的一些拓展学习" class="headerlink" title="常用却不熟悉的一些拓展学习"></a>常用却不熟悉的一些拓展学习</h1><blockquote>
 <p>需要注意的是有些代码架构其实是ARM编译器或GCC&#x2F;CLANG特有的变量属性，如果高频使用的话可能会导致系统可移植性和鲁棒性变差，可读性也会变差，“在必要处使用，避免炫技”</p>
 </blockquote>
 <h3 id="attribute"><a href="#attribute" class="headerlink" title="__attribute__"></a><code>__attribute__</code></h3><p><code>__attribute__</code> ：它是 GNU C 编译器（GCC）提供的一种编译器指令（Compiler Directive） 或扩展语法。它允许开发者向编译器提供关于变量、函数、类型（结构体、联合体、枚举） 的额外信息或特殊要求，这些信息超出了标准 C 语言语法的范畴。</p>
@@ -374,6 +374,9 @@
 <li><p>•<code>type __sync_val_compare_and_swap(type *ptr, type oldval, type newval)</code>: 如果 <code>*ptr == oldval</code>，则原子地将 <code>*ptr</code> 设置为 <code>newval</code>；总是返回 <code>*ptr</code> 的旧值。</p>
 </li>
 </ul>
+<h3 id="generic"><a href="#generic" class="headerlink" title="_generic"></a><code>_generic</code></h3><p>C11标准引入了这个并命名为泛型，但实际上泛型并不准确，应该叫自定义函数重载比较合适（可以类比于Cpp的函数重载）</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs nix"><span class="hljs-comment">#include &lt;stdio.h&gt;</span><br><span class="hljs-comment">#include &lt;complex.h&gt;</span><br> <br><span class="hljs-comment">#define CUSTOM_GENERIC(_var_) _Generic((_var_), \</span><br><span class="hljs-comment">/*signed char*/</span>                 signed <span class="hljs-params">char :</span> printf(<span class="hljs-string">&quot;type signed char, var:%d<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*signed short*/</span>                signed <span class="hljs-params">short :</span> printf(<span class="hljs-string">&quot;type signed short, var:%hd<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*signed int*/</span>                  signed <span class="hljs-params">int :</span> printf(<span class="hljs-string">&quot;type signed int, var:%d<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*signed long int */</span>            signed long <span class="hljs-params">int :</span> printf(<span class="hljs-string">&quot;type signed long int, var:%ld<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*signed long long int*/</span>        signed long long <span class="hljs-params">int :</span> printf(<span class="hljs-string">&quot;type signed long long int, var:%lld<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*unsigned char*/</span>               unsigned <span class="hljs-params">char :</span> printf(<span class="hljs-string">&quot;type unsigned char, var:%c<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*unsigned short*/</span>              unsigned <span class="hljs-params">short :</span> printf(<span class="hljs-string">&quot;type unsigned short, var:%hu<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*unsigned int*/</span>                unsigned <span class="hljs-params">int :</span> printf(<span class="hljs-string">&quot;type unsigned int, var:%u<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*unsigned long int*/</span>           unsigned long <span class="hljs-params">int :</span> printf(<span class="hljs-string">&quot;type unsigned long int, var:%lu<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*unsigned long long int*/</span>      unsigned long long <span class="hljs-params">int :</span> printf(<span class="hljs-string">&quot;type unsigned long long int, var:%llu<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*float*/</span>                       <span class="hljs-params">float :</span> printf(<span class="hljs-string">&quot;type float, var:%f<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*double*/</span>                      <span class="hljs-params">double :</span> printf(<span class="hljs-string">&quot;type double, var:%lf<span class="hljs-char escape_">\n</span>&quot;</span>, _var_), \<br><span class="hljs-comment">/*long double*/</span>                 long <span class="hljs-params">double :</span> printf(<span class="hljs-string">&quot;type long double, var:%llf<span class="hljs-char escape_">\n</span>&quot;</span>, _var_),  \<br><span class="hljs-comment">/*_Bool*/</span>                       <span class="hljs-params">_Bool :</span> printf(<span class="hljs-string">&quot;type _Bool, var:%d<span class="hljs-char escape_">\n</span>&quot;</span>, _var_),  \<br><span class="hljs-comment">/*float _Complex*/</span>              float <span class="hljs-params">_Complex :</span> printf(<span class="hljs-string">&quot;type float _Complex, var:%f+%fi<span class="hljs-char escape_">\n</span>&quot;</span>, crealf(_var_), cimagf(_var_)),  \<br><span class="hljs-comment">/*double _Complex*/</span>             double <span class="hljs-params">_Complex :</span> printf(<span class="hljs-string">&quot;type double _Complex, var:%f+%fi<span class="hljs-char escape_">\n</span>&quot;</span>, creal(_var_), cimag(_var_)),  \<br><span class="hljs-comment">/*long double _Complex*/</span>        long double <span class="hljs-params">_Complex :</span> printf(<span class="hljs-string">&quot;type long double _Complex, var:%lf+%lfi<span class="hljs-char escape_">\n</span>&quot;</span>, creall(_var_), cimagl(_var_)),  \<br><span class="hljs-comment">/*default*/</span>                     <span class="hljs-params">default :</span> printf(<span class="hljs-string">&quot;type default!&quot;</span>) \<br>)<br> <br>int main(void)<br>&#123;<br>    int a <span class="hljs-operator">=</span> <span class="hljs-number">10</span>;<br>    float f <span class="hljs-operator">=</span> <span class="hljs-number">100.0</span>f;<br>    float _Complex fCex <span class="hljs-operator">=</span> <span class="hljs-number">100.0</span>f <span class="hljs-operator">+</span> <span class="hljs-number">1.0</span><span class="hljs-keyword">if</span>;<br> <br>    CUSTOM_GENERIC(a);              <span class="hljs-symbol">//type</span> signed int, var:<span class="hljs-number">10</span><br>    CUSTOM_GENERIC(f);              <span class="hljs-symbol">//type</span> float, var:<span class="hljs-number">100.000000</span><br>    CUSTOM_GENERIC(fCex);           <span class="hljs-symbol">//type</span> float _Complex, var:<span class="hljs-number">100.000000</span><span class="hljs-operator">+</span><span class="hljs-number">1.000000</span>i<br>    CUSTOM_GENERIC(<span class="hljs-number">12</span>);             <span class="hljs-symbol">//type</span> signed int, var:<span class="hljs-number">12</span><br>    return <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
@@ -400,7 +403,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>常用却不熟悉的编译器拓展学习</div>
+      <div>常用却不熟悉的拓展学习</div>
       <div>https://chesterforever.github.io/2025/07/05/常用但不熟悉的编译器拓展学习/</div>
     </div>
     <div class="license-meta">
@@ -455,8 +458,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/07/02/C++%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%AD%A6%E4%B9%A0/" title="C++系统性学习">
-                        <span class="hidden-mobile">C++系统性学习</span>
+                      <a href="/2025/07/02/C++%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%AD%A6%E4%B9%A0/" title="C++从入门到放弃">
+                        <span class="hidden-mobile">C++从入门到放弃</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
