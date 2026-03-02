@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://chesterforever.github.io/img/avatar.png">
 <meta property="article:published_time" content="2025-10-14T07:44:54.000Z">
-<meta property="article:modified_time" content="2025-12-08T13:05:33.576Z">
+<meta property="article:modified_time" content="2025-12-12T12:10:20.376Z">
 <meta property="article:author" content="jiawei xu">
 <meta property="article:tag" content="个人项目">
 <meta name="twitter:card" content="summary_large_image">
@@ -236,7 +236,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.9k 字
+          3.1k 字
         
       </span>
     
@@ -247,7 +247,7 @@
         
         
         
-          25 分钟
+          27 分钟
         
       </span>
     
@@ -305,9 +305,9 @@
 <ul>
 <li><p>x个串口用于步进电机的控制和加热头的控制</p>
 </li>
-<li><p>温度检测有两个方案：一个是热敏电阻+ADC，一个是温度传感器，前者我认为做不到3D打印机所需的精确温控，所以采用温度传感器方案，需要看厂商给的信号协议</p>
+<li><p>温度检测有两个方案：一个是热敏电阻+ADC，一个是温度传感器，前者做不到3D打印机所需的精确温控，所以采用温度传感器方案，需要看厂商给的信号协议，</p>
 </li>
-<li><p>散热风扇：同样看厂商给的信号协议</p>
+<li><p>散热风扇：同样看厂商给的信号协议，</p>
 </li>
 <li><p>摄像头模块OV5640</p>
 </li>
@@ -412,9 +412,13 @@
 <figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">   panel_rgb:</span> <span class="hljs-title class_">panel-rgb</span> <span class="hljs-punctuation">&#123;</span><br>       <span class="hljs-attr">compatible</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;alientek,lcd-rgb&quot;</span><span class="hljs-punctuation">;</span><br>       <span class="hljs-attr">backlight</span> <span class="hljs-operator">=</span> <span class="hljs-params">&lt;<span class="hljs-variable">&amp;backlight</span>&gt;</span><span class="hljs-punctuation">;</span><br>       <span class="hljs-attr">status</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;okay&quot;</span><span class="hljs-punctuation">;</span><br><br>	<span class="hljs-title class_">port</span> <span class="hljs-punctuation">&#123;</span><br><span class="hljs-symbol">		rgb_panel_in:</span> <span class="hljs-title class_">endpoint</span> <span class="hljs-punctuation">&#123;</span><br>			<span class="hljs-attr">remote-endpoint</span> <span class="hljs-operator">=</span> <span class="hljs-params">&lt;<span class="hljs-variable">&amp;ltdc_ep0_out</span>&gt;</span><span class="hljs-punctuation">;</span><br>		<span class="hljs-punctuation">&#125;;</span><br>	<span class="hljs-punctuation">&#125;;</span><br><span class="hljs-punctuation">&#125;;</span><br></code></pre></td></tr></table></figure>
 
 <p>说实话，到这里的时候我思路已经乱了，因为我感觉设备树的节点分配很乱，厂商为了适配不同的开发板用了多级文件，节点可能会在某个文件已经定义过了。于是我想有没有办法直观地看设备树，而非看抽象的代码。</p>
-<p>然后就发现DTC工具没有什么特别好的方法，捣鼓一下午也只找到一个比较满意的解决方案</p>
+<p>然后就发现DTC工具没有什么特别好的方法，捣鼓一下午也只找到一个比较满意的解决方案。</p>
 <figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs mathematica"><span class="hljs-variable">dtc</span> <span class="hljs-operator">-</span><span class="hljs-built_in">I</span> <span class="hljs-variable">dts</span> <span class="hljs-operator">-</span><span class="hljs-built_in">O</span> <span class="hljs-variable">dts</span> <span class="hljs-operator">-</span><span class="hljs-variable">o</span> <span class="hljs-type">device_tree</span><span class="hljs-type">_formatted</span><span class="hljs-operator">.</span><span class="hljs-variable">dts</span> <span class="hljs-variable">stm32mp157d</span><span class="hljs-operator">-</span><span class="hljs-variable">atk</span><span class="hljs-operator">.</span><span class="hljs-variable">preprocessed</span><span class="hljs-operator">.</span><span class="hljs-variable">dts</span><br></code></pre></td></tr></table></figure>
 
+<blockquote>
+<p>有空看看能不能vibe coding一下写一个满意的DTC工具，尽可能让设备树简洁地呈现出具体节点结构，我也很奇怪为什么没人做这种工具，但仔细一想原版的DTC工具似乎也够用了，属于是食之无味弃之可惜了。</p>
+<p>后面发现clion作为IDE有我想要的这些功能,还有代码补全这些额外功能，但是这个项目已经用了vscode+自带工具链的方案了，换起来还是挺麻烦的，之后其他项目可以尝试一下clion</p>
+</blockquote>
 <p>对于dts和dtsi的嵌套问题倒是在github上找到一些脚本，能简单地输出文件结构树状图</p>
 <h3 id="多点触摸屏I2C驱动"><a href="#多点触摸屏I2C驱动" class="headerlink" title="多点触摸屏I2C驱动"></a>多点触摸屏I2C驱动</h3><p>使用FT5426作为触摸屏控制IC，以linux下的I2C设备驱动框架作为主框架，还要用到中断驱动框架和input子系统框架，使用MT协议的TypeB方式进行I2C传输</p>
 <p>当触摸屏持续被触摸时会一直触发中断，但是I2C最大速度400khz，会花费大量CPU时间，但是触摸对于实时性要求没有那么高，所以应该使用<code>devm_request_threaded_irq</code>申请线程化中断，这种中断可以被赋予优先级，从而保证其他线程可以正常运行  </p>
